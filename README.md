@@ -1,4 +1,5 @@
-# nacapet
+# NacaPet
+
 Small implementation of a VPet (Virtual Pet) using an ESP32, an MPU6050, a speaker and an ST7789 display.
 
 ## Beware
