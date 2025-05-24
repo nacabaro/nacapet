@@ -82,6 +82,74 @@ def process_npet_file(origFp, outputName):
     
     logging.info("Creado archivo de manera correcta")
 
+
+def process_nevo_file(origFp, outputName):
+    file_header = origFp.readline()
+    
+    matches = re.findall(
+        r"\[\s*"
+        r"([0-9a-fA-F]+)\s*\|\s*"          # Group 1: First single hex (e.g., 00)
+        r"([0-9a-fA-F]+)\s*"
+        r"\]$", file_header
+    )
+    
+    if (len(matches[0]) != 2):
+        logging.error("Cabecera invalida")
+        return
+
+    id, length = [ int(i, 16) for i in matches[0] ]
+
+    logging.info(f"Encontrado cabecera id={id} numEvos={length}")
+    
+    destFp = open(outputName, "wb")
+    
+    destFp.write(b"NEVO")
+    
+    destFp.write(id.to_bytes(1, "big"))
+    destFp.write(length.to_bytes(1, "big"))
+    
+    for i in range(length):
+        line = origFp.readline()
+        
+        if (line.startswith("#")):
+            continue
+        
+        pattern = re.findall(
+            r"\[\s*"
+            r"([0-9a-fA-F]+)\s*\|\s*"
+            r"([0-9a-fA-F]+)\s+([0-9a-fA-F]+)\s*\|\s*"
+            r"([0-9a-fA-F]+)\s+([0-9a-fA-F]+)\s*\|\s*"
+            r"([0-9a-fA-F]+)\s+([0-9a-fA-F]+)\s*\|\s*"
+            r"([0-9a-fA-F]+)\s+([0-9a-fA-F]+)\s*\|\s*"
+            r"([0-9a-fA-F]+)\s+([0-9a-fA-F]+)\s*\|\s*"
+            r"([0-9a-fA-F]+)\s*"
+            r"\]$", line
+        )
+                
+        charaId, charaNextId = [ int(i, 16) for i in pattern[0][0:2] ]
+        careMistakeMin, careMistakeMax = [ int(i, 16) for i in pattern[0][2:4] ]
+        sleepDistMin, sleepDistMax = [ int(i, 16) for i in pattern[0][4:6] ]
+        overfeedMin, overfeedMax = [ int(i, 16) for i in pattern[0][6:8] ]
+        trainMin, trainMax = [ int(i, 16) for i in pattern[0][8:10] ]
+        trainMin, trainMax = [ int(i, 16) for i in pattern[0][8:10] ]
+        totalWon, totalBattled = [ int(i, 16) for i in pattern[0][10:12] ]
+        
+        evoData = bytearray([
+            charaId, charaNextId,
+            careMistakeMin, careMistakeMax,
+            sleepDistMin, sleepDistMax,
+            overfeedMin, overfeedMax,
+            trainMin, trainMax,
+            totalBattled, totalWon
+        ])
+        
+        destFp.write(evoData)
+        
+    destFp.close()
+    
+    logging.info("Creado archivo de manera correcta")
+        
+    
 if __name__ == "__main__":
     if len(sys.argv) < 3:
         logging.info(f"Uso: {sys.argv[0]} <nombre archivo texto plano> <archivo salida>")
@@ -96,6 +164,10 @@ if __name__ == "__main__":
     if "NPET" in header:
         logging.info("Cabecera NPET encontrada!")
         process_npet_file(origFp, newFile)
+        
+    elif "NEVO" in header:
+        logging.info("Cabecera NEVO encontrada!")
+        process_nevo_file(origFp, newFile)  
     
     else:
         logging.error("No se ha encontrado una cabecera válida.")
