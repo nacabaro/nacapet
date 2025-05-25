@@ -7,11 +7,20 @@ struct CharacterData {
     // Calculated at runtime
     uint8_t hunger;
     uint8_t strength;
-    uint8_t effort;
-    uint8_t careMistakes;
     uint8_t weight;
     uint8_t age;
     uint8_t poopNumber;
+    
+    uint8_t careMistakes;
+    uint8_t effort;
+    uint8_t overfeed;
+    uint8_t sleepDisturbances;
+
+    uint16_t stageTotalBattled;
+    uint16_t stageTotalWon;
+
+    uint16_t charaTotalBattled;
+    uint16_t charaTotalWon;
 
     int32_t sleepCareMistakeCounter = 0;
     int32_t evoLeftTimer;
@@ -30,12 +39,14 @@ struct CharacterData {
     bool dead = false;
     
     // Obtained from structure
-    uint8_t idLine;
     uint8_t idChara;
+
     char charaName[40];
+
     uint8_t hp;
     uint8_t ap;
     uint8_t bp;
+
     uint8_t stage;
     uint8_t attribute;
 
@@ -45,6 +56,7 @@ struct CharacterData {
     uint32_t evoTime;
 
     uint16_t initialStatsReductionTime = 600;
+    uint8_t minWeight;
 };
 
 #endif

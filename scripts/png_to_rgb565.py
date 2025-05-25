@@ -22,7 +22,6 @@ def split_image(filename: str) -> list[bytearray]:
         h = y + 16
         
         tile = image.crop((x, y, w, h))
-        tile.save(f"tile_{i}.png")
         tiles.append(tile)
         
         

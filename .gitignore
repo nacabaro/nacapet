@@ -6,7 +6,9 @@
 .vscode/
 *.bin
 *.line
+*.egg
 *.cm
 __pycache__/
 venv/
 sprites/
+eggs/

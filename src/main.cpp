@@ -10,6 +10,7 @@
 #include "buttons/buttons.h"
 #include "vpet/vpet.h"
 #include "vpet/steps/steps.h"
+#include "vpet/lines/lines.h"
 
 const char* TAG = "[MAIN]";
 
@@ -44,7 +45,7 @@ void secondCoreTask(void*);
 void setup() {
     Serial.begin(115200);
     delay(100); // Give MPU6050 and ESP32 time to power up
-  
+
     Wire.begin(MPU_SDA_PIN, MPU_SCL_PIN);  // I2C init before MPU6050
     mpu.initialize();
 
@@ -58,8 +59,6 @@ void setup() {
     storage_readFile("/ui.bin", &uiElementsData);
 
     storage_initBackground("/bg.bin", bg);
-
-    debug_printFreeMemory();
 
     pinMode(K1_PIN, INPUT_PULLUP);
     pinMode(K2_PIN, INPUT_PULLUP);
@@ -75,6 +74,12 @@ void setup() {
     charaData.strengthCareMistakeTimer = 60;
 
     xTaskCreatePinnedToCore(secondCoreTask, "VPET_EVAL", 4096, NULL, 0, &secondLoop, 0);
+
+    debug_printFreeMemory();
+
+    lines_testLines(); // REMOVE
+
+    debug_printFreeMemory();
 }
 
 

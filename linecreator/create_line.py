@@ -2,18 +2,19 @@ import re
 import sys
 import logging
 
-def process_npet_file(origFp, outputName):
+def process_npet_file(origFp, eggFp, outputName):
     file_header = origFp.readline()
     
-    matches = re.findall(r"\[\s*([0-9a-fA-F]+)\s*\|\s*([^|]+?)\s*\|\s*([0-9a-fA-F]+)\s*\]", file_header)
+    matches = re.findall(r"\[\s*([0-9a-fA-F]+)\s*\|\s*([^|]+?)\s*\|\s*([0-9a-fA-F]+)\s*\|\s*([0-9a-fA-F]+)\s*\]", file_header)
     
-    if len(matches[0]) != 3:
+    if len(matches[0]) != 4:
         logging.error("Cabecera invalida")
         return
     
-    id, nombre, numChara = matches[0]
+    id, nombre, numChara, hatchTime = matches[0]
     id = int(id, 16)
     numChara = int(numChara, 16)
+    hatchTime = int(hatchTime, 16)
     
     logging.info(f"Encontrado cabecera id={id}, nombre={nombre}, numchara={numChara}")
 
@@ -23,6 +24,12 @@ def process_npet_file(origFp, outputName):
     
     destFp.write(id.to_bytes(1, "big"))
     destFp.write(nombre.encode("utf8").ljust(16, b"\0"))
+    
+    eggSpriteData = eggFp.read()
+    
+    destFp.write(eggSpriteData)
+    
+    destFp.write(hatchTime.to_bytes(2, "big"))
     destFp.write(numChara.to_bytes(1, "big"))
 
     for i in range(numChara):
@@ -104,7 +111,7 @@ def process_nevo_file(origFp, outputName):
     destFp = open(outputName, "wb")
     
     destFp.write(b"NEVO")
-    
+        
     destFp.write(id.to_bytes(1, "big"))
     destFp.write(length.to_bytes(1, "big"))
     
@@ -163,7 +170,10 @@ if __name__ == "__main__":
     header = origFp.readline()
     if "NPET" in header:
         logging.info("Cabecera NPET encontrada!")
-        process_npet_file(origFp, newFile)
+        origFileName = "".join(origFile.split(".")[0:-1]) + ".egg"
+        eggFp = open(origFileName, "rb")
+        process_npet_file(origFp, eggFp, newFile)
+        eggFp.close()
         
     elif "NEVO" in header:
         logging.info("Cabecera NEVO encontrada!")
