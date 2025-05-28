@@ -11,7 +11,6 @@ void lines_onHatchComplete() {
 
     char spriteFileName[30];
     snprintf(spriteFileName, 30, "/chara/%02x.bin", currentLine[currentCharacter]->characters[0].id);
-    printf("[DEBUG] spriteFileName=%s\n", spriteFileName);
 
     storage_readFile(spriteFileName, &mainCharacterSprites);
 

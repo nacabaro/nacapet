@@ -36,6 +36,7 @@ struct CharacterData {
     bool strengthCareMistakeObtained = false;
     bool sleepCareMistakeObtained = false;
     bool careMistakeCallLight = false;
+    bool overfeedHappened = false;
 
     bool sleepy = false;
     bool asleep = false;

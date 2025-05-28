@@ -87,8 +87,6 @@ void setup() {
 
     xTaskCreatePinnedToCore(secondCoreTask, "VPET_EVAL", 4096, NULL, 0, &secondLoop, 0);
     
-    debug_printFreeMemory();
-
     lines_initLineStorage();
 
     vpet_initTimer();

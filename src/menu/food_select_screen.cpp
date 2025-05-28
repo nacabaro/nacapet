@@ -42,6 +42,10 @@ void menu_foodScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainC
                     submenuKey = FOOD_ICON;
                 } else {
                     screenKey = REFUSING_SCREEN;
+                    if (!charaData.overfeedHappened) {
+                        charaData.overfeed++;
+                        charaData.overfeedHappened = true;
+                    }
                 }
                 break;
 

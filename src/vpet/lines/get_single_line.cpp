@@ -30,8 +30,6 @@ void lines_getSingleLine(const char* fileName) {
     
     bytesRead += lineFile.read(&selectedLine->charaNumber, 1);
 
-    printf("[DEBUG] SelectedLine numChara=%d hatchTime=%d\n", selectedLine->charaNumber, selectedLine->hatchTime);
-
     selectedLine->characters = (LineChara_t*) malloc(selectedLine->charaNumber * sizeof(LineChara_t));
 
     for (int i = 0; i < selectedLine->charaNumber; i++) {
@@ -43,8 +41,6 @@ void lines_getSingleLine(const char* fileName) {
 }
 
 void lines_getSingleEggSprites(File &lineFile, Egg_t* selectedEgg) {
-    // Ahora si, vamos a ver cuantos sprites hay que reservar
-
     // Importante tener el nombre de archivo del huevo en todo momento
     strcpy(selectedEgg->fileName, lineFile.name());
 

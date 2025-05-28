@@ -152,6 +152,9 @@ void vpet_evalTimers() {
             screenKey = TIMER_FINISHED_SCREEN;
             interruptKey = POOPING_SCREEN;
             charaData.poopNumber++;
+            if (charaData.hunger < 4 && charaData.overfeedHappened) {
+                charaData.overfeedHappened = false;
+            }
             if (charaData.hunger > 0) {
                 charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
             } else {
