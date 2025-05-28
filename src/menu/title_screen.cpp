@@ -6,10 +6,9 @@
 
 void menu_drawTitle(TFT_eSprite &composite, TFT_eSprite &bg) {
     uint8_t pressedButtons = buttons_getPressedButtons();
-    lastPressedButtonTime = esp_timer_get_time();
-
     if (pressedButtons == 8 || pressedButtons == 4) {
         screenKey = CLOCK_EDIT_SCREEN;
+        return;
     }
 
     draw_drawBackground(composite, bg, 90, 90, 3);

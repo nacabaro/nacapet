@@ -6,6 +6,7 @@
 
 #include "defs/background_data.h"
 #include "defs/sprite_data.h"
+#include "defs/file_chara.h"
 
 #define VERSION "Alpha v0.1"
 
@@ -45,8 +46,8 @@
 #define RTC_TIMEOUT_THRESHOLD_TIME_MS 100
 
 // STANDARD BEEP WHEN PRESSING BUTTON
-#define BEEP_FREQ_HZ 3000
-#define BEEP_LEN_MS 50
+#define BEEP_FREQ_HZ 4100
+#define BEEP_LEN_MS 35
 
 // MENU ENTRIES
 #define STATUS_SCREEN_MENU 0
@@ -79,6 +80,7 @@
 #define SETTINGS_SCREEN_ICON 7
 #define CARE_MISTAKE_CALL_LIGHT 8
 #define BED_SPRITE 9
+#define EMPTY_EGG 10
 
 // SCREENS
 #define OFF_SCREEN -1
@@ -87,6 +89,9 @@
 #define CLOCK_SCREEN 2
 #define IDLE_SCREEN 3
 #define MENU_SCREEN 4
+#define EGG_SELECT_SCREEN 5
+#define EGG_HATCH_SCREEN 6
+#define EGG_EMPTY_SCREEN 7
 #define FEEDING_SCREEN 20
 #define REFUSING_SCREEN 21
 #define SLEEPY_SCREEN 22
@@ -127,6 +132,8 @@
 #define K4_PRESSED 1
 #define NONE_PRESSED 0
 
+#define CHARA_COUNT_IN_DEVICE 5
+
 extern int screenKey;
 extern int menuKey;
 extern int submenuKey;
@@ -158,5 +165,18 @@ extern bool runVpetTasks;
 extern uint8_t beepCounter;
 
 extern uint16_t stepCounter;
+
+extern bool coldBoot;
+
+extern uint8_t eggNumber;
+extern Egg_t* eggSelection;
+
+extern uint8_t currentCharacter;
+
+extern Egg_t* currentEgg;
+extern LineCare_t** currentLineCareInstr;
+extern Line_t** currentLine;
+
+extern struct SpriteData mainCharacterSprites;
 
 #endif

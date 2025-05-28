@@ -1,4 +1,5 @@
 #include "defs/defs.h"
+#include "defs/chara_data.h"
 #include "buttons.h"
 #include <Arduino.h>
 
@@ -20,7 +21,7 @@ void buttons_checkInactivity() {
         screenOff = true;
 
     } else if (currentTime - lastPressedButtonTime > LAST_PRESSED_BUTTON_THRESHOLD_TIME_US && !inactive) {        
-        screenKey = IDLE_SCREEN;
+        screenKey =  IDLE_SCREEN;
         inactive = true;
     }
 }

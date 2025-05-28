@@ -9,6 +9,7 @@ const int numFramesEating = 2;
 const int numFramesHappy = 2;
 const int numFramesRefuse = 4;
 const int numFramesSleepy = 2;
+const int numFramesHatching = 4;
 
 // TODO: Cambiar a una animación mas atractiva
 const int animationFrames[numFrames] = {
@@ -53,11 +54,16 @@ const int happyAnimationFrames[] = {
     3, 7
 };
 
+const int hatchingAnimationPositions[] = {
+    72, 66, 72, 78
+};
+
 void animate_performAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData, uint8_t offsetX);
 void animate_performAttentionAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
 void animate_performEatingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
 void animate_performRefuseAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
 void animate_performSleepyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
 void animate_performHappyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performHatchingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
 
 #endif

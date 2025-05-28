@@ -1,10 +1,14 @@
 #include "lines.h"
 #include "memory/memory.h"
+#include "defs/defs.h"
 
 #include <SPIFFS.h>
 
-struct Line_t* lines_getSingleLine(const char* fileName, Egg_t* selectedEgg) {
-    File lineFile = SPIFFS.open(fileName);
+void lines_getSingleLine(const char* fileName) {
+    char fullPath[8 + strlen(fileName)];
+    snprintf(fullPath, 20, "/lines/%s", fileName);
+
+    File lineFile = SPIFFS.open(fullPath);
 
     struct Line_t* selectedLine = (struct Line_t*) malloc(sizeof(struct Line_t));
     if (selectedLine == NULL) {
@@ -18,6 +22,7 @@ struct Line_t* lines_getSingleLine(const char* fileName, Egg_t* selectedEgg) {
     uint8_t bytesRead = lineFile.read(&selectedLine->id, 1);
     bytesRead += lineFile.readBytes(selectedLine->name, 16);
 
+    Egg_t* selectedEgg = (Egg_t*) malloc(sizeof(Egg_t));
     lines_getSingleEggSprites(lineFile, selectedEgg);
 
     bytesRead += lineFile.read(buffer, 2);
@@ -33,7 +38,8 @@ struct Line_t* lines_getSingleLine(const char* fileName, Egg_t* selectedEgg) {
         bytesRead += lineFile.read((uint8_t*) &selectedLine->characters[i], sizeof(LineChara_t));
     }
 
-    return selectedLine;
+    currentLine[currentCharacter] = selectedLine;
+    currentEgg = selectedEgg;
 }
 
 void lines_getSingleEggSprites(File &lineFile, Egg_t* selectedEgg) {
@@ -73,14 +79,3 @@ void lines_getSingleEggSprites(File &lineFile, Egg_t* selectedEgg) {
 // Son las 22:35, que estoy haciendo?
 // Pues claro
 
-void lines_freeEggList(Egg_t* eggList, uint8_t eggNumber) {
-    for (int i = 0; i < eggNumber; i++) {
-        for (int j = 0; j < eggList[i].eggSprite.spriteNumber; j++) {
-            free(eggList[i].eggSprite.spriteData[j]);
-        }
-
-        free(eggList[i].eggSprite.spriteData);
-    }
-
-    free(eggList);
-}

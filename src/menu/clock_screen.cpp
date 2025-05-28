@@ -8,12 +8,12 @@
 void menu_drawClock(TFT_eSprite &composite, TFT_eSprite &bg, int menuOption) {
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
-        case 4:
-        screenKey = IDLE_SCREEN;
-        break;
+        case K2_PRESSED:
+            screenKey = IDLE_SCREEN;
+            break;
         
         default:
-        break;
+            break;
     }
     
     char hourBuffer[6];
@@ -39,26 +39,25 @@ void menu_drawClockEdit(TFT_eSprite &composite, TFT_eSprite &bg) {
     static int clockMinuteCount = 0;
 
     uint8_t pressedButtons = buttons_getPressedButtons();
-    lastPressedButtonTime = esp_timer_get_time();
 
     switch (pressedButtons) {
-        case 8:
+        case K1_PRESSED:
             clockHourCount = (clockHourCount + 1) % 24;
             break;
 
-        case 4:
+        case K2_PRESSED:
             clockMinuteCount = (clockMinuteCount + 1) % 60;
             break;
         
-        case 2:
+        case K3_PRESSED:
+            // Es un dia random, nada significativo, ya pondre mas adelante que tenga dia del año
             rtc.setTime(0, clockMinuteCount, clockHourCount, 1, 11, 2024);
             getLocalTime(&timeInfo, 50);
             dayUnixTime = mktime(&timeInfo) % 86400;
 
-            screenKey = CLOCK_SCREEN;
-            onActionTimerDelta();
-            vpet_initTimer();
+            coldBoot = false;
 
+            screenKey = CLOCK_SCREEN;
             break; 
 
         default:

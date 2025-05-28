@@ -9,7 +9,16 @@
 uint64_t lastUpdateTime = esp_timer_get_time();
 
 void menu_drawIdleScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* bigUiElements, struct SpriteData* smallUiElements) {
-    if (charaData.sleepy && !charaData.asleep) {
+    if (coldBoot) { 
+        screenKey = TITLE_SCREEN;
+        return;
+    } else if (!charaData.hatched && !charaData.hatching) {
+        screenKey = EGG_EMPTY_SCREEN;
+        return;
+    } else if (!charaData.hatched && charaData.hatching) {
+        screenKey = EGG_HATCH_SCREEN;
+        return;
+    } else if (charaData.sleepy && !charaData.asleep) {
         screenKey = SLEEPY_SCREEN;
         return;
     } else if ((charaData.sleepy && charaData.asleep) || charaData.asleep) {
@@ -20,12 +29,12 @@ void menu_drawIdleScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &s
     uint8_t pressedButtons = buttons_getPressedButtons();
     
     switch (pressedButtons) {
-        case 8:
+        case K1_PRESSED:
             screenKey = MENU_SCREEN;
             menuKey = 0;
             break;
         
-        case 4:
+        case K2_PRESSED:
             screenKey = CLOCK_SCREEN;
             break;
         

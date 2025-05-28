@@ -5,6 +5,10 @@
 
 struct CharacterData {
     // Calculated at runtime
+    bool hatching = false; 
+    bool hatched = false;
+    uint16_t hatchTimer = 0;
+
     uint8_t hunger;
     uint8_t strength;
     uint8_t weight;
@@ -37,6 +41,7 @@ struct CharacterData {
     bool asleep = false;
     bool injured = false;
     bool dead = false;
+    bool traited = true;
     
     // Obtained from structure
     uint8_t idChara;
@@ -50,8 +55,8 @@ struct CharacterData {
     uint8_t stage;
     uint8_t attribute;
 
-    uint32_t sleepTime = 75600;
-    uint32_t wakeupTime = 25200;
+    uint32_t sleepTime;
+    uint32_t wakeupTime;
 
     uint32_t evoTime;
 

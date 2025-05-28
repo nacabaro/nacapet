@@ -14,29 +14,50 @@
 
 const char* TAG = "[MAIN]";
 
+// TFT_eSPI stuff, important
 TFT_eSPI tft = TFT_eSPI();
 TFT_eSprite composite = TFT_eSprite(&tft);
 TFT_eSprite sprite = TFT_eSprite(&tft);
 TFT_eSprite bg = TFT_eSprite(&tft);
 
+// External devices stuff
+MPU6050 mpu;
+ESP32Time rtc(0);
+
+// Sprite data and background data
 struct BackgroundData backgroundData;
 struct SpriteData mainCharacterSprites;
 struct SpriteData menuElementsData;
 struct SpriteData uiElementsData;
 
+// Active character data
+// TODO: Split into CHARA_COUNT_IN_DEVICE times
 struct CharacterData charaData;
+uint8_t currentCharacter = 0;
 
+// Boot flag, tells if the device clock has been initialized
+bool coldBoot = true;
+
+// Screen keys, this tells which screen is being shown the screens state machine
 int screenKey = TITLE_SCREEN;
 int menuKey = STATUS_SCREEN_MENU;
 int submenuKey = -1;
 
-uint32_t dayUnixTime = 0;
+// Step counter, counts steps, duh
+// TODO: Reset with each day, maybe have a log of steps
 uint16_t stepCounter = 0;
 
+// Time stuff, timeInfo is the time structure used by everything, updated in loop2
+// dayUnixTime is used to tell the day time, in UNIX seconds
 struct tm timeInfo;
+uint32_t dayUnixTime = 0;
 
-MPU6050 mpu;
-ESP32Time rtc(0);
+// Egg stuff, initializes it to zero, used by the algorithm to tell if something has
+// been malloc'd into memory,
+Egg_t* eggSelection = NULL;
+uint8_t eggNumber = 0;
+
+// Tasks
 TaskHandle_t secondLoop = NULL;
 
 void loop2();
@@ -54,7 +75,6 @@ void setup() {
 
     storage_init();
     
-    storage_readFile("/sprite.bin", &mainCharacterSprites);
     storage_readFile("/menu.bin", &menuElementsData);
     storage_readFile("/ui.bin", &uiElementsData);
 
@@ -65,21 +85,13 @@ void setup() {
     pinMode(K3_PIN, INPUT_PULLUP);
     pinMode(K4_PIN, INPUT_PULLUP);
 
-    charaData.hunger = 4;
-    charaData.strength = 4;
-    charaData.effort = 4;
-
-    charaData.evoLeftTimer = 60;
-    charaData.hungerCareMistakeTimer = 60;
-    charaData.strengthCareMistakeTimer = 60;
-
     xTaskCreatePinnedToCore(secondCoreTask, "VPET_EVAL", 4096, NULL, 0, &secondLoop, 0);
-
+    
     debug_printFreeMemory();
 
-    lines_testLines(); // REMOVE
+    lines_initLineStorage();
 
-    debug_printFreeMemory();
+    vpet_initTimer();
 }
 
 
@@ -152,6 +164,18 @@ void loop() {
         case HAPPY_SCREEN:
             menu_drawHappyScreen(composite, bg, sprite, &mainCharacterSprites, &uiElementsData);
             break;
+
+        case EGG_HATCH_SCREEN:
+            menu_eggHatchScreen(composite, bg, sprite, &menuElementsData, &uiElementsData);
+            break;
+        
+        case EGG_SELECT_SCREEN:
+            menu_lineSwitcher(composite, bg, sprite, &uiElementsData);
+            break;
+
+        case EGG_EMPTY_SCREEN:
+            menu_drawDeathScreen(composite, bg, sprite, &menuElementsData, &uiElementsData);
+            break;       
     }
 }
 
@@ -159,6 +183,9 @@ void loop2() {
     steps_countSteps();
     buttons_checkInactivity();
     vpet_runVpetTasks();
+
+    getLocalTime(&timeInfo, 50);
+    dayUnixTime = mktime(&timeInfo) % 86400;
 }
 
 void secondCoreTask(void*) {

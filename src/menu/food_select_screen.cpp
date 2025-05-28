@@ -37,6 +37,7 @@ void menu_foodScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainC
                 if (charaData.hunger < 8) {
                     charaData.weight++;
                     charaData.hunger++;
+                    charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
                     screenKey = FEEDING_SCREEN;
                     submenuKey = FOOD_ICON;
                 } else {
@@ -48,6 +49,7 @@ void menu_foodScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainC
                 if (charaData.strength < 8) {
                     charaData.strength++;
                     charaData.weight += 2;
+                    charaData.strengthCareMistakeTimer = charaData.initialStatsReductionTime;
                     screenKey = FEEDING_SCREEN;
                     submenuKey = PILL_ICON;
                 } else {

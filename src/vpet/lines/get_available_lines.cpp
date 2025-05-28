@@ -1,12 +1,17 @@
 #include "lines.h"
 #include "memory/memory.h"
+#include "defs/defs.h"
 
 #include "SPIFFS.h"
 
 const char lineHeader[5] = "NPET"; 
 const uint8_t headerSize = 4;
 
-struct Egg_t* lines_getAvailableLines(uint8_t* count) {
+void lines_getAvailableLines() {
+    if (eggSelection != NULL) {
+        return;
+    }
+    
     File root = SPIFFS.open("/lines");
     File lineFile = root.openNextFile();
 
@@ -28,7 +33,6 @@ struct Egg_t* lines_getAvailableLines(uint8_t* count) {
 
     root.close();
 
-    printf("[LINES] Found %i lines.\n", allocCount);
     allocCount = 0;
 
     root = SPIFFS.open("/lines");
@@ -73,34 +77,6 @@ struct Egg_t* lines_getAvailableLines(uint8_t* count) {
 
     root.close();
 
-    *count = allocCount;
-    return availableLines;
-}
-
-void lines_testLines() {
-    uint8_t countedLines;
-    struct Egg_t* availableLines = lines_getAvailableLines(&countedLines);
-
-    char fullPath[8 + strlen(availableLines[0].fileName)];
-    snprintf(fullPath, 20, "/lines/%s", availableLines[0].fileName);
-
-    lines_freeEggList(availableLines, countedLines);
-    
-    printf("[DEBUG] fullPath=%s\n", fullPath);
-
-    availableLines = (Egg_t*) malloc(sizeof(Egg_t));
-
-    struct Line_t* singleLine = lines_getSingleLine(fullPath, availableLines);
-        
-    lines_freeEggList(availableLines, 1);
-
-    struct LineCare_t* lineCareData = lines_getLineCareMistakes(availableLines->fileName);
-
-    for (int i = 0; i < lineCareData->numCareMistakesData; i++) {
-        printf(
-            "[DEBUG] Chara %d changes into chara %d\n", 
-            lineCareData->careMistakeData[i].currentChara, 
-            lineCareData->careMistakeData[i].nextChara
-        );
-    }
+    eggNumber = allocCount;
+    eggSelection = availableLines;
 }

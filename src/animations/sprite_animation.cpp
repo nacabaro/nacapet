@@ -93,3 +93,17 @@ void animate_performHappyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct
         false
     );
 }
+
+void animate_performHatchingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData) {
+    currentAnimationFrame = (currentAnimationFrame + 1) % numFramesHappy;
+    draw_drawSprite(
+        buffer,
+        spr,
+        hatchingAnimationPositions[currentAnimationFrame],
+        spriteHeightOnScreen,
+        spriteData,
+        0,
+        6,
+        false
+    );
+}

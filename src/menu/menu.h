@@ -40,5 +40,9 @@ void menu_drawHappyScreen(
     TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite,
     struct SpriteData* spriteData, struct SpriteData* smallUiElements
 );
+void menu_lineSwitcher(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiSmallSprite);
+void menu_eggHatchScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite);
+void menu_reloadEggs(uint8_t selectedEgg);
+void menu_drawDeathScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite);
 
 #endif

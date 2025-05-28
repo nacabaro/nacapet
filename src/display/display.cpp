@@ -3,7 +3,7 @@
 void tft_initDisplay(TFT_eSPI &tft, uint16_t color) {
     tft.init();
     tft.setRotation(0);
-    tft.fillScreen(TFT_RED);
+    tft.fillScreen(color);
 }
 
 void tft_initScreenBuffer(TFT_eSprite &buffer, uint16_t color) {

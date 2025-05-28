@@ -152,7 +152,11 @@ void vpet_evalTimers() {
             screenKey = TIMER_FINISHED_SCREEN;
             interruptKey = POOPING_SCREEN;
             charaData.poopNumber++;
-            charaData.hungerCareMistakeTimer = 60;
+            if (charaData.hunger > 0) {
+                charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
+            } else {
+                charaData.hungerCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+            }
         } 
 
         if (!charaData.hungerCareMistakeObtained) {
@@ -172,7 +176,11 @@ void vpet_evalTimers() {
 
         if (charaData.strength > 0) {
             charaData.strength--;
-            charaData.strengthCareMistakeTimer = 60;
+            if (charaData.strength > 0) {
+                charaData.strengthCareMistakeTimer = charaData.initialStatsReductionTime;
+            } else {
+                charaData.strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+            }
         } 
 
         if (!charaData.strengthCareMistakeObtained) {
@@ -198,7 +206,7 @@ void IRAM_ATTR onActionTimerDelta() {
 }
 
 void vpet_runVpetTasks() {
-    if (runVpetTasks) {
+    if (runVpetTasks && charaData.hatched) {
         vpet_computeCallLight();
         if (!vpet_evalSleep()) {
             vpet_evalTimers();
@@ -212,5 +220,14 @@ void vpet_runVpetTasks() {
         printf("[MAIN]: Is sleep care mistake tripped? %d\n", charaData.sleepCareMistakeObtained);
 
         runVpetTasks = false;
-    } 
+    } else if (runVpetTasks && !charaData.hatched && charaData.hatching) {
+        charaData.hatchTimer++;
+        printf("[DEBUG] hatchTimer=%i out of hatchTimer=%i\n", charaData.hatchTimer, currentLine[currentCharacter]->hatchTime);
+        if (charaData.hatchTimer > currentLine[currentCharacter]->hatchTime) {
+            interruptKey = EGG_HATCH_SCREEN;
+            screenKey = TIMER_FINISHED_SCREEN;
+        }
+
+        runVpetTasks = false;
+    }
 }

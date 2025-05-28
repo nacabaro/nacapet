@@ -1,9 +1,10 @@
 #include "lines.h"
 #include "defs/file_chara.h"
+#include "defs/defs.h"
 
 #include "SPIFFS.h"
 
-struct LineCare_t* lines_getLineCareMistakes(const char* fileName) {
+void lines_getLineCareMistakes(const char* fileName) {
     char careMistakesPath[strlen(fileName) + 8];
     snprintf(careMistakesPath, strlen(fileName) + 8, "/care/%s", fileName);
 
@@ -26,5 +27,5 @@ struct LineCare_t* lines_getLineCareMistakes(const char* fileName) {
         bytesRead += careMistakesFile.read((uint8_t*) &careMistakesData->careMistakeData[i], sizeof(CareMistakes_t));
     }
 
-    return careMistakesData;
+    currentLineCareInstr[currentCharacter] = careMistakesData; 
 }
