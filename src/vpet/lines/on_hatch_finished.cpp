@@ -14,23 +14,24 @@ void lines_onHatchComplete() {
 
     storage_readFile(spriteFileName, &mainCharacterSprites);
 
+    // Primero los datos del bicho actual en nuestra estructura de datos de confianza
     charaData.hp = currentLine[currentCharacter]->characters[0].hp;
     charaData.bp = currentLine[currentCharacter]->characters[0].bp;
     charaData.ap = currentLine[currentCharacter]->characters[0].ap;
 
     charaData.stage = currentLine[currentCharacter]->characters[0].stage;
     charaData.attribute = currentLine[currentCharacter]->characters[0].attribute;
-
-    charaData.sleepTime = currentLine[currentCharacter]->characters[0].sleepTime;
-    charaData.wakeupTime = currentLine[currentCharacter]->characters[0].wakeTime;
-    charaData.evoLeftTimer = currentLine[currentCharacter]->characters[0].changeTime;
-    charaData.evoTime = currentLine[currentCharacter]->characters[0].changeTime;
-
-    charaData.hungerCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
-    charaData.strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+    
+    charaData.sleepTime = charaData.initialSleepTime = currentLine[currentCharacter]->characters[0].sleepTime;
+    charaData.wakeupTime = charaData.initialWakeupTime = currentLine[currentCharacter]->characters[0].wakeTime;
+    charaData.initialChangeTimer = charaData.changeTimerLeft = currentLine[currentCharacter]->characters[0].changeTime;
 
     charaData.initialStatsReductionTime = currentLine[currentCharacter]->characters[0].depleteTime;
     charaData.minWeight = currentLine[currentCharacter]->characters[0].minWeight;
+
+    // Luego le obligamos a que nazca con hambre
+    charaData.hungerCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+    charaData.strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
 
     charaData.hatched = true;
 }

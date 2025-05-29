@@ -32,12 +32,14 @@ void menu_foodScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainC
     }
     
     if (pressedButtons == 4) {
+        lastUpdateTime = 0;
         switch(arrowPosition) {
             case 0:
                 if (charaData.hunger < 8) {
+                    charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
+                    charaData.hungerCareMistakeObtained = false;
                     charaData.weight++;
                     charaData.hunger++;
-                    charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
                     screenKey = FEEDING_SCREEN;
                     submenuKey = FOOD_ICON;
                 } else {
@@ -47,18 +49,20 @@ void menu_foodScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainC
                         charaData.overfeedHappened = true;
                     }
                 }
+                return;
                 break;
 
             case 1:
                 if (charaData.strength < 8) {
+                    charaData.strengthCareMistakeTimer = charaData.initialStatsReductionTime;
                     charaData.strength++;
                     charaData.weight += 2;
-                    charaData.strengthCareMistakeTimer = charaData.initialStatsReductionTime;
                     screenKey = FEEDING_SCREEN;
                     submenuKey = PILL_ICON;
                 } else {
                     screenKey = REFUSING_SCREEN;
                 }
+                return;
                 break;
             
             default:

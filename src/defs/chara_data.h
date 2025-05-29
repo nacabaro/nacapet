@@ -15,10 +15,11 @@ struct CharacterData {
     uint8_t age;
     uint8_t poopNumber;
     
-    uint8_t careMistakes;
-    uint8_t effort;
-    uint8_t overfeed;
-    uint8_t sleepDisturbances;
+    uint8_t careMistakes = 0;
+    uint8_t effort = 0;
+    uint8_t overfeed = 0;
+    uint8_t sleepDisturbances = 0;
+    uint8_t injuries = 0;
 
     uint16_t stageTotalBattled;
     uint16_t stageTotalWon;
@@ -27,7 +28,7 @@ struct CharacterData {
     uint16_t charaTotalWon;
 
     int32_t sleepCareMistakeCounter = 0;
-    int32_t evoLeftTimer;
+    int32_t changeTimerLeft;
     int16_t hungerCareMistakeTimer;
     int16_t strengthCareMistakeTimer;
 
@@ -38,11 +39,17 @@ struct CharacterData {
     bool careMistakeCallLight = false;
     bool overfeedHappened = false;
 
+    uint32_t sleepTime;
+    uint32_t wakeupTime;
+
     bool sleepy = false;
     bool asleep = false;
     bool injured = false;
     bool dead = false;
     bool traited = true;
+
+    // Usado para recalcular cuantos dias van a tardar en recuperarse, max 5 pls
+    uint8_t dynamicSleepDists; 
     
     // Obtained from structure
     uint8_t idChara;
@@ -56,10 +63,10 @@ struct CharacterData {
     uint8_t stage;
     uint8_t attribute;
 
-    uint32_t sleepTime;
-    uint32_t wakeupTime;
+    uint32_t initialSleepTime;
+    uint32_t initialWakeupTime;
 
-    uint32_t evoTime;
+    uint32_t initialChangeTimer;
 
     uint16_t initialStatsReductionTime = 600;
     uint8_t minWeight;

@@ -59,9 +59,11 @@ uint8_t eggNumber = 0;
 
 // Tasks
 TaskHandle_t secondLoop = NULL;
+TaskHandle_t readSteps = NULL;
 
 void loop2();
 void secondCoreTask(void*);
+void loop_readSteps(void*);
 
 void setup() {
     Serial.begin(115200);
@@ -175,15 +177,18 @@ void loop() {
             menu_drawDeathScreen(composite, bg, sprite, &menuElementsData, &uiElementsData);
             break;       
     }
+
+    if (screenKey == IDLE_SCREEN || screenKey == OFF_SCREEN) {
+        steps_countSteps();
+    }
 }
 
 void loop2() {
-    steps_countSteps();
     buttons_checkInactivity();
     vpet_runVpetTasks();
 
     getLocalTime(&timeInfo, 50);
-    dayUnixTime = mktime(&timeInfo) % 86400;
+    dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
 }
 
 void secondCoreTask(void*) {

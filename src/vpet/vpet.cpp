@@ -37,6 +37,15 @@ bool vpet_evalSleep() {
 
         charaData.sleepy = false;
         charaData.asleep = false;
+        
+        if (charaData.dynamicSleepDists > 0) {
+            // Primero, el sleep time ahora está reventado, hay que restaurarlo
+            // fácil, simplemente recalcula a la hora de despertar
+            charaData.dynamicSleepDists--;
+
+            charaData.sleepTime = (charaData.initialSleepTime + (charaData.dynamicSleepDists * 3600)) % SECONDS_IN_DAY;
+            charaData.wakeupTime = (charaData.initialWakeupTime + (charaData.dynamicSleepDists * 3600)) % SECONDS_IN_DAY; 
+        }
 
         return false;
         
@@ -44,7 +53,7 @@ bool vpet_evalSleep() {
         dayUnixTime < charaData.sleepTime && 
         dayUnixTime > charaData.wakeupTime &&
         charaData.asleep &&
-        charaData.sleepCareMistakeCounter < 60
+        charaData.sleepCareMistakeCounter < SLEEP_COUNTER_MAX
         // Esto se ejecuta cuando mandamos a dormir al personaje
         // durante el dia. 
         // Resultado, el personaje deberia de dormir una siesta
@@ -57,7 +66,7 @@ bool vpet_evalSleep() {
         dayUnixTime < charaData.sleepTime && 
         dayUnixTime > charaData.wakeupTime &&
         charaData.asleep &&
-        charaData.sleepCareMistakeCounter >= 60
+        charaData.sleepCareMistakeCounter >= SLEEP_COUNTER_MAX
         // Esto se ejecuta cuando la siesta del personaje acaba
         // Resultado, el personaje se despierta
     ) {
@@ -88,7 +97,7 @@ bool vpet_evalSleep() {
 
     } else if (
         charaData.sleepy && !charaData.asleep &&
-        charaData.sleepCareMistakeCounter < 60 &&
+        charaData.sleepCareMistakeCounter < SLEEP_COUNTER_MAX &&
         !charaData.sleepCareMistakeObtained
         // Esto se ejecuta cuando el personaje debería de estar durmiendo
         // pero no se le ha mandado a dormir, empieza a contar para pasar
@@ -100,7 +109,7 @@ bool vpet_evalSleep() {
 
     } else if (
         charaData.sleepy && !charaData.asleep &&
-        charaData.sleepCareMistakeCounter >= 60 &&
+        charaData.sleepCareMistakeCounter >= SLEEP_COUNTER_MAX &&
         !charaData.sleepCareMistakeObtained
         // Esto se ejecuta cuando el personaje deberia de estar durmiendo 
         // pero no se le ha mandado a dormir, y el contador ya ha llegado
@@ -135,74 +144,78 @@ bool vpet_evalSleep() {
 }
 
 void vpet_evalTimers() {
-    if (charaData.hungerCareMistakeTimer >= 0) {
-        charaData.hungerCareMistakeTimer -= 1;
-    }
+    vpet_evalHungerTimer();
+    vpet_evalStrengthTimer();
+}
 
-    if (charaData.strengthCareMistakeTimer >= 0) {
-        charaData.strengthCareMistakeTimer -= 1;
-    }
+void vpet_evalHungerTimer() {
+    if (charaData.hungerCareMistakeTimer > 0) {
+        charaData.hungerCareMistakeTimer--;
 
-    if (
-        charaData.hungerCareMistakeTimer < 0 ||
-        charaData.strengthCareMistakeTimer < 0
+    } else if (
+        charaData.hungerCareMistakeTimer <= 0 &&
+        charaData.hunger > 0
     ) {
+        charaData.hunger--;
+
         if (charaData.hunger > 0) {
-            charaData.hunger--;
+            charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
             screenKey = TIMER_FINISHED_SCREEN;
             interruptKey = POOPING_SCREEN;
+        } else {
+            charaData.hungerCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+            screenKey = TIMER_FINISHED_SCREEN;
+            interruptKey = CARE_MISTAKE_SCREEN;
+        }
+
+        if (charaData.poopNumber < 8) {
             charaData.poopNumber++;
-            if (charaData.hunger < 4 && charaData.overfeedHappened) {
-                charaData.overfeedHappened = false;
-            }
-            if (charaData.hunger > 0) {
-                charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
-            } else {
-                charaData.hungerCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
-            }
-        } 
-
-        if (!charaData.hungerCareMistakeObtained) {
-            if (
-                charaData.hunger == 0 && 
-                charaData.hungerCareMistakeTimer < 0
-            ) {
-                charaData.careMistakes++;
-                charaData.hungerCareMistakeObtained = true;
-                
-            } else if (charaData.hunger == 0) {
-                interruptKey = POOPING_SCREEN;
-                screenKey = TIMER_FINISHED_SCREEN;
-                charaData.poopNumber++;
-            }
+        } else {
+            charaData.injured = true;
+            charaData.injuries++;
         }
 
-        if (charaData.strength > 0) {
-            charaData.strength--;
-            if (charaData.strength > 0) {
-                charaData.strengthCareMistakeTimer = charaData.initialStatsReductionTime;
-            } else {
-                charaData.strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
-            }
-        } 
+    } else if (
+        charaData.hungerCareMistakeTimer <= 0 &&
+        charaData.hunger == 0 &&
+        !charaData.hungerCareMistakeObtained
+    ) {
+        charaData.hungerCareMistakeObtained = true;
+        charaData.careMistakes++;
 
-        if (!charaData.strengthCareMistakeObtained) {
-            if (
-                charaData.strength == 0 && 
-                charaData.strengthCareMistakeTimer < 0
-            ) {
-                charaData.careMistakes++;
-                charaData.strengthCareMistakeObtained = true;
-    
-            } else if(charaData.strength == 0) {
-                if (interruptKey != POOPING_SCREEN) {
-                    interruptKey = CARE_MISTAKE_SCREEN;
-                    screenKey = TIMER_FINISHED_SCREEN;
-                }
-            }
-        }
     }
 }
+
+void vpet_evalStrengthTimer() {
+    if (charaData.strengthCareMistakeTimer > 0) {
+        charaData.strengthCareMistakeTimer--;
+
+    } else if (
+        charaData.strengthCareMistakeTimer <= 0 &&
+        charaData.strength > 0
+    ) {
+        charaData.strength--;
+        if (charaData.strength > 0) {
+            charaData.strengthCareMistakeTimer = charaData.initialStatsReductionTime;
+        } else {
+            charaData.strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+            if (interruptKey != POOPING_SCREEN) {
+                interruptKey = CARE_MISTAKE_SCREEN;
+                screenKey = TIMER_FINISHED_SCREEN;
+            }
+        }
+
+    } else if (
+        charaData.strengthCareMistakeTimer <= 0 &&
+        charaData.strength == 0 &&
+        !charaData.strengthCareMistakeObtained
+    ) {
+        charaData.strengthCareMistakeObtained = true;
+        charaData.careMistakes++;
+
+    }
+}
+
 
 void IRAM_ATTR onActionTimerDelta() {
     runVpetTasks = true;
@@ -214,15 +227,17 @@ void vpet_runVpetTasks() {
         if (!vpet_evalSleep()) {
             vpet_evalTimers();
         }
+
         printf("[MAIN]: Hunger timer %d, hunger %d\n", charaData.hungerCareMistakeTimer, charaData.hunger);
         printf("[MAIN]: Strength timer %d, strength %d\n", charaData.strengthCareMistakeTimer, charaData.strength);
-        printf("[MAIN]: Evo timer %d\n", charaData.evoLeftTimer);
+        printf("[MAIN]: Change timer %d\n", charaData.changeTimerLeft);
         printf("[MAIN]: RTC time is %d\n", dayUnixTime);
         printf("[MAIN]: Sleep counter is %d\n", charaData.sleepCareMistakeCounter);
         printf("[MAIN]: Care mistake count is %d\n", charaData.careMistakes);
         printf("[MAIN]: Is sleep care mistake tripped? %d\n", charaData.sleepCareMistakeObtained);
 
         runVpetTasks = false;
+
     } else if (runVpetTasks && !charaData.hatched && charaData.hatching) {
         charaData.hatchTimer++;
         printf("[DEBUG] hatchTimer=%i out of hatchTimer=%i\n", charaData.hatchTimer, currentLine[currentCharacter]->hatchTime);

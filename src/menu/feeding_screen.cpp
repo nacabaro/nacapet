@@ -11,6 +11,29 @@ void menu_feedingScreen(
     static int currentAnimationFrame = 0;
     
     uint64_t currentTime = esp_timer_get_time();
+    
+    if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
+        draw_drawBackground(composite, bg, 90, 90, 3);
+        
+        tft_clearBuffer(charaSprite, TFT_TRANSPARENT);
+        animate_performEatingAnimation(composite, charaSprite, charaSpriteData);
+        
+        tft_clearBuffer(charaSprite, TFT_TRANSPARENT);
+        draw_drawSprite(composite, charaSprite, 24, 120, uiSpriteData, item, 6);
+        
+        lastUpdateTime = currentTime;
+        currentAnimationFrame++;
+    }
+    
+    if (currentAnimationFrame > 6) {
+        screenKey = FOOD_SCREEN;
+        lastPressedButtonTime = currentTime;
+        currentAnimationFrame = 0;
+        submenuKey = -1;
+    } 
+    
+    tft_drawBuffer(composite);
+    
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
         case 8: 
@@ -24,26 +47,4 @@ void menu_feedingScreen(
         default:
             break;
     }
-
-    if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
-        draw_drawBackground(composite, bg, 90, 90, 3);
-
-        tft_clearBuffer(charaSprite, TFT_TRANSPARENT);
-        animate_performEatingAnimation(composite, charaSprite, charaSpriteData);
-
-        tft_clearBuffer(charaSprite, TFT_TRANSPARENT);
-        draw_drawSprite(composite, charaSprite, 24, 120, uiSpriteData, item, 6);
-
-        lastUpdateTime = currentTime;
-        currentAnimationFrame++;
-    }
-
-    if (currentAnimationFrame > 6) {
-        screenKey = FOOD_SCREEN;
-        lastPressedButtonTime = currentTime;
-        currentAnimationFrame = 0;
-        submenuKey = -1;
-    } 
-
-    tft_drawBuffer(composite);
 }

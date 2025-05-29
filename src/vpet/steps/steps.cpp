@@ -2,8 +2,8 @@
 #include "defs/defs.h"
 
 float gravity     = 0.0;
-const float alpha = 0.99;
-const float thresh = 0.80; 
+const float alpha = 0.95;
+const float thresh = 0.40; 
 uint64_t lastStepTime = esp_timer_get_time();
 
 
@@ -22,7 +22,7 @@ void steps_countSteps() {
     float dyn = mag - gravity;
   
     unsigned long now = esp_timer_get_time();
-    if (dyn > thresh && (now - lastStepTime) > 500000) {
+    if (dyn > thresh && (now - lastStepTime) > 250000) {
         stepCounter++;
         lastStepTime = now;
     }

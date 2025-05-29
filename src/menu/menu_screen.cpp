@@ -17,11 +17,11 @@ void menu_drawCurrentMenuOption(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSp
     uint8_t pressedButtons = buttons_getPressedButtons();
 
     switch (pressedButtons) {
-        case 8:
+        case K1_PRESSED:
             menuKey++;
             break;
 
-        case 2:
+        case K3_PRESSED:
             screenKey = IDLE_SCREEN;
             menuKey = STATUS_SCREEN_MENU;
             return;
@@ -31,7 +31,8 @@ void menu_drawCurrentMenuOption(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSp
             break;
     }
 
-    if (pressedButtons == 4) {
+    // Separaíto mas guapito
+    if (pressedButtons == K2_PRESSED) {
         switch (menuKey) {
             case STATUS_SCREEN_MENU:
                 screenKey = STATUS_SCREEN;
@@ -42,10 +43,7 @@ void menu_drawCurrentMenuOption(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSp
                 break;
 
             case SLEEP_SCREEN_MENU:
-                charaData.asleep = true;
-                vpet_computeCallLight();
-                menuKey = STATUS_SCREEN;
-                screenKey = SLEEP_SCREEN;
+                menu_sleepScreen_sleepAction();
                 break;
 
             case POOP_SCREEN_MENU:
@@ -106,4 +104,36 @@ void menu_drawCurrentMenuOption(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSp
     menu_uiOverlay(composite, icon, spriteData);
 
     tft_drawBuffer(composite);
+}
+
+void menu_sleepScreen_sleepAction() {
+    if (charaData.asleep && charaData.sleepy) {
+        menu_sleepScreen_recalculateSleep();
+
+        charaData.sleepy = false;
+        charaData.asleep = false;
+
+        charaData.sleepDisturbances++;
+
+        menuKey = STATUS_SCREEN;
+        screenKey = IDLE_SCREEN;
+
+    } else {
+        charaData.asleep = true;
+
+        vpet_computeCallLight();    // Lo hago por cortesia, no me gusta
+
+        menuKey = STATUS_SCREEN;
+        screenKey = SLEEP_SCREEN;
+    }
+}
+
+void menu_sleepScreen_recalculateSleep() {
+    uint32_t newSleepTime = (dayUnixTime + 3600) % SECONDS_IN_DAY;
+    uint32_t newWakeUpTime = charaData.wakeupTime + 3600;
+
+    charaData.sleepTime = newSleepTime;
+    charaData.wakeupTime = newWakeUpTime;
+
+    charaData.dynamicSleepDists++;
 }

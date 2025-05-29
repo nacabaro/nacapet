@@ -49,6 +49,8 @@ void menu_reloadEggs(uint8_t selectedEgg) {
 
     lines_freeEggList();
     
+    printf("[DEBUG] fileName=%s\n", fileName);
+
     lines_getSingleLine(fileName);
     lines_getLineCareMistakes(fileName);
 

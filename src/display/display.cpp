@@ -1,8 +1,11 @@
 #include "display.h"
 
+int xPos = 0;
+int yPos = 0;
+
 void tft_initDisplay(TFT_eSPI &tft, uint16_t color) {
     tft.init();
-    tft.setRotation(0);
+    tft.setRotation(1);
     tft.fillScreen(color);
 }
 
@@ -15,7 +18,7 @@ void tft_initScreenBuffer(TFT_eSprite &buffer, uint16_t color) {
 }
 
 void tft_drawBuffer(TFT_eSprite &buffer) {
-    buffer.pushSprite(0, 0);
+    buffer.pushSprite(xPos * -80, yPos * -112);
 }
 
 void tft_clearBuffer(TFT_eSprite &buffer, uint16_t color) {

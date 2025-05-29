@@ -113,6 +113,8 @@
 #define EMPTY_HEART_ICON 10
 #define CLEANER_ICON 11
 
+#define SECONDS_IN_DAY 86400
+
 // STANDARD VPET PARAMETER (CARE MISTAKES)
 #define CARE_MISTAKE_COUNTER_MAX 60
 #define SLEEP_CARE_MISTAKE_COUNTER_MAX 60
@@ -131,6 +133,8 @@
 #define K3_PRESSED 2
 #define K4_PRESSED 1
 #define NONE_PRESSED 0
+
+#define SCALE_FACTOR 3
 
 #define CHARA_COUNT_IN_DEVICE 5
 
@@ -178,5 +182,13 @@ extern LineCare_t** currentLineCareInstr;
 extern Line_t** currentLine;
 
 extern struct SpriteData mainCharacterSprites;
+
+// ALTAMENTE TEMPORAL
+extern int xPos;
+extern int yPos;
+
+#include <TFT_eSPI.h>
+
+extern TFT_eSPI tft;
 
 #endif

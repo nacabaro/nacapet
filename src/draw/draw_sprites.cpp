@@ -2,6 +2,9 @@
 
 #include "defs/sprite_data.h"
 
+#define BUFFER_X 239
+#define BUFFER_Y 239
+
 const char* TAG_D = "[DRAW]";
 
 void draw_drawSprite(
@@ -39,10 +42,10 @@ void draw_drawSpriteCentered(
     TFT_eSprite &buffer, TFT_eSprite &spr,
     struct SpriteData* spriteData, uint8_t spriteNumber, uint8_t factor, bool flipped, int y
 ) {
-    int x = (TFT_WIDTH - (spriteData->spriteWidth * factor)) / 2;
+    int x = (BUFFER_X - (spriteData->spriteWidth * factor)) / 2;
     int new_y; 
     if (y == -1) {
-        new_y = (TFT_HEIGHT - (spriteData->spriteHeight * factor)) / 2;
+        new_y = (BUFFER_Y - (spriteData->spriteHeight * factor)) / 2;
     } else {
         new_y = y;
     }
