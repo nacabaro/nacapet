@@ -11,12 +11,16 @@
 #include "vpet/vpet.h"
 #include "vpet/steps/steps.h"
 #include "vpet/lines/lines.h"
+#include "energy/energy.h"
+#include "driver/rtc_io.h"
+
 
 const char* TAG = "[MAIN]";
 
 // TFT_eSPI stuff, important
 TFT_eSPI tft = TFT_eSPI();
-TFT_eSprite composite = TFT_eSprite(&tft);
+TFT_eSprite composite1 = TFT_eSprite(&tft);
+TFT_eSprite composite2 = TFT_eSprite(&tft);
 TFT_eSprite sprite = TFT_eSprite(&tft);
 TFT_eSprite bg = TFT_eSprite(&tft);
 
@@ -66,14 +70,14 @@ void secondCoreTask(void*);
 void loop_readSteps(void*);
 
 void setup() {
-    Serial.begin(115200);
+    //Serial.begin(115200);
     delay(100); // Give MPU6050 and ESP32 time to power up
 
     Wire.begin(MPU_SDA_PIN, MPU_SCL_PIN);  // I2C init before MPU6050
     mpu.initialize();
 
     tft_initDisplay(tft, TFT_BLACK);
-    tft_initScreenBuffer(composite, TFT_BLACK);
+    tft_initScreenBuffer(TFT_BLACK);
 
     storage_init();
     
@@ -82,99 +86,106 @@ void setup() {
 
     storage_initBackground("/bg.bin", bg);
 
-    pinMode(K1_PIN, INPUT_PULLUP);
-    pinMode(K2_PIN, INPUT_PULLUP);
-    pinMode(K3_PIN, INPUT_PULLUP);
-    pinMode(K4_PIN, INPUT_PULLUP);
+    pinMode(K1_PIN, INPUT_PULLDOWN);
+    pinMode(K2_PIN, INPUT_PULLDOWN);
+    pinMode(K3_PIN, INPUT_PULLDOWN);
+    pinMode(K4_PIN, INPUT_PULLDOWN);
 
     xTaskCreatePinnedToCore(secondCoreTask, "VPET_EVAL", 4096, NULL, 0, &secondLoop, 0);
     
     lines_initLineStorage();
 
     vpet_initTimer();
+
+    energy_setUpLightSleep();
 }
 
 
 void loop() { 
+    if (screenOff) {
+        printf("[TEST] Going to sleep\n");
+        energy_startLightSleep();
+    }
+
     switch (screenKey) {
         case TITLE_SCREEN:
-            menu_drawTitle(composite, bg);
+            menu_drawTitle(bg);
             break;
 
         case CLOCK_EDIT_SCREEN:
-            menu_drawClockEdit(composite, bg);
+            menu_drawClockEdit(bg);
             break;
 
         case CLOCK_SCREEN:
-            menu_drawClock(composite, bg, menuKey);
+            menu_drawClock(bg);
             break;
 
         case IDLE_SCREEN:
-            menu_drawIdleScreen(composite, bg, sprite, &mainCharacterSprites, &menuElementsData, &uiElementsData);
+            menu_drawIdleScreen(bg, sprite, &mainCharacterSprites, &menuElementsData, &uiElementsData);
             break;
 
         case MENU_SCREEN:
-            menu_drawCurrentMenuOption(composite, bg, sprite, &menuElementsData);
+            menu_drawCurrentMenuOption(bg, sprite, &menuElementsData);
             break;
 
         case STATUS_SCREEN: 
-            menu_statusScreen(composite, bg, sprite, &uiElementsData, &charaData);
+            menu_statusScreen(bg, sprite, &uiElementsData, &charaData);
             break;
 
         case OFF_SCREEN:
-            menu_offScreen(composite);
+            menu_offScreen();
             break;
 
         case TIMER_FINISHED_SCREEN:
-            menu_timerFinishedScreen(composite, bg, sprite, &mainCharacterSprites);
+            menu_timerFinishedScreen(bg, sprite, &mainCharacterSprites);
             break;
 
         case FOOD_SCREEN:
-            menu_foodScreen(composite, bg, sprite, &uiElementsData);
+            menu_foodScreen(bg, sprite, &uiElementsData);
             break;
 
         case FEEDING_SCREEN:
-            menu_feedingScreen(composite, bg, sprite, &uiElementsData, &mainCharacterSprites, submenuKey);
+            menu_feedingScreen(bg, sprite, &uiElementsData, &mainCharacterSprites, submenuKey);
             break;
 
         case REFUSING_SCREEN:
-            menu_refuseScreen(composite, bg, sprite, &mainCharacterSprites);
+            menu_refuseScreen(bg, sprite, &mainCharacterSprites);
             break;
 
         case SLEEPY_SCREEN:
-            menu_sleepyScreen(composite, bg, sprite, &mainCharacterSprites, &menuElementsData);
+            menu_sleepyScreen(bg, sprite, &mainCharacterSprites, &menuElementsData);
             break;
 
         case SLEEP_SCREEN:
-            menu_sleepingScreen(composite, bg, sprite, &mainCharacterSprites, &menuElementsData, &uiElementsData);
+            menu_sleepingScreen(bg, sprite, &mainCharacterSprites, &menuElementsData, &uiElementsData);
             break;
 
         case CARE_MISTAKE_SCREEN:
-            menu_careMistakeScreen(composite, bg, sprite, &mainCharacterSprites, &menuElementsData);
+            menu_careMistakeScreen(bg, sprite, &mainCharacterSprites, &menuElementsData);
             break;
 
         case POOPING_SCREEN:
-            menu_poopScreen(composite, bg, sprite, &mainCharacterSprites, &uiElementsData, &menuElementsData);
+            menu_poopScreen(bg, sprite, &mainCharacterSprites, &uiElementsData, &menuElementsData);
             break;
 
         case CLEAR_POOP_SCREEN:
-            menu_clearPoopScreen(composite, bg, sprite, &mainCharacterSprites, &menuElementsData, &uiElementsData);
+            menu_clearPoopScreen(bg, sprite, &mainCharacterSprites, &menuElementsData, &uiElementsData);
             break;
 
         case HAPPY_SCREEN:
-            menu_drawHappyScreen(composite, bg, sprite, &mainCharacterSprites, &uiElementsData);
+            menu_drawHappyScreen(bg, sprite, &mainCharacterSprites, &uiElementsData);
             break;
 
         case EGG_HATCH_SCREEN:
-            menu_eggHatchScreen(composite, bg, sprite, &menuElementsData, &uiElementsData);
+            menu_eggHatchScreen(bg, sprite, &menuElementsData, &uiElementsData);
             break;
         
         case EGG_SELECT_SCREEN:
-            menu_lineSwitcher(composite, bg, sprite, &uiElementsData);
+            menu_lineSwitcher(bg, sprite, &uiElementsData);
             break;
 
         case EGG_EMPTY_SCREEN:
-            menu_drawDeathScreen(composite, bg, sprite, &menuElementsData, &uiElementsData);
+            menu_drawDeathScreen( bg, sprite, &menuElementsData, &uiElementsData);
             break;       
     }
 

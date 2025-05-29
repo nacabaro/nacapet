@@ -6,7 +6,7 @@
 #include "display/display.h"
 #include "draw/draw.h"
 
-void menu_statusScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct CharacterData* charaData) {
+void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct CharacterData* charaData) {
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
 
     uint8_t pressedButtons = buttons_getPressedButtons();
@@ -19,27 +19,25 @@ void menu_statusScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &spr
             break;
     }
 
-    draw_drawBackground(composite, bg, 90, 90, 3);
-    composite.setTextSize(4);
+    draw_drawBackground(bg, 90, 90, 3);
 
-    menu_statusScreen_drawStat(composite, sprite, spriteData, 10, 10, "Hunger", charaData->hunger);
-    menu_statusScreen_drawStat(composite, sprite, spriteData, 10, 80, "Strength", charaData->strength);
-    menu_statusScreen_drawStat(composite, sprite, spriteData, 10, 150, "Effort", charaData->effort);
+    menu_statusScreen_drawStat(sprite, spriteData, 10, 10, "Hunger", charaData->hunger);
+    menu_statusScreen_drawStat(sprite, spriteData, 10, 80, "Strength", charaData->strength);
+    menu_statusScreen_drawStat(sprite, spriteData, 10, 150, "Effort", charaData->effort);
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }
 
-void menu_statusScreen_drawStat(TFT_eSprite &composite, TFT_eSprite &sprite, struct SpriteData* spriteData, int x, int y, const char* text, uint8_t statValue) {
+void menu_statusScreen_drawStat(TFT_eSprite &sprite, struct SpriteData* spriteData, int x, int y, const char* text, uint8_t statValue) {
     uint8_t icon;
     
-    composite.drawString(text, x, y);
+    tft_drawText(text, 4, x, y);
     
     for (int i = 0; i < 4; i++) {
         if (i < statValue) { icon = FULL_HEART_ICON; } 
         else { icon = EMPTY_HEART_ICON; }
 
         draw_drawSprite(
-            composite, 
             sprite, 
             15 + (i * 32),
             y + 30, 

@@ -5,7 +5,7 @@
 #include "defs/chara_data.h"
 #include "vpet/vpet.h"
 
-void menu_foodScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData* spriteData) {
+void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData* spriteData) {
     if (charaData.sleepy) {
         tone(SPK_PIN, BEEP_FREQ_HZ, BEEP_LEN_MS);
         delay(100);
@@ -72,22 +72,21 @@ void menu_foodScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainC
         vpet_computeCallLight();
     }
 
-    composite.setTextSize(4);
 
-    draw_drawBackground(composite, bg, 90, 90, 3);
-    menu_foodScreen_drawEntry(composite, mainChara, spriteData, 0, FOOD_ICON, "Meat");
-    menu_foodScreen_drawEntry(composite, mainChara, spriteData, 1, PILL_ICON, "Pill");
+    draw_drawBackground(bg, 90, 90, 3);
+    menu_foodScreen_drawEntry(mainChara, spriteData, 0, FOOD_ICON, "Meat");
+    menu_foodScreen_drawEntry(mainChara, spriteData, 1, PILL_ICON, "Pill");
     
-    draw_drawSprite(composite, mainChara, 5, (arrowPosition * 34) + 5, spriteData, ARROW_ICON, 4);
+    draw_drawSprite(mainChara, 5, (arrowPosition * 34) + 5, spriteData, ARROW_ICON, 4);
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }
 
 void menu_foodScreen_drawEntry(
-    TFT_eSprite &composite, TFT_eSprite &mainChara, struct SpriteData* spriteData, 
+    TFT_eSprite &mainChara, struct SpriteData* spriteData, 
     uint8_t entryId, uint8_t spriteNumber, const char* textEntry
 ) {
     tft_clearBuffer(mainChara, TFT_TRANSPARENT);
-    draw_drawSprite(composite, mainChara, 45, (entryId * 34) + 5, spriteData, spriteNumber, 4);
-    composite.drawString(textEntry, 80, (entryId * 34) + 5);
+    draw_drawSprite(mainChara, 45, (entryId * 34) + 5, spriteData, spriteNumber, 4);
+    tft_drawText(textEntry, 4, 80, (entryId * 34) + 5);
 }

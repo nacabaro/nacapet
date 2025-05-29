@@ -6,7 +6,7 @@
 #include "defs/sprite_data.h"
 #include "animations/animations.h"
 
-void menu_refuseScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData* spriteData) {
+void menu_refuseScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData* spriteData) {
     static uint8_t currentAnimationFrame = 0;
     static bool soundPlayed = false;
 
@@ -26,8 +26,8 @@ void menu_refuseScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mai
     }
 
     if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
-        draw_drawBackground(composite, bg, 90, 90, 3);
-        animate_performRefuseAnimation(composite, mainChara, spriteData);
+        draw_drawBackground(bg, 90, 90, 3);
+        animate_performRefuseAnimation(mainChara, spriteData);
 
         lastUpdateTime = currentTime;
         currentAnimationFrame++;
@@ -46,5 +46,5 @@ void menu_refuseScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &mai
         screenKey = IDLE_SCREEN;
     }
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }

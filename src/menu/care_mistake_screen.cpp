@@ -8,7 +8,7 @@
 uint64_t lastBeepTime = esp_timer_get_time();
 uint8_t beepCounter = 0;
 
-void menu_careMistakeScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* uiSpritesBig) {
+void menu_careMistakeScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* uiSpritesBig) {
     uint64_t currentTime = esp_timer_get_time();
     uint8_t pressedButtons = buttons_getPressedButtons();
 
@@ -22,13 +22,13 @@ void menu_careMistakeScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite
     }
     
     if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
-        draw_drawBackground(composite, bg, 90, 90, 3);
+        draw_drawBackground(bg, 90, 90, 3);
 
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        animate_performAttentionAnimation(composite, sprite, spriteData);
+        animate_performAttentionAnimation(sprite, spriteData);
     
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        menu_uiOverlay(composite, sprite, uiSpritesBig);
+        menu_uiOverlay(sprite, uiSpritesBig);
             
         lastUpdateTime = currentTime;
     }
@@ -38,5 +38,5 @@ void menu_careMistakeScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite
         beepCounter = 0;
     }
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }

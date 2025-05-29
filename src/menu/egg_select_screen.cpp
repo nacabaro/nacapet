@@ -9,7 +9,7 @@
 #include "defs/chara_data.h"
 
 
-void menu_lineSwitcher(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiSmallSprite) {
+void menu_lineSwitcher(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiSmallSprite) {
     static uint8_t eggCounter = 0;
 
     uint8_t buttonsPressed = buttons_getPressedButtons();
@@ -34,13 +34,13 @@ void menu_lineSwitcher(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &spr
             break;
     }
 
-    draw_drawBackground(composite, bg, 90, 90, 3);
+    draw_drawBackground(bg, 90, 90, 3);
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
-    draw_drawSpriteCentered(composite, sprite, &eggSelection[eggCounter].eggSprite, 0, 6);
+    draw_drawSpriteCentered(sprite, &eggSelection[eggCounter].eggSprite, 0, 6);
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
-    draw_drawSprite(composite, sprite, 194, 96, uiSmallSprite, ARROW_ICON, 6);
+    draw_drawSprite(sprite, 194, 96, uiSmallSprite, ARROW_ICON, 6);
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }
 
 void menu_reloadEggs(uint8_t selectedEgg) {

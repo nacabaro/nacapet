@@ -8,7 +8,7 @@
 
 uint64_t lastUpdateTime = esp_timer_get_time();
 
-void menu_drawIdleScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* bigUiElements, struct SpriteData* smallUiElements) {
+void menu_drawIdleScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* bigUiElements, struct SpriteData* smallUiElements) {
     if (coldBoot) { 
         screenKey = TITLE_SCREEN;
         return;
@@ -45,19 +45,19 @@ void menu_drawIdleScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &s
     uint64_t currentTime = esp_timer_get_time();
 
     if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
-        draw_drawBackground(composite, bg, 90, 90, 3);
+        draw_drawBackground(bg, 90, 90, 3);
         
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        uint8_t offsetX = menu_poopOverlay(composite, sprite, smallUiElements);
+        uint8_t offsetX = menu_poopOverlay(sprite, smallUiElements);
         
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        animate_performAnimation(composite, sprite, spriteData, offsetX);
+        animate_performAnimation(sprite, spriteData, offsetX);
         
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        menu_uiOverlay(composite, sprite, bigUiElements);
+        menu_uiOverlay(sprite, bigUiElements);
             
         lastUpdateTime = currentTime;
     }
     
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }

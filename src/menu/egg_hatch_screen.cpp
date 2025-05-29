@@ -9,7 +9,7 @@
 #include "vpet/vpet.h"
 #include "vpet/lines/lines.h"
 
-void menu_eggHatchScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite) {
+void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite) {
     static bool eggSpriteFrame = false;
     uint8_t frameCounter = 0;
 
@@ -30,13 +30,13 @@ void menu_eggHatchScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &s
     uint64_t currentTime = esp_timer_get_time();
     if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
         if (charaData.hatchTimer <= currentLine[currentCharacter]->hatchTime) {
-            draw_drawBackground(composite, bg, 90, 90, 3);
-            draw_drawSpriteCentered(composite, sprite, &currentEgg->eggSprite, eggSpriteFrame, 6);
+            draw_drawBackground(bg, 90, 90, 3);
+            draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, eggSpriteFrame, 6);
     
             eggSpriteFrame = !eggSpriteFrame;
             lastUpdateTime = currentTime;
 
-            tft_drawBuffer(composite);
+            tft_drawBuffer();
 
             
         } else if (charaData.hatchTimer > currentLine[currentCharacter]->hatchTime && !charaData.hatched) {
@@ -44,16 +44,16 @@ void menu_eggHatchScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &s
                 tone(SPK_PIN, 4100, 35);
                 tone(SPK_PIN, 3500, 35);
 
-                draw_drawBackground(composite, bg, 90, 90, 3);
-                animate_performHatchingAnimation(composite, sprite, &currentEgg->eggSprite);
+                draw_drawBackground(bg, 90, 90, 3);
+                animate_performHatchingAnimation(sprite, &currentEgg->eggSprite);
 
-                tft_drawBuffer(composite);
+                tft_drawBuffer();
             }
 
-            draw_drawBackground(composite, bg, 90, 90, 3);
-            draw_drawSpriteCentered(composite, sprite, &currentEgg->eggSprite, 2, 6);
+            draw_drawBackground(bg, 90, 90, 3);
+            draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, 2, 6);
             
-            tft_drawBuffer(composite);
+            tft_drawBuffer();
             
             delay(2000);
                         

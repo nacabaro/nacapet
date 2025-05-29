@@ -6,7 +6,7 @@
 #include "animations/animations.h"
 #include "defs/chara_data.h"
 
-void menu_sleepyScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* charaSprites, struct SpriteData* uiSprites) {
+void menu_sleepyScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* charaSprites, struct SpriteData* uiSprites) {
     if (!charaData.asleep && !charaData.sleepy) {
         screenKey = IDLE_SCREEN;
         return;
@@ -30,16 +30,16 @@ void menu_sleepyScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &spr
     }
 
     if (currentTime - lastUpdateTime > ANIMATION_SLEEPY_THRESHOLD_TIME_US) {
-        draw_drawBackground(composite, bg, 90, 90, 3);
+        draw_drawBackground(bg, 90, 90, 3);
 
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        animate_performSleepyAnimation(composite, sprite, charaSprites);
+        animate_performSleepyAnimation(sprite, charaSprites);
         
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        menu_uiOverlay(composite, sprite, uiSprites);
+        menu_uiOverlay(sprite, uiSprites);
 
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        menu_uiOverlay(composite, sprite, uiSprites);
+        menu_uiOverlay(sprite, uiSprites);
 
         lastUpdateTime = currentTime;
     }
@@ -53,5 +53,5 @@ void menu_sleepyScreen(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &spr
         beepCounter++;
     }
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }

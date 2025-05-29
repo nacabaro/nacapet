@@ -58,12 +58,12 @@ const int hatchingAnimationPositions[] = {
     72, 66, 72, 78
 };
 
-void animate_performAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData, uint8_t offsetX);
-void animate_performAttentionAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
-void animate_performEatingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
-void animate_performRefuseAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
-void animate_performSleepyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
-void animate_performHappyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
-void animate_performHatchingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performAnimation(TFT_eSprite &spr, struct SpriteData* spriteData, uint8_t offsetX);
+void animate_performAttentionAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performEatingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performRefuseAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performSleepyAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performHappyAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performHatchingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
 
 #endif

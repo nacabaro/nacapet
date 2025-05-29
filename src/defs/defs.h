@@ -17,9 +17,9 @@
 #define BL_PIN 25
 
 // BUTTONS PINOUT
-#define K1_PIN 33
-#define K2_PIN 35
-#define K3_PIN 34
+#define K1_PIN 27
+#define K2_PIN 26
+#define K3_PIN 33
 #define K4_PIN 32
 
 // SPEAKER PINOUT
@@ -182,13 +182,5 @@ extern LineCare_t** currentLineCareInstr;
 extern Line_t** currentLine;
 
 extern struct SpriteData mainCharacterSprites;
-
-// ALTAMENTE TEMPORAL
-extern int xPos;
-extern int yPos;
-
-#include <TFT_eSPI.h>
-
-extern TFT_eSPI tft;
 
 #endif

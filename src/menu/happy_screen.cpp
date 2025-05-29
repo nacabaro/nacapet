@@ -6,7 +6,7 @@
 #include "animations/animations.h"
 
 void menu_drawHappyScreen(
-    TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite,
+    TFT_eSprite &bg, TFT_eSprite &sprite,
     struct SpriteData* spriteData, struct SpriteData* smallUiElements
 ) {
     uint8_t frameCounter = 0;
@@ -21,10 +21,10 @@ void menu_drawHappyScreen(
                 return;
             }
 
-            draw_drawBackground(composite, bg, 90, 90, 3);
+            draw_drawBackground(bg, 90, 90, 3);
 
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            animate_performHappyAnimation(composite, sprite, spriteData);
+            animate_performHappyAnimation(sprite, spriteData);
             
             if (frameCounter % 2 == 0) {
                 tone(SPK_PIN, 7500, 50);
@@ -33,14 +33,14 @@ void menu_drawHappyScreen(
                 tone(SPK_PIN, 1000, 50);
 
                 tft_clearBuffer(sprite, TFT_TRANSPARENT);
-                draw_drawSprite(composite, sprite, 18, 72, smallUiElements, FIREWORKS_ICON, 6);
-                draw_drawSprite(composite, sprite, 174, 72, smallUiElements, FIREWORKS_ICON, 6);
+                draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON, 6);
+                draw_drawSprite(sprite, 174, 72, smallUiElements, FIREWORKS_ICON, 6);
             }
 
             frameCounter++;            
             lastUpdateTime = currentTime;
         }
         
-        tft_drawBuffer(composite);
+        tft_drawBuffer();
     }
 }

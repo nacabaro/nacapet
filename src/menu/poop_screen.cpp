@@ -7,7 +7,7 @@
 #include "defs/sprite_data.h"
 
 void menu_poopScreen(
-    TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite, 
+    TFT_eSprite &bg, TFT_eSprite &sprite, 
     struct SpriteData* spriteData, struct SpriteData* smallUiElements, struct SpriteData* bigUiElements
 ) {
     uint8_t animationFrame = 0;
@@ -19,13 +19,13 @@ void menu_poopScreen(
         uint64_t currentTime = esp_timer_get_time();
 
         if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US && animationFrame < 4) {
-            draw_drawBackground(composite, bg, 90, 90, 3);
+            draw_drawBackground(bg, 90, 90, 3);
     
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            draw_drawSprite(composite, sprite, 72 + (animationPosition * 6), 72, spriteData, 6, 6);
+            draw_drawSprite(sprite, 72 + (animationPosition * 6), 72, spriteData, 6, 6);
 
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            menu_uiOverlay(composite, sprite, bigUiElements);
+            menu_uiOverlay(sprite, bigUiElements);
             
             animationFrame++;
             animationPosition = !animationPosition;
@@ -42,16 +42,16 @@ void menu_poopScreen(
                 beepedAlready = true;
             }
 
-            draw_drawBackground(composite, bg, 90, 90, 3);
+            draw_drawBackground(bg, 90, 90, 3);
     
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            draw_drawSprite(composite, sprite, 174, 120, smallUiElements, POOP_ICON, 6);
+            draw_drawSprite(sprite, 174, 120, smallUiElements, POOP_ICON, 6);
             
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            menu_uiOverlay(composite, sprite, bigUiElements);
+            menu_uiOverlay(sprite, bigUiElements);
 
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            draw_drawSprite(composite, sprite, 72, 72, spriteData, 7, 6);
+            draw_drawSprite(sprite, 72, 72, spriteData, 7, 6);
     
             animationFrame++;
             animationPosition = !animationPosition;
@@ -76,6 +76,6 @@ void menu_poopScreen(
             break;
         }
 
-        tft_drawBuffer(composite);
+        tft_drawBuffer();
     }
 }

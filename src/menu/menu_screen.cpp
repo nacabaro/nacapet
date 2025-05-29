@@ -11,8 +11,8 @@
 const int textXPos = 10;
 const int textYPos = 180;
 
-void menu_drawCurrentMenuOption(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &icon, struct SpriteData* spriteData) {
-    draw_drawBackground(composite, bg, 90, 90, 3);
+void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct SpriteData* spriteData) {
+    draw_drawBackground(bg, 90, 90, 3);
 
     uint8_t pressedButtons = buttons_getPressedButtons();
 
@@ -58,40 +58,39 @@ void menu_drawCurrentMenuOption(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSp
         return;
     }
 
-    composite.setTextSize(4);
-    draw_drawSpriteCentered(composite, icon, spriteData, menuKey % 8, 6);
+    draw_drawSpriteCentered(icon, spriteData, menuKey % 8, 6);
 
     switch(menuKey % 9) {
         case STATUS_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Status", 4, textYPos);
+            tft_drawCenteredText("Status", 4, textYPos);
             break;
 
         case FOOD_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Food", 4, textYPos);
+            tft_drawCenteredText("Food", 4, textYPos);
             break;
 
         case TRAIN_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Train", 4, textYPos);
+            tft_drawCenteredText("Train", 4, textYPos);
             break;
             
         case BATTLE_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Battle", 4, textYPos);
+            tft_drawCenteredText("Battle", 4, textYPos);
             break;
 
         case POOP_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Cleanup", 4, textYPos);
+            tft_drawCenteredText("Cleanup", 4, textYPos);
             break;
 
         case MEDICAL_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Medical", 4, textYPos);
+            tft_drawCenteredText("Medical", 4, textYPos);
             break;
 
         case SLEEP_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Sleep", 4, textYPos);
+            tft_drawCenteredText("Sleep", 4, textYPos);
             break;
             
         case SETTINGS_SCREEN_MENU:
-            tft_drawCenteredText(composite, "Settings", 4, textYPos);
+            tft_drawCenteredText("Settings", 4, textYPos);
             break;
             
         case 8:
@@ -101,9 +100,9 @@ void menu_drawCurrentMenuOption(TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSp
             break;
     }
 
-    menu_uiOverlay(composite, icon, spriteData);
+    menu_uiOverlay(icon, spriteData);
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }
 
 void menu_sleepScreen_sleepAction() {

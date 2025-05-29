@@ -4,8 +4,9 @@
 #include "display/display.h"
 #include "buttons/buttons.h"
 #include "vpet/vpet.h"
+#include "defs/screen_defs.h"
 
-void menu_drawClock(TFT_eSprite &composite, TFT_eSprite &bg, int menuOption) {
+void menu_drawClock(TFT_eSprite &bg) {
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
         case K2_PRESSED:
@@ -18,21 +19,18 @@ void menu_drawClock(TFT_eSprite &composite, TFT_eSprite &bg, int menuOption) {
     
     char hourBuffer[6];
     
-    draw_drawBackground(composite, bg, 90, 90, 3);
+    draw_drawBackground(bg, 90, 90, 3);
     
     snprintf(hourBuffer, 6, "%02d:%02d", timeInfo.tm_hour, timeInfo.tm_min);
-    composite.setTextSize(4); 
-    composite.drawString(hourBuffer, 40, 90);
+    tft_drawText(hourBuffer, 4, 40, 90);
 
     sniprintf(hourBuffer, 3, "%02d", timeInfo.tm_sec);
-    composite.setTextSize(2);
-    composite.drawString(hourBuffer, 170, 104);
+    tft_drawText(hourBuffer, 2, 170, 104);
 
-    tft_drawBuffer(composite);
-
+    tft_drawBuffer();
 }
 
-void menu_drawClockEdit(TFT_eSprite &composite, TFT_eSprite &bg) {
+void menu_drawClockEdit(TFT_eSprite &bg) {
     char textBuffer[6];
 
     static int clockHourCount = 0;
@@ -64,13 +62,12 @@ void menu_drawClockEdit(TFT_eSprite &composite, TFT_eSprite &bg) {
             break;
     }
     
-    draw_drawBackground(composite, bg, 90, 90, 3);
+    draw_drawBackground(bg, 90, 90, 3);
 
     snprintf(textBuffer, 6, "%02d:%02d", clockHourCount, clockMinuteCount);
 
-    composite.setTextSize(4);
-    composite.drawString(textBuffer, 40, 90);
-    composite.drawString("SET", 40, 122);
+    tft_drawText(textBuffer, 4, 40, 90);
+    tft_drawText("SET", 4, 40, 122);
 
-    tft_drawBuffer(composite);
+    tft_drawBuffer();
 }

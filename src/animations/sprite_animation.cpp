@@ -8,9 +8,8 @@ const int spriteHeightOnScreen = 72;
 
 int currentAnimationFrame = 0;
 
-void animate_performAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData, uint8_t offsetX) {
+void animate_performAnimation(TFT_eSprite &spr, struct SpriteData* spriteData, uint8_t offsetX) {
     draw_drawSprite(
-        buffer, 
         spr,
         animationPositions[currentAnimationFrame] - offsetX, 
         spriteHeightOnScreen, 
@@ -23,10 +22,9 @@ void animate_performAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct Spri
     currentAnimationFrame = (currentAnimationFrame + 1) % numFrames;
 }
 
-void animate_performAttentionAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData) {
+void animate_performAttentionAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesAngry;
     draw_drawSprite(
-        buffer, 
         spr,
         spriteHeightOnScreen, 
         spriteHeightOnScreen, 
@@ -38,10 +36,9 @@ void animate_performAttentionAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, st
 
 }
 
-void animate_performEatingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData) {
+void animate_performEatingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesEating;
     draw_drawSprite(
-        buffer,
         spr,
         spriteHeightOnScreen,
         spriteHeightOnScreen,
@@ -52,10 +49,9 @@ void animate_performEatingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struc
     );
 }
 
-void animate_performRefuseAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData) {
+void animate_performRefuseAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesRefuse;
     draw_drawSprite(
-        buffer,
         spr,
         spriteHeightOnScreen,
         spriteHeightOnScreen,
@@ -66,10 +62,9 @@ void animate_performRefuseAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struc
     );
 }
 
-void animate_performSleepyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData) {
+void animate_performSleepyAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesSleepy;
     draw_drawSprite(
-        buffer,
         spr,
         spriteHeightOnScreen,
         spriteHeightOnScreen,
@@ -80,10 +75,9 @@ void animate_performSleepyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struc
     );
 }
 
-void animate_performHappyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData) {
+void animate_performHappyAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesHappy;
     draw_drawSprite(
-        buffer,
         spr,
         spriteHeightOnScreen,
         spriteHeightOnScreen,
@@ -94,10 +88,9 @@ void animate_performHappyAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct
     );
 }
 
-void animate_performHatchingAnimation(TFT_eSprite &buffer, TFT_eSprite &spr, struct SpriteData* spriteData) {
+void animate_performHatchingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesHappy;
     draw_drawSprite(
-        buffer,
         spr,
         hatchingAnimationPositions[currentAnimationFrame],
         spriteHeightOnScreen,
