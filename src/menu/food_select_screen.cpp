@@ -3,7 +3,7 @@
 #include "draw/draw.h"
 #include "buttons/buttons.h"
 #include "defs/chara_data.h"
-#include "vpet/vpet.h"
+#include "vpet/vpet/vpet.h"
 
 void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData* spriteData) {
     if (charaData.sleepy) {

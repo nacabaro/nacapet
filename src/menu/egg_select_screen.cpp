@@ -1,12 +1,12 @@
 #include "menu.h"
 #include "draw/draw.h"
 #include "defs/defs.h"
-#include "vpet/vpet.h"
 #include "display/display.h"
 #include "defs/sprite_data.h"
 #include "buttons/buttons.h"
 #include "vpet/lines/lines.h"
 #include "defs/chara_data.h"
+#include "vpet/vpet/vpet.h"
 
 
 void menu_lineSwitcher(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiSmallSprite) {

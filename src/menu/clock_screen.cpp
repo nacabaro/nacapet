@@ -3,7 +3,6 @@
 #include "draw/draw.h"
 #include "display/display.h"
 #include "buttons/buttons.h"
-#include "vpet/vpet.h"
 #include "defs/screen_defs.h"
 
 void menu_drawClock(TFT_eSprite &bg) {

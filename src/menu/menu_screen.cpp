@@ -5,7 +5,8 @@
 #include "defs/sprite_data.h"
 #include "defs/chara_data.h"
 #include "buttons/buttons.h"
-#include "vpet/vpet.h"
+#include "vpet/vpet/vpet.h"
+
 #include <string.h>
 
 const int textXPos = 10;

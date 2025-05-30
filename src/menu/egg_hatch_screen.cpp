@@ -6,19 +6,14 @@
 #include "defs/sprite_data.h"
 #include "defs/chara_data.h"
 #include "animations/animations.h"
-#include "vpet/vpet.h"
+#include "vpet/vpet/vpet.h"
 #include "vpet/lines/lines.h"
 
 void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite) {
     static bool eggSpriteFrame = false;
-    uint8_t frameCounter = 0;
-
+    
     uint8_t pressedButtons = buttons_getPressedButtons();
-    switch (pressedButtons) {
-        case K3_PRESSED:
-        case K1_PRESSED:
-            break;
-        
+    switch (pressedButtons) {       
         case K2_PRESSED:
             screenKey = CLOCK_SCREEN;
             break;
@@ -51,6 +46,7 @@ void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
             }
 
             draw_drawBackground(bg, 90, 90, 3);
+
             draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, 2, 6);
             
             tft_drawBuffer();
@@ -59,11 +55,6 @@ void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
                         
             lines_onHatchComplete();
             
-            vpet_computeCallLight();
-
-            interruptKey = CARE_MISTAKE_SCREEN;
-            screenKey = TIMER_FINISHED_SCREEN;
-
             return;
         }
     }

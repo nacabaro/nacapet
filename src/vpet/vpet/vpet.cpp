@@ -1,6 +1,7 @@
 #include "vpet.h"
 #include "defs/defs.h"
 #include "defs/chara_data.h"
+#include "vpet/evolution/evolution.h"
 
 hw_timer_t *actionTimerDelta = NULL;
 bool runVpetTasks = false;
@@ -61,9 +62,6 @@ bool vpet_evalSleep(uint8_t diff_sec) {
         // Resultado, el personaje deberia de dormir una siesta
     ) {
         charaData.sleepCareMistakeCounter += diff_sec;
-        if (charaData.hungerCareMistakeTimer <= 0) {
-            skipSleep = true;
-        }
 
         return true;
 
@@ -161,6 +159,10 @@ void vpet_reduceTimers(uint8_t diff_sec) {
     if (charaData.strengthCareMistakeTimer > 0) {
         charaData.strengthCareMistakeTimer -= diff_sec;
     } 
+
+    if (charaData.changeTimerLeft > 0) {
+        charaData.changeTimerLeft -= diff_sec;
+    }
 }
 
 void vpet_evalHungerTimer() {
@@ -225,26 +227,60 @@ void vpet_evalStrengthTimer() {
     }
 }
 
+void vpet_evalChangeTimer() {
+    if (charaData.changeTimerLeft <= 0) {
+        if (change_onChangeTimerComplete()) {
+            screenKey = TIMER_FINISHED_SCREEN;
+            interruptKey = EVOLUTION_SCREEN;
+            
+            pauseLoop = true;
+        }
+    }
+}
+
 
 void IRAM_ATTR onActionTimerDelta() {
     runVpetTasks = true;
 }
 
 void vpet_runVpetTasks() {
-    if (runVpetTasks && charaData.hatched) {
+    if (runVpetTasks) {
         uint64_t currentEvaluationTime = esp_timer_get_time();
+
         uint64_t deltaUs   = currentEvaluationTime - vpetLastEvaluationTime;
-        printf("[DELTA] deltaUpdate=%lu\n", deltaUs);
-        uint8_t  diffSec   = (deltaUs + 1000000 - 1000) / 1000000;  // round up
+        uint8_t  diffSec  = (deltaUs + 1000000 - 1000) / 1000000;
 
-        printf("[DEBUG] diffSec=%i\n", diffSec);
+        if (charaData.hatched) {
+            vpet_computeCallLight();
 
-        vpet_computeCallLight();
-        if (!vpet_evalSleep(diffSec)) {
-            vpet_reduceTimers(diffSec);
-            vpet_evalTimers();
+            if (!vpet_evalSleep(diffSec)) {
+                vpet_reduceTimers(diffSec);
+                vpet_evalTimers();
+            }
+            
+            vpet_evalChangeTimer();
+        
+        } else if (!charaData.hatched && charaData.hatching) {
+            charaData.hatchTimer += diffSec;
+            
+            if (charaData.hatchTimer > currentLine[currentCharacter]->hatchTime) {
+                interruptKey = EGG_HATCH_SCREEN;
+                screenKey = TIMER_FINISHED_SCREEN;
+            }
+    
         }
+        
+        vpet_debugTimers(diffSec);
 
+        runVpetTasks = false;
+        vpetLastEvaluationTime = currentEvaluationTime;
+    }
+}
+
+void vpet_debugTimers(uint8_t diffSec) {
+    printf("[DEBUG] diffSec=%i\n", diffSec);
+
+    if (charaData.hatched) {
         printf("[MAIN]: Hunger timer %d, hunger %d\n", charaData.hungerCareMistakeTimer, charaData.hunger);
         printf("[MAIN]: Strength timer %d, strength %d\n", charaData.strengthCareMistakeTimer, charaData.strength);
         printf("[MAIN]: Change timer %d\n", charaData.changeTimerLeft);
@@ -252,24 +288,8 @@ void vpet_runVpetTasks() {
         printf("[MAIN]: Sleep counter is %d\n", charaData.sleepCareMistakeCounter);
         printf("[MAIN]: Care mistake count is %d\n", charaData.careMistakes);
         printf("[MAIN]: Is sleep care mistake tripped? %d\n", charaData.sleepCareMistakeObtained);
-
-        vpetLastEvaluationTime = currentEvaluationTime;
-        runVpetTasks = false;
-
-    } else if (runVpetTasks && !charaData.hatched && charaData.hatching) {
-        uint64_t currentEvaluationTime = esp_timer_get_time();
-        uint64_t deltaUs   = currentEvaluationTime - vpetLastEvaluationTime;
-        uint8_t  diffSec   = (deltaUs + 1000000 - 1000) / 1000000;  // round up
-
-        charaData.hatchTimer += diffSec;
+    } else if(!charaData.hatched && charaData.hatching) {
         printf("[DEBUG] hatchTimer=%i out of hatchTimer=%i\n", charaData.hatchTimer, currentLine[currentCharacter]->hatchTime);
-        if (charaData.hatchTimer > currentLine[currentCharacter]->hatchTime) {
-            interruptKey = EGG_HATCH_SCREEN;
-            screenKey = TIMER_FINISHED_SCREEN;
-        }
 
-        runVpetTasks = false;
-
-        vpetLastEvaluationTime = currentEvaluationTime;
     }
 }

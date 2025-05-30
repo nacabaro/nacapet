@@ -8,7 +8,7 @@
 #include "defs/chara_data.h"
 #include "menu/menu.h"
 #include "buttons/buttons.h"
-#include "vpet/vpet.h"
+#include "vpet/vpet/vpet.h"
 #include "vpet/steps/steps.h"
 #include "vpet/lines/lines.h"
 #include "energy/energy.h"
@@ -63,13 +63,10 @@ uint8_t eggNumber = 0;
 
 // Tasks
 TaskHandle_t secondLoop = NULL;
-TaskHandle_t readSteps = NULL;
-
-bool skipSleep = false;
+bool pauseLoop = false;
 
 void loop2();
 void secondCoreTask(void*);
-void loop_readSteps(void*);
 
 void setup() {
     Serial.begin(115200);
@@ -184,6 +181,10 @@ void loop() {
         case EGG_EMPTY_SCREEN:
             menu_drawDeathScreen( bg, sprite, &menuElementsData, &uiElementsData);
             break;       
+
+        case EVOLUTION_SCREEN:
+            menu_evolutionScreen(bg, sprite, &mainCharacterSprites);
+            break;
     }
 
     if (screenKey == IDLE_SCREEN || screenKey == OFF_SCREEN) {
@@ -192,19 +193,23 @@ void loop() {
 }
 
 void loop2() {
-    buttons_checkInactivity();
-    vpet_runVpetTasks();
+    if (!pauseLoop) {
+        buttons_checkInactivity();
+        vpet_runVpetTasks();
+        
+        getLocalTime(&timeInfo, 50);
+        dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
     
-    getLocalTime(&timeInfo, 50);
-    dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
-
-    if (screenOff && !skipSleep) {
-        energy_startLightSleep();
-    } else if (screenOff && skipSleep) {
-        skipSleep = false;
+        if (screenOff) { energy_startLightSleep(); }
+    } else {
+        lastPressedButtonTime = esp_timer_get_time();
+        buttons_getPressedButtons();
     }
+
 }
 
 void secondCoreTask(void*) {
-    for (;;) { loop2(); }
+    for (;;) {
+        loop2(); 
+    }
 }

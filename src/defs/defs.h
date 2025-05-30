@@ -92,6 +92,7 @@
 #define EGG_SELECT_SCREEN 5
 #define EGG_HATCH_SCREEN 6
 #define EGG_EMPTY_SCREEN 7
+#define EVOLUTION_SCREEN 8
 #define FEEDING_SCREEN 20
 #define REFUSING_SCREEN 21
 #define SLEEPY_SCREEN 22
@@ -150,7 +151,6 @@ extern bool k4_prev;
 
 extern bool inactive;
 extern bool screenOff;
-extern bool skipSleep;
 
 extern uint64_t lastPressedButtonTime;
 extern uint64_t lastUpdateTime;
@@ -164,6 +164,7 @@ extern ESP32Time rtc;
 extern MPU6050 mpu;
 
 extern hw_timer_t *actionTimerDelta;
+extern TaskHandle_t secondLoop;
 
 extern bool runVpetTasks;
 
@@ -183,5 +184,7 @@ extern LineCare_t** currentLineCareInstr;
 extern Line_t** currentLine;
 
 extern struct SpriteData mainCharacterSprites;
+
+extern bool pauseLoop;
 
 #endif

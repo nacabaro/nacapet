@@ -73,3 +73,8 @@ void tft_drawText(const char* text, uint8_t size, uint8_t x, uint8_t y, uint16_t
     composite2.setTextColor(color);
     composite2.drawString(text, x, y - BUF_H);
 }
+
+void tft_drawRectangle(uint8_t x, uint8_t y, uint8_t w, uint8_t h, uint16_t color) {
+    composite1.fillRect(x, y, w, h, color);
+    composite2.fillRect(x, y - BUF_H, w, h, color);
+}

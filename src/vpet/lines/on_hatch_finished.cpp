@@ -2,7 +2,7 @@
 #include "defs/defs.h"
 #include "defs/chara_data.h"
 #include "storage/storage.h"
-#include "vpet/vpet.h"
+#include "vpet/vpet/vpet.h"
 
 void lines_onHatchComplete() {
     // Cuando se nace, lo que se va a hacer es poner el sprite 0, es decir,
@@ -34,4 +34,11 @@ void lines_onHatchComplete() {
     charaData.strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
 
     charaData.hatched = true;
+
+    vpet_computeCallLight();
+
+    interruptKey = CARE_MISTAKE_SCREEN;
+    screenKey = TIMER_FINISHED_SCREEN;
+
+
 }

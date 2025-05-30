@@ -44,6 +44,7 @@ void menu_lineSwitcher(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
 void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite);
 void menu_reloadEggs(uint8_t selectedEgg);
 void menu_drawDeathScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite);
+void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainCharacterSprites);
 
 void menu_sleepScreen_sleepAction();
 void menu_sleepScreen_recalculateSleep();
