@@ -65,12 +65,14 @@ uint8_t eggNumber = 0;
 TaskHandle_t secondLoop = NULL;
 TaskHandle_t readSteps = NULL;
 
+bool skipSleep = false;
+
 void loop2();
 void secondCoreTask(void*);
 void loop_readSteps(void*);
 
 void setup() {
-    //Serial.begin(115200);
+    Serial.begin(115200);
     delay(100); // Give MPU6050 and ESP32 time to power up
 
     Wire.begin(MPU_SDA_PIN, MPU_SCL_PIN);  // I2C init before MPU6050
@@ -102,11 +104,6 @@ void setup() {
 
 
 void loop() { 
-    if (screenOff) {
-        printf("[TEST] Going to sleep\n");
-        energy_startLightSleep();
-    }
-
     switch (screenKey) {
         case TITLE_SCREEN:
             menu_drawTitle(bg);
@@ -197,9 +194,15 @@ void loop() {
 void loop2() {
     buttons_checkInactivity();
     vpet_runVpetTasks();
-
+    
     getLocalTime(&timeInfo, 50);
     dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
+
+    if (screenOff && !skipSleep) {
+        energy_startLightSleep();
+    } else if (screenOff && skipSleep) {
+        skipSleep = false;
+    }
 }
 
 void secondCoreTask(void*) {

@@ -19,27 +19,30 @@ void energy_setUpLightSleep() {
         Serial.println("Failed to set EXT1 Wake-Up as wake-up source.");
     }
 
-    //esp_sleep_enable_timer_wakeup(SLEEP_TIME_US);
+    esp_sleep_enable_timer_wakeup(SLEEP_TIME_US);
 }
 
 void energy_startLightSleep() {
+    if (skipSleep) { 
+        skipSleep = false;
+        return; 
+    }
+
     esp_light_sleep_start();
     
     // 6) Figure out which woke you
     auto cause = esp_sleep_get_wakeup_cause();
-    if (cause == ESP_SLEEP_WAKEUP_EXT1) {
-      uint64_t mask = esp_sleep_get_ext1_wakeup_status();
-      int pin = mask ? __builtin_ctzll(mask) : -1;
-      Serial.printf("Woke by button on GPIO %d\n", pin);
+    if (cause == ESP_SLEEP_WAKEUP_EXT0) {
+      Serial.println("Woke by button on GPIO");
     } else if (cause == ESP_SLEEP_WAKEUP_TIMER) {
       Serial.println("Woke by timer");
     } else {
       Serial.printf("Other wakeup: %d\n", cause);
     }
 
+    runVpetTasks = true;
+
     byte pinValue = digitalRead(26);
     Serial.println(pinValue);
-  
-    // 7) Re-init your display (SPI.begin(), tft.init(), redraw…)
 }
   

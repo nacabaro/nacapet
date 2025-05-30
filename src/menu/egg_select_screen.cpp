@@ -54,5 +54,7 @@ void menu_reloadEggs(uint8_t selectedEgg) {
     lines_getSingleLine(fileName);
     lines_getLineCareMistakes(fileName);
 
+    vpetLastEvaluationTime = esp_timer_get_time();
+
     charaData.hatching = true;
 }

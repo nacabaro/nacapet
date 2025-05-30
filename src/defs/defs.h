@@ -150,6 +150,7 @@ extern bool k4_prev;
 
 extern bool inactive;
 extern bool screenOff;
+extern bool skipSleep;
 
 extern uint64_t lastPressedButtonTime;
 extern uint64_t lastUpdateTime;

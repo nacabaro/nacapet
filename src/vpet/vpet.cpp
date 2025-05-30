@@ -5,6 +5,8 @@
 hw_timer_t *actionTimerDelta = NULL;
 bool runVpetTasks = false;
 
+uint64_t vpetLastEvaluationTime = esp_timer_get_time();
+
 void vpet_initTimer() {
     printf("[TIMER] Timer Init.\n");
     actionTimerDelta = timerBegin(0, 80, true);
@@ -21,7 +23,7 @@ void vpet_computeCallLight() {
     );
 }
 
-bool vpet_evalSleep() {
+bool vpet_evalSleep(uint8_t diff_sec) {
     // Se devuelve true si quieres pausar los otros contadores
     // False ejecutara los contadores correspondientes
     if (
@@ -58,7 +60,10 @@ bool vpet_evalSleep() {
         // durante el dia. 
         // Resultado, el personaje deberia de dormir una siesta
     ) {
-        charaData.sleepCareMistakeCounter++;
+        charaData.sleepCareMistakeCounter += diff_sec;
+        if (charaData.hungerCareMistakeTimer <= 0) {
+            skipSleep = true;
+        }
 
         return true;
 
@@ -103,7 +108,7 @@ bool vpet_evalSleep() {
         // pero no se le ha mandado a dormir, empieza a contar para pasar
         // un care mistake
     ) {
-        charaData.sleepCareMistakeCounter++;
+        charaData.sleepCareMistakeCounter += diff_sec;
 
         return true;
 
@@ -124,7 +129,7 @@ bool vpet_evalSleep() {
 
     } else if (
         !charaData.gotLifeYearAdded &&
-        dayUnixTime < 1 // This stinks
+        dayUnixTime < 60 // This stinks
         // Esto se ejecuta cuando es media noche.
         // Resultado: se incrementa la edad por 1
     ) {
@@ -148,11 +153,18 @@ void vpet_evalTimers() {
     vpet_evalStrengthTimer();
 }
 
-void vpet_evalHungerTimer() {
+void vpet_reduceTimers(uint8_t diff_sec) {
     if (charaData.hungerCareMistakeTimer > 0) {
-        charaData.hungerCareMistakeTimer--;
+        charaData.hungerCareMistakeTimer -= diff_sec;
+    } 
 
-    } else if (
+    if (charaData.strengthCareMistakeTimer > 0) {
+        charaData.strengthCareMistakeTimer -= diff_sec;
+    } 
+}
+
+void vpet_evalHungerTimer() {
+    if (
         charaData.hungerCareMistakeTimer <= 0 &&
         charaData.hunger > 0
     ) {
@@ -187,10 +199,7 @@ void vpet_evalHungerTimer() {
 }
 
 void vpet_evalStrengthTimer() {
-    if (charaData.strengthCareMistakeTimer > 0) {
-        charaData.strengthCareMistakeTimer--;
-
-    } else if (
+    if (
         charaData.strengthCareMistakeTimer <= 0 &&
         charaData.strength > 0
     ) {
@@ -223,8 +232,16 @@ void IRAM_ATTR onActionTimerDelta() {
 
 void vpet_runVpetTasks() {
     if (runVpetTasks && charaData.hatched) {
+        uint64_t currentEvaluationTime = esp_timer_get_time();
+        uint64_t deltaUs   = currentEvaluationTime - vpetLastEvaluationTime;
+        printf("[DELTA] deltaUpdate=%lu\n", deltaUs);
+        uint8_t  diffSec   = (deltaUs + 1000000 - 1000) / 1000000;  // round up
+
+        printf("[DEBUG] diffSec=%i\n", diffSec);
+
         vpet_computeCallLight();
-        if (!vpet_evalSleep()) {
+        if (!vpet_evalSleep(diffSec)) {
+            vpet_reduceTimers(diffSec);
             vpet_evalTimers();
         }
 
@@ -236,10 +253,15 @@ void vpet_runVpetTasks() {
         printf("[MAIN]: Care mistake count is %d\n", charaData.careMistakes);
         printf("[MAIN]: Is sleep care mistake tripped? %d\n", charaData.sleepCareMistakeObtained);
 
+        vpetLastEvaluationTime = currentEvaluationTime;
         runVpetTasks = false;
 
     } else if (runVpetTasks && !charaData.hatched && charaData.hatching) {
-        charaData.hatchTimer++;
+        uint64_t currentEvaluationTime = esp_timer_get_time();
+        uint64_t deltaUs   = currentEvaluationTime - vpetLastEvaluationTime;
+        uint8_t  diffSec   = (deltaUs + 1000000 - 1000) / 1000000;  // round up
+
+        charaData.hatchTimer += diffSec;
         printf("[DEBUG] hatchTimer=%i out of hatchTimer=%i\n", charaData.hatchTimer, currentLine[currentCharacter]->hatchTime);
         if (charaData.hatchTimer > currentLine[currentCharacter]->hatchTime) {
             interruptKey = EGG_HATCH_SCREEN;
@@ -247,5 +269,7 @@ void vpet_runVpetTasks() {
         }
 
         runVpetTasks = false;
+
+        vpetLastEvaluationTime = currentEvaluationTime;
     }
 }
