@@ -13,7 +13,7 @@
 #include "vpet/lines/lines.h"
 #include "energy/energy.h"
 #include "driver/rtc_io.h"
-
+#include "menu/training/training_screens.h"
 
 const char* TAG = "[MAIN]";
 
@@ -184,6 +184,10 @@ void loop() {
 
         case EVOLUTION_SCREEN:
             menu_evolutionScreen(bg, sprite, &mainCharacterSprites);
+            break;
+
+        case TRAINING_SCREEN_1:
+            training_screenTraining1(bg, sprite, &mainCharacterSprites, &uiElementsData);
             break;
     }
 

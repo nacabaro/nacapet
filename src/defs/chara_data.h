@@ -62,6 +62,7 @@ struct CharacterData {
 
     uint8_t stage;
     uint8_t attribute;
+    uint8_t spriteAttackId;
 
     uint32_t initialSleepTime;
     uint32_t initialWakeupTime;

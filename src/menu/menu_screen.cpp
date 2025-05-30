@@ -47,6 +47,11 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
                 menu_sleepScreen_sleepAction();
                 break;
 
+            case TRAIN_SCREEN_MENU:
+                screenKey = TRAINING_SCREEN_1;
+                return;
+                break;
+
             case POOP_SCREEN_MENU:
                 menuKey = STATUS_SCREEN;
                 screenKey = CLEAR_POOP_SCREEN;

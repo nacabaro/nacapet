@@ -278,8 +278,6 @@ void vpet_runVpetTasks() {
 }
 
 void vpet_debugTimers(uint8_t diffSec) {
-    printf("[DEBUG] diffSec=%i\n", diffSec);
-
     if (charaData.hatched) {
         printf("[MAIN]: Hunger timer %d, hunger %d\n", charaData.hungerCareMistakeTimer, charaData.hunger);
         printf("[MAIN]: Strength timer %d, strength %d\n", charaData.strengthCareMistakeTimer, charaData.strength);

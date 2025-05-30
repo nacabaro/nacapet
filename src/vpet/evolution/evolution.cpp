@@ -56,6 +56,7 @@ void change_replaceCharaData(uint8_t nextCharaId) {
     charaData.ap = currentEvalCharacter->ap;
     charaData.stage = currentEvalCharacter->stage;
     charaData.attribute = currentEvalCharacter->attribute;
+    charaData.spriteAttackId = currentEvalCharacter->attackSprite;
     charaData.initialSleepTime = currentEvalCharacter->sleepTime;
     charaData.initialWakeupTime = currentEvalCharacter->wakeTime;
     charaData.initialChangeTimer = currentEvalCharacter->changeTime;

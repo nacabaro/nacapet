@@ -21,6 +21,7 @@ void lines_onHatchComplete() {
 
     charaData.stage = currentLine[currentCharacter]->characters[0].stage;
     charaData.attribute = currentLine[currentCharacter]->characters[0].attribute;
+    charaData.spriteAttackId = currentLine[currentCharacter]->characters[0].attackSprite;
     
     charaData.sleepTime = charaData.initialSleepTime = currentLine[currentCharacter]->characters[0].sleepTime;
     charaData.wakeupTime = charaData.initialWakeupTime = currentLine[currentCharacter]->characters[0].wakeTime;

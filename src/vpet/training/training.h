@@ -3,9 +3,11 @@
 
 #include <TFT_eSPI.h>
 
-void training_screenTraining1(
-    TFT_eSprite &composite, TFT_eSprite &bg, TFT_eSprite &sprite,
-    struct SpriteData* mainCharaData, struct SpriteData* attackSprites
+void training_displayTrainingResult(
+    TFT_eSprite &bg, TFT_eSprite &sprite,
+    struct SpriteData* mainCharaData, struct SpriteData* attackSprites, uint8_t trainingResult
 );
+void training_trainingAttackSounds();
+
 
 #endif
