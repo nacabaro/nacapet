@@ -15,7 +15,7 @@ void menu_drawHappyScreen(
         uint64_t currentTime = esp_timer_get_time();
         if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
             if (frameCounter > 3) {
-                screenKey = IDLE_SCREEN; // TODO: Change for while battling
+                screenKey = MAIN_SCREEN; // TODO: Change for while battling
                 menuKey = STATUS_SCREEN;
 
                 return;

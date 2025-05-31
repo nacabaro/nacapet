@@ -24,7 +24,7 @@ void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
 
     uint64_t currentTime = esp_timer_get_time();
     if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
-        if (charaData.hatchTimer <= currentLine[currentCharacter]->hatchTime) {
+        if (charaData[currentCharacter].hatchTimer <= currentLine[currentCharacter]->hatchTime) {
             draw_drawBackground(bg, 90, 90, 3);
             draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, eggSpriteFrame, 6);
     
@@ -34,7 +34,7 @@ void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
             tft_drawBuffer();
 
             
-        } else if (charaData.hatchTimer > currentLine[currentCharacter]->hatchTime && !charaData.hatched) {
+        } else if (charaData[currentCharacter].hatchTimer > currentLine[currentCharacter]->hatchTime && !charaData[currentCharacter].hatched) {
             for (int i = 0; i < 30; i++) {
                 tone(SPK_PIN, 4100, 35);
                 tone(SPK_PIN, 3500, 35);

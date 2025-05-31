@@ -22,17 +22,29 @@ void storage_readFile(const char* path, struct SpriteData* spriteData) {
 
     size_t bytesRead = 0;
     size_t fileSize = file.size();
-    
-    bytesRead += file.read(&spriteData->spriteWidth, 1);
-    bytesRead += file.read(&spriteData->spriteHeight, 1);
-    bytesRead += file.read(&spriteData->spriteNumber, 1);
 
-    printf("%s Read header: width=%d, height=%d, numSprites=%d\n", 
-        TAG_S, spriteData->spriteWidth, spriteData->spriteHeight, spriteData->spriteNumber);
+    uint8_t width, height, spriteNumber;
+    
+    bytesRead += file.read(&width, 1);
+    bytesRead += file.read(&height, 1);
+    bytesRead += file.read(&spriteNumber, 1);
+
+    if (spriteData->spriteData != NULL) {
+        memory_free(spriteData);
+    } 
+    
+    spriteData->spriteWidth = width;
+    spriteData->spriteHeight = height;
+    spriteData->spriteNumber = spriteNumber;
+    
+    spriteData->spriteData = memory_allocate(spriteData->spriteNumber, spriteData->spriteWidth, spriteData->spriteHeight);
+
+    printf(
+        "%s Read header: width=%d, height=%d, numSprites=%d\n", 
+        TAG_S, spriteData->spriteWidth, spriteData->spriteHeight, spriteData->spriteNumber
+    );
 
     fileSize = (fileSize - 3) / sizeof(uint16_t);
-
-    spriteData->spriteData = memory_allocate(spriteData->spriteNumber, spriteData->spriteWidth, spriteData->spriteHeight);
 
     size_t bufferSize = spriteData->spriteNumber * spriteData->spriteWidth * spriteData->spriteHeight;
 

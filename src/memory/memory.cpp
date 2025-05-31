@@ -1,4 +1,5 @@
 #include "memory.h"
+#include "defs/sprite_data.h"
 
 const char* TAG_M = "[MEMORY]";
 
@@ -31,11 +32,12 @@ uint16_t** memory_allocate(uint8_t numSprite, uint8_t width, uint8_t height) {
 }
 
 
-void memory_free(uint8_t* ptr) {
-    if (ptr != NULL) {
-        free(ptr);
-        ptr = NULL;
-    } else {
-        printf("%s Pointer is already NULL\n", TAG_M);
+void memory_free(struct SpriteData* spriteData) {
+    for (int i = 0; i < spriteData->spriteNumber; i++) {
+        free(spriteData->spriteData[i]);
     }
+
+    free(spriteData->spriteData);
+
+    spriteData->spriteData = NULL;
 }

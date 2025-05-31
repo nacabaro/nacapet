@@ -7,7 +7,7 @@ struct BackgroundData {
     uint8_t backgroundWidth;
     uint8_t backgroundHeight;
     uint8_t scaleFactor;
-    uint16_t* backgroundData;
+    uint16_t* backgroundData = NULL;
 };
 
 #endif

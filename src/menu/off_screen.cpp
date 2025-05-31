@@ -8,7 +8,7 @@ void menu_offScreen() {
     if (buttons != 0) {
         tft_drawBuffer();
         digitalWrite(BL_PIN, HIGH);
-        screenKey = IDLE_SCREEN;
+        screenKey = MAIN_SCREEN;
     } else {
         screenOff = true;
     }

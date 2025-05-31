@@ -43,7 +43,7 @@ void menu_refuseScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteDat
     if (currentAnimationFrame > 4) {
         currentAnimationFrame = 0;
         soundPlayed = false;
-        screenKey = IDLE_SCREEN;
+        screenKey = MAIN_SCREEN;
     }
 
     tft_drawBuffer();

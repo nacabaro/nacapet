@@ -26,7 +26,7 @@ void menu_lineSwitcher(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
             break;
 
         case K3_PRESSED:
-            screenKey = IDLE_SCREEN;
+            screenKey = MAIN_SCREEN;
             return;
             break;
 
@@ -56,5 +56,5 @@ void menu_reloadEggs(uint8_t selectedEgg) {
 
     vpetLastEvaluationTime = esp_timer_get_time();
 
-    charaData.hatching = true;
+    charaData[currentCharacter].hatching = true;
 }

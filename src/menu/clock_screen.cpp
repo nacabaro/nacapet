@@ -9,7 +9,8 @@ void menu_drawClock(TFT_eSprite &bg) {
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
         case K2_PRESSED:
-            screenKey = IDLE_SCREEN;
+            draw_drawBackground(bg, 90, 90, 3);
+            screenKey = MAIN_SCREEN;
             break;
         
         default:

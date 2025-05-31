@@ -6,7 +6,7 @@
 #include "vpet/vpet/vpet.h"
 
 void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData* spriteData) {
-    if (charaData.sleepy) {
+    if (charaData[currentCharacter].sleepy) {
         tone(SPK_PIN, BEEP_FREQ_HZ, BEEP_LEN_MS);
         delay(100);
         tone(SPK_PIN, BEEP_FREQ_HZ, BEEP_LEN_MS);
@@ -35,28 +35,28 @@ void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData*
         lastUpdateTime = 0;
         switch(arrowPosition) {
             case 0:
-                if (charaData.hunger < 8) {
-                    charaData.hungerCareMistakeTimer = charaData.initialStatsReductionTime;
-                    charaData.hungerCareMistakeObtained = false;
-                    charaData.weight++;
-                    charaData.hunger++;
+                if (charaData[currentCharacter].hunger < 8) {
+                    charaData[currentCharacter].hungerCareMistakeTimer = charaData[currentCharacter].initialStatsReductionTime;
+                    charaData[currentCharacter].hungerCareMistakeObtained = false;
+                    charaData[currentCharacter].weight++;
+                    charaData[currentCharacter].hunger++;
                     screenKey = FEEDING_SCREEN;
                     submenuKey = FOOD_ICON;
                 } else {
                     screenKey = REFUSING_SCREEN;
-                    if (!charaData.overfeedHappened) {
-                        charaData.overfeed++;
-                        charaData.overfeedHappened = true;
+                    if (!charaData[currentCharacter].overfeedHappened) {
+                        charaData[currentCharacter].overfeed++;
+                        charaData[currentCharacter].overfeedHappened = true;
                     }
                 }
                 return;
                 break;
 
             case 1:
-                if (charaData.strength < 8) {
-                    charaData.strengthCareMistakeTimer = charaData.initialStatsReductionTime;
-                    charaData.strength++;
-                    charaData.weight += 2;
+                if (charaData[currentCharacter].strength < 8) {
+                    charaData[currentCharacter].strengthCareMistakeTimer = charaData[currentCharacter].initialStatsReductionTime;
+                    charaData[currentCharacter].strength++;
+                    charaData[currentCharacter].weight += 2;
                     screenKey = FEEDING_SCREEN;
                     submenuKey = PILL_ICON;
                 } else {

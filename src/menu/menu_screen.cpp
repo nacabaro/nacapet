@@ -23,7 +23,7 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
             break;
 
         case K3_PRESSED:
-            screenKey = IDLE_SCREEN;
+            screenKey = MAIN_SCREEN;
             menuKey = STATUS_SCREEN_MENU;
             return;
             break;
@@ -58,15 +58,21 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
                 return;
                 break;
 
+            case CHANGE_SCREEN_MENU:
+                menuKey = STATUS_SCREEN;
+                screenKey = CHANGE_SCREEN;
+                return;
+                break;
+
             default:
                 break;
         }
         return;
     }
 
-    draw_drawSpriteCentered(icon, spriteData, menuKey % 8, 6);
+    draw_drawSpriteCentered(icon, spriteData, menuKey % 9, 6);
 
-    switch(menuKey % 9) {
+    switch(menuKey % 10) {
         case STATUS_SCREEN_MENU:
             tft_drawCenteredText("Status", 4, textYPos);
             break;
@@ -94,14 +100,18 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
         case SLEEP_SCREEN_MENU:
             tft_drawCenteredText("Sleep", 4, textYPos);
             break;
-            
+        
+        case CHANGE_SCREEN_MENU:
+            tft_drawCenteredText("Change", 4, textYPos);
+            break;
+
         case SETTINGS_SCREEN_MENU:
             tft_drawCenteredText("Settings", 4, textYPos);
             break;
             
-        case 8:
-            menuKey = 0;
-            screenKey = IDLE_SCREEN;
+        case 9:
+            menuKey = STATUS_SCREEN_MENU;
+            screenKey = MAIN_SCREEN;
             return;
             break;
     }
@@ -112,19 +122,19 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
 }
 
 void menu_sleepScreen_sleepAction() {
-    if (charaData.asleep && charaData.sleepy) {
+    if (charaData[currentCharacter].asleep && charaData[currentCharacter].sleepy) {
         menu_sleepScreen_recalculateSleep();
 
-        charaData.sleepy = false;
-        charaData.asleep = false;
+        charaData[currentCharacter].sleepy = false;
+        charaData[currentCharacter].asleep = false;
 
-        charaData.sleepDisturbances++;
+        charaData[currentCharacter].sleepDisturbances++;
 
         menuKey = STATUS_SCREEN;
-        screenKey = IDLE_SCREEN;
+        screenKey = MAIN_SCREEN;
 
     } else {
-        charaData.asleep = true;
+        charaData[currentCharacter].asleep = true;
 
         vpet_computeCallLight();    // Lo hago por cortesia, no me gusta
 
@@ -135,10 +145,10 @@ void menu_sleepScreen_sleepAction() {
 
 void menu_sleepScreen_recalculateSleep() {
     uint32_t newSleepTime = (dayUnixTime + 3600) % SECONDS_IN_DAY;
-    uint32_t newWakeUpTime = charaData.wakeupTime + 3600;
+    uint32_t newWakeUpTime = charaData[currentCharacter].wakeupTime + 3600;
 
-    charaData.sleepTime = newSleepTime;
-    charaData.wakeupTime = newWakeUpTime;
+    charaData[currentCharacter].sleepTime = newSleepTime;
+    charaData[currentCharacter].wakeupTime = newWakeUpTime;
 
-    charaData.dynamicSleepDists++;
+    charaData[currentCharacter].dynamicSleepDists++;
 }

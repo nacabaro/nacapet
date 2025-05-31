@@ -22,7 +22,7 @@ void menu_clearPoopScreen(
     }
 
     screenKey = HAPPY_SCREEN;
-    charaData.poopNumber = 0;
+    charaData[currentCharacter].poopNumber = 0;
 
     return;
 }

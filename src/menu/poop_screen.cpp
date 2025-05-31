@@ -60,13 +60,13 @@ void menu_poopScreen(
 
         } else if (animationFrame >= 6) {
             if (        
-                (charaData.hunger == 0 && !charaData.hungerCareMistakeObtained) || 
-                (charaData.strength == 0 && !charaData.strengthCareMistakeObtained) || 
-                (charaData.sleepy && !charaData.asleep && !charaData.sleepCareMistakeObtained)
+                (charaData[currentCharacter].hunger == 0 && !charaData[currentCharacter].hungerCareMistakeObtained) || 
+                (charaData[currentCharacter].strength == 0 && !charaData[currentCharacter].strengthCareMistakeObtained) || 
+                (charaData[currentCharacter].sleepy && !charaData[currentCharacter].asleep && !charaData[currentCharacter].sleepCareMistakeObtained)
             ) { 
                 screenKey = CARE_MISTAKE_SCREEN;
             } else  {
-                screenKey = IDLE_SCREEN;
+                screenKey = MAIN_SCREEN;
             }
             
             menuKey = 0;

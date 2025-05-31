@@ -15,26 +15,26 @@ void lines_onHatchComplete() {
     storage_readFile(spriteFileName, &mainCharacterSprites);
 
     // Primero los datos del bicho actual en nuestra estructura de datos de confianza
-    charaData.hp = currentLine[currentCharacter]->characters[0].hp;
-    charaData.bp = currentLine[currentCharacter]->characters[0].bp;
-    charaData.ap = currentLine[currentCharacter]->characters[0].ap;
+    charaData[currentCharacter].hp = currentLine[currentCharacter]->characters[0].hp;
+    charaData[currentCharacter].bp = currentLine[currentCharacter]->characters[0].bp;
+    charaData[currentCharacter].ap = currentLine[currentCharacter]->characters[0].ap;
 
-    charaData.stage = currentLine[currentCharacter]->characters[0].stage;
-    charaData.attribute = currentLine[currentCharacter]->characters[0].attribute;
-    charaData.spriteAttackId = currentLine[currentCharacter]->characters[0].attackSprite;
+    charaData[currentCharacter].stage = currentLine[currentCharacter]->characters[0].stage;
+    charaData[currentCharacter].attribute = currentLine[currentCharacter]->characters[0].attribute;
+    charaData[currentCharacter].spriteAttackId = currentLine[currentCharacter]->characters[0].attackSprite;
     
-    charaData.sleepTime = charaData.initialSleepTime = currentLine[currentCharacter]->characters[0].sleepTime;
-    charaData.wakeupTime = charaData.initialWakeupTime = currentLine[currentCharacter]->characters[0].wakeTime;
-    charaData.initialChangeTimer = charaData.changeTimerLeft = currentLine[currentCharacter]->characters[0].changeTime;
+    charaData[currentCharacter].sleepTime = charaData[currentCharacter].initialSleepTime = currentLine[currentCharacter]->characters[0].sleepTime;
+    charaData[currentCharacter].wakeupTime = charaData[currentCharacter].initialWakeupTime = currentLine[currentCharacter]->characters[0].wakeTime;
+    charaData[currentCharacter].initialChangeTimer = charaData[currentCharacter].changeTimerLeft = currentLine[currentCharacter]->characters[0].changeTime;
 
-    charaData.initialStatsReductionTime = currentLine[currentCharacter]->characters[0].depleteTime;
-    charaData.minWeight = currentLine[currentCharacter]->characters[0].minWeight;
+    charaData[currentCharacter].initialStatsReductionTime = currentLine[currentCharacter]->characters[0].depleteTime;
+    charaData[currentCharacter].minWeight = currentLine[currentCharacter]->characters[0].minWeight;
 
     // Luego le obligamos a que nazca con hambre
-    charaData.hungerCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
-    charaData.strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+    charaData[currentCharacter].hungerCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
+    charaData[currentCharacter].strengthCareMistakeTimer = CARE_MISTAKE_COUNTER_MAX;
 
-    charaData.hatched = true;
+    charaData[currentCharacter].hatched = true;
 
     vpet_computeCallLight();
 

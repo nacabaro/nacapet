@@ -34,7 +34,7 @@ void menu_careMistakeScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteD
     }
     
     if (pressedButtons != 0) {
-        screenKey = IDLE_SCREEN;
+        screenKey = MAIN_SCREEN;
         beepCounter = 0;
     }
 

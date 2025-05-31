@@ -21,7 +21,7 @@ void buttons_checkInactivity() {
         screenKey = OFF_SCREEN;
         
     } else if (currentTime - lastPressedButtonTime > LAST_PRESSED_BUTTON_THRESHOLD_TIME_US && !inactive) {        
-        screenKey =  IDLE_SCREEN;
+        screenKey =  MAIN_SCREEN;
         inactive = true;
     }
 }

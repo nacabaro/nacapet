@@ -17,7 +17,7 @@ void menu_uiOverlay(TFT_eSprite &charSprite, struct SpriteData* uiElements) {
     snprintf(hourBuffer, 6, "%05d", stepCounter);
     tft_drawText(hourBuffer, 2, 176, 4, TFT_WHITE);
     
-    if (charaData.careMistakeCallLight) {
+    if (charaData[currentCharacter].careMistakeCallLight) {
         tft_clearBuffer(charSprite, TFT_TRANSPARENT);
         draw_drawSprite(charSprite, 192, 192, uiElements, CARE_MISTAKE_CALL_LIGHT, 2);
     }

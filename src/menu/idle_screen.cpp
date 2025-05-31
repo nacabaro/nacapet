@@ -9,25 +9,7 @@
 uint64_t lastUpdateTime = esp_timer_get_time();
 
 void menu_drawIdleScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* bigUiElements, struct SpriteData* smallUiElements) {
-    if (coldBoot) { 
-        screenKey = TITLE_SCREEN;
-        return;
-    } else if (!charaData.hatched && !charaData.hatching) {
-        screenKey = EGG_EMPTY_SCREEN;
-        return;
-    } else if (!charaData.hatched && charaData.hatching) {
-        screenKey = EGG_HATCH_SCREEN;
-        return;
-    } else if (charaData.sleepy && !charaData.asleep) {
-        screenKey = SLEEPY_SCREEN;
-        return;
-    } else if ((charaData.sleepy && charaData.asleep) || charaData.asleep) {
-        screenKey = SLEEP_SCREEN;
-        return;
-    }
-
     uint8_t pressedButtons = buttons_getPressedButtons();
-    
     switch (pressedButtons) {
         case K1_PRESSED:
             screenKey = MENU_SCREEN;
@@ -43,17 +25,11 @@ void menu_drawIdleScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
     }
 
     uint64_t currentTime = esp_timer_get_time();
-
-    if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
+    if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {        
         draw_drawBackground(bg, 90, 90, 3);
+        uint8_t offsetX = menu_poopOverlay(bg, sprite, smallUiElements);
         
-        tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        uint8_t offsetX = menu_poopOverlay(sprite, smallUiElements);
-        
-        tft_clearBuffer(sprite, TFT_TRANSPARENT);
         animate_performAnimation(sprite, spriteData, offsetX);
-        
-        tft_clearBuffer(sprite, TFT_TRANSPARENT);
         menu_uiOverlay(sprite, bigUiElements);
             
         lastUpdateTime = currentTime;

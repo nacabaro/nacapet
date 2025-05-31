@@ -6,7 +6,7 @@
 #include "display/display.h"
 #include "draw/draw.h"
 
-void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct CharacterData* charaData) {
+void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData) {
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
 
     uint8_t pressedButtons = buttons_getPressedButtons();
@@ -21,9 +21,9 @@ void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
 
     draw_drawBackground(bg, 90, 90, 3);
 
-    menu_statusScreen_drawStat(sprite, spriteData, 10, 10, "Hunger", charaData->hunger);
-    menu_statusScreen_drawStat(sprite, spriteData, 10, 80, "Strength", charaData->strength);
-    menu_statusScreen_drawStat(sprite, spriteData, 10, 150, "Effort", charaData->effort);
+    menu_statusScreen_drawStat(sprite, spriteData, 10, 10, "Hunger", charaData[currentCharacter].hunger);
+    menu_statusScreen_drawStat(sprite, spriteData, 10, 80, "Strength", charaData[currentCharacter].strength);
+    menu_statusScreen_drawStat(sprite, spriteData, 10, 150, "Effort", charaData[currentCharacter].effort);
 
     tft_drawBuffer();
 }

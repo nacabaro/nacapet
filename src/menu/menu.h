@@ -10,7 +10,7 @@ void menu_drawClockEdit(TFT_eSprite &bg);
 void menu_drawTitle(TFT_eSprite &bg);
 void menu_drawIdleScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* bigUiElements, struct SpriteData* smallUiElements);
 void menu_offScreen();
-void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct CharacterData* charaData);
+void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData);
 void menu_statusScreen_drawStat(TFT_eSprite &sprite, struct SpriteData* spriteData, int x, int y, const char* text, uint8_t statValue);
 void menu_timerFinishedScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData);
 void menu_uiOverlay(TFT_eSprite &charSprite, struct SpriteData* uiElements);
@@ -34,7 +34,7 @@ void menu_poopScreen(
     TFT_eSprite &bg, TFT_eSprite &sprite, 
     struct SpriteData* spriteData, struct SpriteData* smallUiElements, struct SpriteData* bigUiElements
 );
-uint8_t menu_poopOverlay(TFT_eSprite &sprite, struct SpriteData* smallUiElements);
+uint8_t menu_poopOverlay(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* smallUiElements);
 void menu_clearPoopScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* bigUiElements, struct SpriteData* smallUiElements);
 void menu_drawHappyScreen(
     TFT_eSprite &bg, TFT_eSprite &sprite,
@@ -45,6 +45,8 @@ void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
 void menu_reloadEggs(uint8_t selectedEgg);
 void menu_drawDeathScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite);
 void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainCharacterSprites);
+void menu_mainScreen();
+void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainSpriteData, struct SpriteData* uiSpriteData);
 
 void menu_sleepScreen_sleepAction();
 void menu_sleepScreen_recalculateSleep();

@@ -57,7 +57,8 @@
 #define POOP_SCREEN_MENU 4
 #define MEDICAL_SCREEN_MENU 5
 #define SLEEP_SCREEN_MENU 6
-#define SETTINGS_SCREEN_MENU 7
+#define CHANGE_SCREEN_MENU 7
+#define SETTINGS_SCREEN_MENU 8
 
 // SCREENS THAT OPEN AFTER CLICKING ON A MENU ENTRY
 #define STATUS_SCREEN 10
@@ -67,7 +68,8 @@
 #define CLEAR_POOP_SCREEN 14
 #define MEDICAL_SCREEN 15
 #define SLEEP_SCREEN 16
-#define SETTINGS_SCREEN 17
+#define CHANGE_SCREEN 17
+#define SETTINGS_SCREEN 18
 
 // ICONS FOR EACH MENU ENTRY (MENU.BIN)
 #define STATUS_SCREEN_ICON 0
@@ -77,10 +79,10 @@
 #define CLEAR_POOP_ICON 4
 #define MEDICAL_SCREEN_ICON 5
 #define SLEEP_SCREEN_ICON 6
-#define SETTINGS_SCREEN_ICON 7
-#define CARE_MISTAKE_CALL_LIGHT 8
-#define BED_SPRITE 9
-#define EMPTY_EGG 10
+#define SETTINGS_SCREEN_ICON 8
+#define CARE_MISTAKE_CALL_LIGHT 9
+#define BED_SPRITE 10
+#define EMPTY_EGG 11
 
 // SCREENS
 #define OFF_SCREEN -1
@@ -99,6 +101,7 @@
 #define CARE_MISTAKE_SCREEN 23
 #define POOPING_SCREEN 24
 #define HAPPY_SCREEN 25
+#define MAIN_SCREEN 26
 
 // TRAINING MODES
 #define TRAINING_SCREEN_1 30
@@ -159,7 +162,7 @@ extern uint64_t lastPressedButtonTime;
 extern uint64_t lastUpdateTime;
 extern uint64_t lastBeepTime;
 
-extern struct CharacterData charaData;
+extern struct CharacterData* charaData;
 extern struct tm timeInfo;
 extern uint32_t dayUnixTime; 
 
@@ -187,7 +190,5 @@ extern LineCare_t** currentLineCareInstr;
 extern Line_t** currentLine;
 
 extern struct SpriteData mainCharacterSprites;
-
-extern bool pauseLoop;
 
 #endif

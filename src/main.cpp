@@ -1,10 +1,10 @@
 #include <Arduino.h>
+#include "defs/defs.h"
 #include "display/display.h"
 #include "memory/memory.h"
 #include "storage/storage.h"
 #include "animations/animations.h"
 #include "debug/debug.h"
-#include "defs/defs.h"
 #include "defs/chara_data.h"
 #include "menu/menu.h"
 #include "buttons/buttons.h"
@@ -13,6 +13,7 @@
 #include "vpet/lines/lines.h"
 #include "energy/energy.h"
 #include "driver/rtc_io.h"
+#include "loop/loop.h"
 #include "menu/training/training_screens.h"
 
 const char* TAG = "[MAIN]";
@@ -36,7 +37,7 @@ struct SpriteData uiElementsData;
 
 // Active character data
 // TODO: Split into CHARA_COUNT_IN_DEVICE times
-struct CharacterData charaData;
+struct CharacterData* charaData;
 uint8_t currentCharacter = 0;
 
 // Boot flag, tells if the device clock has been initialized
@@ -63,7 +64,6 @@ uint8_t eggNumber = 0;
 
 // Tasks
 TaskHandle_t secondLoop = NULL;
-bool pauseLoop = false;
 
 void loop2();
 void secondCoreTask(void*);
@@ -79,6 +79,8 @@ void setup() {
     tft_initScreenBuffer(TFT_BLACK);
 
     storage_init();
+
+    charaData = (struct CharacterData*) calloc(CHARA_COUNT_IN_DEVICE, sizeof(struct CharacterData));
     
     storage_readFile("/menu.bin", &menuElementsData);
     storage_readFile("/ui.bin", &uiElementsData);
@@ -123,7 +125,7 @@ void loop() {
             break;
 
         case STATUS_SCREEN: 
-            menu_statusScreen(bg, sprite, &uiElementsData, &charaData);
+            menu_statusScreen(bg, sprite, &uiElementsData);
             break;
 
         case OFF_SCREEN:
@@ -189,6 +191,14 @@ void loop() {
         case TRAINING_SCREEN_1:
             training_screenTraining1(bg, sprite, &mainCharacterSprites, &uiElementsData);
             break;
+
+        case MAIN_SCREEN:
+            menu_mainScreen();
+            break;
+
+        case CHANGE_SCREEN:
+            menu_changeCharaScreen(bg, sprite, &mainCharacterSprites, &uiElementsData);
+            break;
     }
 
     if (screenKey == IDLE_SCREEN || screenKey == OFF_SCREEN) {
@@ -206,10 +216,11 @@ void loop2() {
     
         if (screenOff) { energy_startLightSleep(); }
     } else {
-        lastPressedButtonTime = esp_timer_get_time();
-        buttons_getPressedButtons();
+        buttons_getPressedButtons(); // REMOVE: Esto es porque tengo que shiftear el buffer de la pantalla
+        delay(100);
     }
 
+    loopPaused = pauseLoop;
 }
 
 void secondCoreTask(void*) {

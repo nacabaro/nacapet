@@ -10,11 +10,11 @@ void menu_sleepingScreen(
     TFT_eSprite &bg, TFT_eSprite &sprite, 
     struct SpriteData* mainCharaData, struct SpriteData* bigUiElements, struct SpriteData* smallUIElements
 ) {
-    if (charaData.sleepy && !charaData.asleep) {
+    if (charaData[currentCharacter].sleepy && !charaData[currentCharacter].asleep) {
         screenKey = SLEEPY_SCREEN;
         return;
-    } else if (!charaData.sleepy && !charaData.asleep) {
-        screenKey = IDLE_SCREEN;
+    } else if (!charaData[currentCharacter].sleepy && !charaData[currentCharacter].asleep) {
+        screenKey = MAIN_SCREEN;
         return;
     }
 

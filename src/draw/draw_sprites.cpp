@@ -8,7 +8,8 @@
 
 const char* TAG_D = "[DRAW]";
 
-void draw_drawSprite(
+
+/*void draw_drawSprite(
     TFT_eSprite &spr, int x, int y, 
     struct SpriteData* spriteData, uint8_t spriteNumber, uint8_t factor, bool flipHorizontal 
 ) {
@@ -37,8 +38,62 @@ void draw_drawSprite(
     spr.pushToSprite(&composite1, x, y, TFT_TRANSPARENT);
     spr.pushToSprite(&composite2, x, y - 120, TFT_TRANSPARENT);
 
+    spriteData->lastX = x;
+    spriteData->lastY = y;
+    spriteData->lastW = scaledWidth;
+    spriteData->lastH = scaledWidth;
+
     //printf("%s: Sprite %d drawn at (%d, %d) %s\n", TAG_D, spriteNumber, x, y, (flipHorizontal ? "flipped" : ""));
+}*/
+
+
+void draw_drawSprite(
+    TFT_eSprite &spr,
+    int x, int y,
+    struct SpriteData* spriteData,
+    uint8_t spriteNumber,
+    uint8_t factor,
+    bool flipHorizontal
+) {
+    int srcW = spriteData->spriteWidth;
+    int srcH = spriteData->spriteHeight;
+    int scaledW = srcW * factor;
+    int scaledH = srcH * factor;
+
+    if (spr.width() != scaledW || spr.height() != scaledH) {
+        spr.deleteSprite();
+        spr.createSprite(scaledW, scaledH);
+    }
+
+    uint16_t *sprBuf = (uint16_t *)spr.getPointer();
+    uint16_t *srcBuf = spriteData->spriteData[spriteNumber];
+
+    for (int srcY = 0; srcY < srcH; srcY++) {
+        int destYBase = srcY * factor;
+        for (int srcX = 0; srcX < srcW; srcX++) {
+            int useX = flipHorizontal ? (srcW - 1 - srcX) : srcX;
+            uint16_t raw  = srcBuf[srcY * srcW + useX];
+            uint16_t color = (raw << 8) | (raw >> 8);
+
+            int destXBase = srcX * factor;
+            for (int dy = 0; dy < factor; dy++) {
+                int rowStart = (destYBase + dy) * scaledW + destXBase;
+                for (int dx = 0; dx < factor; dx++) {
+                    sprBuf[rowStart + dx] = color;
+                }
+            }
+        }
+    }
+
+    spr.pushToSprite(&composite1, x, y, TFT_TRANSPARENT);
+    spr.pushToSprite(&composite2, x, y - 120, TFT_TRANSPARENT);
+
+    spriteData->lastX = x;
+    spriteData->lastY = y;
+    spriteData->lastW = scaledW;
+    spriteData->lastH = scaledH;
 }
+
 
 void draw_drawSpriteCentered(
     TFT_eSprite &spr,

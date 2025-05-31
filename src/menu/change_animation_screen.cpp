@@ -3,6 +3,7 @@
 #include "display/display.h"
 #include "defs/screen_defs.h"
 #include "vpet/evolution/evolution.h"
+#include "loop/loop.h"
 
 struct SpriteData* checkerboardPattern;
 
@@ -31,7 +32,6 @@ void menu_freeCheckerboard() {
 }
 
 // Don't worry, I hate this too
-
 void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainCharacterSprites) {
     menu_createCheckerboard();
     TFT_eSprite checkerboard = TFT_eSprite(&tft);
@@ -150,7 +150,9 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
 
     menu_freeCheckerboard();
 
-    pauseLoop = false;
-    screenKey = IDLE_SCREEN;
+    loop_resumeLoop();
+
+    screenKey = MAIN_SCREEN;
+
     lastUpdateTime = 0; // Un pequeño empujoncito
 }

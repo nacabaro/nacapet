@@ -7,10 +7,10 @@
 #include "defs/chara_data.h"
 
 void menu_sleepyScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* charaSprites, struct SpriteData* uiSprites) {
-    if (!charaData.asleep && !charaData.sleepy) {
-        screenKey = IDLE_SCREEN;
+    if (!charaData[currentCharacter].asleep && !charaData[currentCharacter].sleepy) {
+        screenKey = MAIN_SCREEN;
         return;
-    } else if (charaData.asleep && charaData.sleepy) {
+    } else if (charaData[currentCharacter].asleep && charaData[currentCharacter].sleepy) {
         screenKey = SLEEP_SCREEN;
         return;
     }

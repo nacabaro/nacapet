@@ -5,11 +5,13 @@
 #include "buttons/buttons.h"
 #include "display/display.h"
 #include "draw/draw.h"
+#include "loop/loop.h"
 
 void training_screenTraining1(
     TFT_eSprite &bg, TFT_eSprite &sprite,
     struct SpriteData* mainCharaData, struct SpriteData* attackSprites
 ) {
+    
     draw_drawBackground(bg, 90, 90, 3);
     draw_drawSpriteCentered(sprite, mainCharaData, 11, 6);
     
@@ -28,15 +30,24 @@ void training_screenTraining1(
 
     uint8_t attackPower = 0;
     uint64_t currentTime = lastUpdateTime = esp_timer_get_time();
+    int16_t lineYPos = 0;
+    bool counted = false;
     
-    while (currentTime - lastUpdateTime < 8000000) {
+    while (currentTime - lastUpdateTime < 5000000) {
         currentTime = esp_timer_get_time();
 
         uint8_t buttonsRead = buttons_getPressedButtons();
 
         switch (buttonsRead) {
-        case 8:
+            case 8:
             attackPower++;
+            if (attackPower % 4 == 0) {
+                tft_drawRectangle(18, 168 - lineYPos, 18, 6, TFT_BLACK);
+                tft_drawBuffer();
+                lineYPos += 8;
+            } else {
+                delay(15);
+            }
             break;
         
         case 2:
@@ -63,6 +74,9 @@ void training_screenTraining1(
         attackResult = ATTACK_PATTERN_MEDIOCRE;
     }
 
+    loop_pauseLoop();
 
     training_displayTrainingResult(bg, sprite, mainCharaData, attackSprites, attackResult);
+    
+    loop_resumeLoop();
 }
