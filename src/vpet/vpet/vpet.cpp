@@ -160,10 +160,6 @@ void vpet_reduceTimers(uint8_t diff_sec) {
     if (charaData[currentCharacter].strengthCareMistakeTimer > 0) {
         charaData[currentCharacter].strengthCareMistakeTimer -= diff_sec;
     } 
-
-    if (charaData[currentCharacter].changeTimerLeft > 0) {
-        charaData[currentCharacter].changeTimerLeft -= diff_sec;
-    }
 }
 
 void vpet_evalHungerTimer() {
@@ -228,13 +224,17 @@ void vpet_evalStrengthTimer() {
     }
 }
 
-void vpet_evalChangeTimer() {
+void vpet_evalChangeTimer(uint8_t diff_sec) {
+    if (charaData[currentCharacter].changeTimerLeft > 0) {
+        charaData[currentCharacter].changeTimerLeft -= diff_sec;
+    }
+
     if (charaData[currentCharacter].changeTimerLeft <= 0) {
         if (change_onChangeTimerComplete()) {
             screenKey = TIMER_FINISHED_SCREEN;
             interruptKey = EVOLUTION_SCREEN;
 
-            pauseLoop = true;
+            vTaskSuspend(secondLoop);
         }
     }
 }
@@ -259,7 +259,7 @@ void vpet_runVpetTasks() {
                 vpet_evalTimers();
             }
             
-            vpet_evalChangeTimer();
+            vpet_evalChangeTimer(diffSec);
         
         } else if (!charaData[currentCharacter].hatched && charaData[currentCharacter].hatching) {
             charaData[currentCharacter].hatchTimer += diffSec;
@@ -272,6 +272,7 @@ void vpet_runVpetTasks() {
         }
         
         vpet_debugTimers(diffSec);
+        debug_printFreeMemory();
 
         runVpetTasks = false;
         vpetLastEvaluationTime = currentEvaluationTime;

@@ -12,7 +12,7 @@ static const int BUF_H = 120;
 void tft_initDisplay(TFT_eSPI &tft, uint16_t color) {
     tft.begin();
     tft.initDMA();
-    tft.setRotation(1);
+    tft.setRotation(0);
     tft.fillScreen(TFT_RED);
 }
 
@@ -32,8 +32,8 @@ void tft_initScreenBuffer(uint16_t color) {
 
 void tft_drawBuffer() {
     tft.startWrite();
-    composite1.pushSprite(xPos * -80, yPos * -112);
-    composite2.pushSprite(xPos * -80, (yPos * -112) + BUF_H);
+    composite1.pushSprite(0, 0);
+    composite2.pushSprite(0, 0 + BUF_H);
     tft.endWrite();
 }
 

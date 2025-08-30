@@ -88,6 +88,20 @@ void animate_performHappyAnimation(TFT_eSprite &spr, struct SpriteData* spriteDa
     );
 }
 
+
+void animate_performAngryAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
+    currentAnimationFrame = (currentAnimationFrame + 1) % numFramesAngry;
+    draw_drawSprite(
+        spr,
+        spriteHeightOnScreen,
+        spriteHeightOnScreen,
+        spriteData,
+        angryAnimationFrames[currentAnimationFrame],
+        6,
+        false
+    );
+}
+
 void animate_performHatchingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesHappy;
     draw_drawSprite(

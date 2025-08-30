@@ -17,10 +17,10 @@
 #define BL_PIN 25
 
 // BUTTONS PINOUT
-#define K1_PIN 27
-#define K2_PIN 26
+#define K1_PIN 35
+#define K2_PIN 13
 #define K3_PIN 33
-#define K4_PIN 32
+#define K4_PIN 14
 
 // SPEAKER PINOUT
 #define SPK_PIN 21
@@ -101,7 +101,8 @@
 #define CARE_MISTAKE_SCREEN 23
 #define POOPING_SCREEN 24
 #define HAPPY_SCREEN 25
-#define MAIN_SCREEN 26
+#define ANGRY_SCREEN 26
+#define MAIN_SCREEN 27
 
 // TRAINING MODES
 #define TRAINING_SCREEN_1 30

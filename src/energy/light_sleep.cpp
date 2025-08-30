@@ -11,12 +11,14 @@
 
 void energy_setUpLightSleep() {
     // Plena confianza en manolo
-    esp_sleep_enable_ext0_wakeup(GPIO_NUM_32, 0);
+    esp_sleep_enable_ext0_wakeup((gpio_num_t) K4_PIN, LOW);
     esp_sleep_enable_timer_wakeup(SLEEP_TIME_US);
 }
 
 void energy_startLightSleep() {
     esp_light_sleep_start();
+
+    printf("[MAIN] Woken up\n");
     
     // Who woke you up???? TELL me!!
     auto cause = esp_sleep_get_wakeup_cause();

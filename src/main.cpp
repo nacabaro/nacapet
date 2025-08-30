@@ -72,8 +72,8 @@ void setup() {
     Serial.begin(115200);
     delay(100); // Give MPU6050 and ESP32 time to power up
 
-    Wire.begin(MPU_SDA_PIN, MPU_SCL_PIN);  // I2C init before MPU6050
-    mpu.initialize();
+    //Wire.begin(MPU_SDA_PIN, MPU_SCL_PIN);  // I2C init before MPU6050
+    //mpu.initialize();
 
     tft_initDisplay(tft, TFT_BLACK);
     tft_initScreenBuffer(TFT_BLACK);
@@ -172,6 +172,10 @@ void loop() {
             menu_drawHappyScreen(bg, sprite, &mainCharacterSprites, &uiElementsData);
             break;
 
+        case ANGRY_SCREEN:
+            menu_drawAngryScreen(bg, sprite, &mainCharacterSprites, &uiElementsData);
+            break;
+
         case EGG_HATCH_SCREEN:
             menu_eggHatchScreen(bg, sprite, &menuElementsData, &uiElementsData);
             break;
@@ -207,20 +211,13 @@ void loop() {
 }
 
 void loop2() {
-    if (!pauseLoop) {
-        buttons_checkInactivity();
-        vpet_runVpetTasks();
+    buttons_checkInactivity();
+    vpet_runVpetTasks();
         
-        getLocalTime(&timeInfo, 50);
-        dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
+    getLocalTime(&timeInfo, 50);
+    dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
     
-        if (screenOff) { energy_startLightSleep(); }
-    } else {
-        buttons_getPressedButtons(); // REMOVE: Esto es porque tengo que shiftear el buffer de la pantalla
-        delay(100);
-    }
-
-    loopPaused = pauseLoop;
+    if (screenOff) { energy_startLightSleep(); }
 }
 
 void secondCoreTask(void*) {

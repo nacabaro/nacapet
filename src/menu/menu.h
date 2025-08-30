@@ -47,6 +47,10 @@ void menu_drawDeathScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
 void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainCharacterSprites);
 void menu_mainScreen();
 void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainSpriteData, struct SpriteData* uiSpriteData);
+void menu_drawAngryScreen(
+    TFT_eSprite &bg, TFT_eSprite &sprite,
+    struct SpriteData* spriteData, struct SpriteData* smallUiElements
+);
 
 void menu_sleepScreen_sleepAction();
 void menu_sleepScreen_recalculateSleep();

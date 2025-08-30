@@ -39,18 +39,6 @@ uint8_t buttons_getPressedButtons() {
         (k4_prev == HIGH && k4_current == LOW)    
     );
 
-    if (retV == K4_PRESSED) {
-        tft.fillScreen(TFT_BLACK);
-        xPos++;
-        if (xPos > 1) {
-            yPos++;
-            xPos = 0;
-            if (yPos > 1) {
-                yPos = 0;
-            }
-        }
-    }
-
     if (retV != 0) {
         tone(SPK_PIN, BEEP_FREQ_HZ, BEEP_LEN_MS);
         lastPressedButtonTime = esp_timer_get_time();

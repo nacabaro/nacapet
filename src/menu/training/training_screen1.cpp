@@ -11,7 +11,8 @@ void training_screenTraining1(
     TFT_eSprite &bg, TFT_eSprite &sprite,
     struct SpriteData* mainCharaData, struct SpriteData* attackSprites
 ) {
-    
+    vTaskSuspend(secondLoop);
+
     draw_drawBackground(bg, 90, 90, 3);
     draw_drawSpriteCentered(sprite, mainCharaData, 11, 6);
     
@@ -74,9 +75,5 @@ void training_screenTraining1(
         attackResult = ATTACK_PATTERN_MEDIOCRE;
     }
 
-    loop_pauseLoop();
-
     training_displayTrainingResult(bg, sprite, mainCharaData, attackSprites, attackResult);
-    
-    loop_resumeLoop();
 }

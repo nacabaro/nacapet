@@ -50,8 +50,6 @@ void menu_drawClockEdit(TFT_eSprite &bg) {
         case K3_PRESSED:
             // Es un dia random, nada significativo, ya pondre mas adelante que tenga dia del año
             rtc.setTime(0, clockMinuteCount, clockHourCount, 1, 11, 2024);
-            getLocalTime(&timeInfo, 50);
-            dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
 
             coldBoot = false;
 

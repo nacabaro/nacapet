@@ -51,7 +51,7 @@ const int sleepyAnimationFrames[] = {
 };
 
 const int happyAnimationFrames[] = {
-    3, 7
+    7, 3
 };
 
 const int hatchingAnimationPositions[] = {
@@ -64,6 +64,7 @@ void animate_performEatingAnimation(TFT_eSprite &spr, struct SpriteData* spriteD
 void animate_performRefuseAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
 void animate_performSleepyAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
 void animate_performHappyAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
+void animate_performAngryAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
 void animate_performHatchingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData);
 
 #endif

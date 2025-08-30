@@ -5,10 +5,8 @@
 #include "defs/screen_defs.h"
 
 void menu_uiOverlay(TFT_eSprite &charSprite, struct SpriteData* uiElements) {
-    struct tm timeInfo;
     char hourBuffer[6];
 
-    getLocalTime(&timeInfo, RTC_TIMEOUT_THRESHOLD_TIME_MS);
     snprintf(hourBuffer, 6, "%02d:%02d", timeInfo.tm_hour, timeInfo.tm_min);     
 
     composite1.fillRect(0, 0, 240, 24, TFT_BLACK);

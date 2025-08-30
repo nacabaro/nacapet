@@ -9,7 +9,7 @@
 
 
 void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainSpriteData, struct SpriteData* uiSpriteData) {
-    loop_pauseLoop();
+    vTaskSuspend(secondLoop);
 
     uint8_t selectedChara = currentCharacter;
     CharacterData* selectedCharaData = &charaData[selectedChara];
@@ -30,7 +30,7 @@ void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteD
             
             case K2_PRESSED:
                 currentCharacter = selectedChara;
-                loop_resumeLoop();
+                vTaskResume(secondLoop);
 
                 screenKey = MAIN_SCREEN;
                 menuKey = STATUS_SCREEN;
@@ -42,7 +42,7 @@ void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteD
                 sprintf(fileName, "/chara/%02x.bin", charaData[currentCharacter].idChara);
 
                 storage_readFile(fileName, mainSpriteData);       
-                loop_resumeLoop();
+                vTaskResume(secondLoop);
 
                 screenKey = MAIN_SCREEN;
                 menuKey = STATUS_SCREEN;
@@ -64,6 +64,7 @@ void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteD
                 
                 storage_readFile(fileName, mainSpriteData);
                 draw_drawSprite(sprite, 18, 72, mainSpriteData, 0, 6);
+                
             } else {
                 tft_drawCenteredText("EMPTY", 4, 120);
             }
@@ -81,7 +82,7 @@ void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteD
             sprintf(fileName, "/chara/%02x.bin", charaData[currentCharacter].idChara);
 
             storage_readFile(fileName, mainSpriteData);       
-            loop_resumeLoop();
+            vTaskResume(secondLoop);
 
             screenKey = MAIN_SCREEN;
             menuKey = STATUS_SCREEN;

@@ -14,6 +14,7 @@ void vpet_debugTimers(uint8_t diffSec);
 void vpet_runVpetTasks();
 void vpet_reduceTimers(uint8_t diff_sec);
 void vpet_evalHungerTimer();
+void vpet_evalChangeTimer(uint8_t diff_sec);
 void vpet_evalStrengthTimer();
 
 #endif

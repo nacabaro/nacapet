@@ -150,7 +150,7 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
 
     menu_freeCheckerboard();
 
-    loop_resumeLoop();
+    vTaskResume(secondLoop);
 
     screenKey = MAIN_SCREEN;
 

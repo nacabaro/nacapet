@@ -5,7 +5,7 @@
 #include "draw/draw.h"
 #include "animations/animations.h"
 
-void menu_drawHappyScreen(
+void menu_drawAngryScreen(
     TFT_eSprite &bg, TFT_eSprite &sprite,
     struct SpriteData* spriteData, struct SpriteData* smallUiElements
 ) {
@@ -26,13 +26,11 @@ void menu_drawHappyScreen(
             draw_drawBackground(bg, 90, 90, 3);
 
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            animate_performHappyAnimation(sprite, spriteData);
+            animate_performAngryAnimation(sprite, spriteData);
             
             if (frameCounter % 2 == 0) {
-                tone(SPK_PIN, 7500, 50);
-                tone(SPK_PIN, 5000, 50);
-                tone(SPK_PIN, 2500, 50);
-                tone(SPK_PIN, 1000, 50);
+                tone(SPK_PIN, 1000, 100);
+                tone(SPK_PIN, 1000, 200);
 
                 tft_clearBuffer(sprite, TFT_TRANSPARENT);
                 draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON, 6);

@@ -59,7 +59,7 @@ void training_displayTrainingResult(
 
         case ATTACK_PATTERN_BAD:
             pattern = patternBad;
-            screenKey = MAIN_SCREEN;
+            screenKey = ANGRY_SCREEN;
 
             charaData[currentCharacter].weight--;
             if (charaData[currentCharacter].weight < charaData[currentCharacter].minWeight) {
@@ -71,14 +71,14 @@ void training_displayTrainingResult(
         case ATTACK_PATTERN_MEDIOCRE:
         default:
             pattern = patternMediocre;
-            screenKey = MAIN_SCREEN;
+            screenKey = ANGRY_SCREEN;
             break;
     }
 
 
     for (int i = 0; i < NUM_ROUNDS; i++) {
         training_trainingAttackSounds();
-        for (int j = 78; j >= -48; j -= 6) {
+        for (int j = 78; j >= -48; j -= 3) {
             draw_drawBackground(bg, 90, 90, 3);
             draw_drawSprite(sprite, 126, 72, mainCharaData, 11, 6);
             draw_drawAttacks(sprite, attackSprites, j, 72, pattern[i], charaData[currentCharacter].spriteAttackId, 6);
@@ -86,7 +86,7 @@ void training_displayTrainingResult(
             tft_drawBuffer();
         }
 
-        delay(100);
+        delay(20);
     }
 
 
