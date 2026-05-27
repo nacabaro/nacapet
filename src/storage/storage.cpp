@@ -8,8 +8,6 @@
 
 const char* TAG_S = "[STORAGE]";
 
-#define SPRITE_SCALE 6
-
 void storage_init() {
     if (!SPIFFS.begin(true)) {
         printf("%s Failed to mount file system\n", TAG_S);
@@ -18,94 +16,6 @@ void storage_init() {
     }
 }
 
-
-void storage_readFile(const char* path, struct SpriteData* spriteData) {
-    File file = SPIFFS.open(path, "r");
-    if (!file) {
-        printf("%s Failed to open file for reading\n", TAG_S);
-        return;
-    }
-
-    uint8_t width, height, spriteNumber;
-
-    file.read(&width, 1);
-    file.read(&height, 1);
-    file.read(&spriteNumber, 1);
-
-    if (spriteData->spriteData != NULL) {
-        memory_free(spriteData);
-    }
-
-    const uint8_t scaledW = width  * SPRITE_SCALE;
-    const uint8_t scaledH = height * SPRITE_SCALE;
-
-    uint16_t** scaled = (uint16_t**) ps_malloc(spriteNumber * sizeof(uint16_t*));
-    if (!scaled) {
-        printf("%s PSRAM alloc failed for pointer table\n", TAG_S);
-        file.close();
-        return;
-    }
-    for (uint8_t i = 0; i < spriteNumber; i++) {
-        scaled[i] = (uint16_t*) ps_malloc(scaledW * scaledH * sizeof(uint16_t));
-        if (!scaled[i]) {
-            printf("%s PSRAM alloc failed for sprite %d\n", TAG_S, i);
-            for (uint8_t j = 0; j < i; j++) free(scaled[j]);
-            free(scaled);
-            file.close();
-            return;
-        }
-    }
-
-    uint16_t* rowBuf = (uint16_t*) malloc(width * sizeof(uint16_t));
-    if (!rowBuf) {
-        printf("%s scratch alloc failed\n", TAG_S);
-        for (uint8_t i = 0; i < spriteNumber; i++) free(scaled[i]);
-        free(scaled);
-        file.close();
-        return;
-    }
-
-    printf(
-        "%s Read header: width=%d, height=%d, numSprites=%d -> scaled to %dx%d\n",
-        TAG_S, width, height, spriteNumber, scaledW, scaledH
-    );
-
-    for (int sprN = 0; sprN < spriteNumber; sprN++) {
-        uint16_t* dst = scaled[sprN];
-
-        for (int srcY = 0; srcY < height; srcY++) {
-            for (int srcX = 0; srcX < width; srcX++) {
-                uint8_t hi, lo;
-                file.read(&hi, 1);
-                file.read(&lo, 1);
-                rowBuf[srcX] = (lo << 8) | hi;
-            }
-
-            for (int dy = 0; dy < SPRITE_SCALE; dy++) {
-                uint16_t* dstRow = dst + (srcY * SPRITE_SCALE + dy) * scaledW;
-
-                for (int srcX = 0; srcX < width; srcX++) {
-                    uint16_t color = rowBuf[srcX];
-                    uint16_t* dstPixel = dstRow + srcX * SPRITE_SCALE;
-                    for (int dx = 0; dx < SPRITE_SCALE; dx++) {
-                        dstPixel[dx] = color;
-                    }
-                }
-            }
-        }
-    }
-
-    free(rowBuf);
-    file.close();
-
-    spriteData->spriteWidth  = scaledW;
-    spriteData->spriteHeight = scaledH;
-    spriteData->spriteNumber = spriteNumber;
-    spriteData->spriteData   = scaled;
-
-    printf("%s Loaded & upscaled %s (%d sprites, each %dx%d px)\n",
-           TAG_S, path, spriteNumber, scaledW, scaledH);
-}
 
 void storage_initBackground(const char* path, TFT_eSprite& bg) {
     File file = SPIFFS.open(path, "r");
