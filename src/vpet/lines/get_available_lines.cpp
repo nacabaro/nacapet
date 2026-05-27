@@ -1,23 +1,24 @@
 #include "lines.h"
 #include "memory/memory.h"
 #include "defs/defs.h"
+#include "utils/utils.h"
 
 #include <FS.h>
 #include <SPIFFS.h>
 
-const char lineHeader[5] = "NPET"; 
+const char lineHeader[5] = "NPET";
 const uint8_t headerSize = 4;
 
 void lines_getAvailableLines() {
     if (eggSelection != NULL) {
         return;
     }
-    
+
     fs::File root = SPIFFS.open("/lines");
     fs::File lineFile = root.openNextFile();
 
     uint8_t allocCount = 0;
-    char header[5]; 
+    char header[5];
 
     while (lineFile) {
         printf("[LINES] Opening file %s\n", lineFile.name());
@@ -40,39 +41,69 @@ void lines_getAvailableLines() {
     lineFile = root.openNextFile("r");
 
     while (lineFile) {
-        uint16_t bytesRead = lineFile.readBytes(header, headerSize);
+        uint16_t bytesRead = 0;
+
+        bytesRead += lineFile.readBytes(header, headerSize);
         bytesRead += lineFile.read(&availableLines[allocCount].id, 1);
         bytesRead += lineFile.readBytes(availableLines[allocCount].name, 16);
 
-        bytesRead += lineFile.read(&availableLines[allocCount].eggSprite.spriteWidth, 1);
-        bytesRead += lineFile.read(&availableLines[allocCount].eggSprite.spriteHeight, 1);
-        bytesRead += lineFile.read(&availableLines[allocCount].eggSprite.spriteNumber, 1); // Se coloca el cursor al principio de los datos de sprite
+        uint8_t originalWidth;
+        uint8_t originalHeight;
+        uint8_t spriteCount;
 
-        availableLines[allocCount].eggSprite.spriteNumber = 1; // Inutil, pero es que necesito hacer la lectura
+        bytesRead += lineFile.read(&originalWidth, 1);
+        bytesRead += lineFile.read(&originalHeight, 1);
+        bytesRead += lineFile.read(&spriteCount, 1);
 
-        availableLines[allocCount].eggSprite.spriteData = memory_allocate(
-            availableLines[allocCount].eggSprite.spriteNumber,
-            availableLines[allocCount].eggSprite.spriteWidth,
-            availableLines[allocCount].eggSprite.spriteHeight
-        );
+        const uint8_t scaledWidth = originalWidth * SPRITE_SCALE;
+        const uint8_t scaledHeight = originalHeight * SPRITE_SCALE;
+
+        availableLines[allocCount].eggSprite.spriteWidth = scaledWidth;
+        availableLines[allocCount].eggSprite.spriteHeight = scaledHeight;
+        availableLines[allocCount].eggSprite.spriteNumber = 1;
+        availableLines[allocCount].eggSprite.spriteData = memory_allocate(1, scaledWidth, scaledHeight);
+      
+        uint16_t* spriteBuffer =
+            (uint16_t*) malloc(
+                originalWidth *
+                originalHeight *
+                sizeof(uint16_t)
+            );
+
+        if (!spriteBuffer) {
+            printf("[LINES] Failed to allocate sprite buffer\n");
+
+            lineFile.close();
+            lineFile = root.openNextFile();
+
+            continue;
+        }
 
         uint8_t highByte;
         uint8_t lowByte;
 
-        for (int i = 0; i < availableLines[allocCount].eggSprite.spriteWidth * availableLines[allocCount].eggSprite.spriteHeight; i++) {
+        for (int i = 0; i < originalWidth * originalHeight; i++) {
             bytesRead += lineFile.read(&highByte, 1);
             bytesRead += lineFile.read(&lowByte, 1);
 
-            uint16_t pixel = (highByte << 8) | lowByte;
-
-            availableLines[allocCount].eggSprite.spriteData[0][i] = pixel;
+            spriteBuffer[i] = (highByte << 8) | lowByte;
         }
 
+        utils_upscaleSprite(
+            spriteBuffer,
+            originalWidth,
+            originalHeight,
+            availableLines[allocCount].eggSprite.spriteData[0]
+        );
+
+        free(spriteBuffer);
+
         strcpy(availableLines[allocCount].fileName, lineFile.name());
-        
+
         lineFile.close();
-        
+
         allocCount++;
+
         lineFile = root.openNextFile();
     }
 
