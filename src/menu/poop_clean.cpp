@@ -53,5 +53,7 @@ void menu_clearPoopScreen(
     menuKey = -1;
     charaData[currentCharacter].poopNumber = 0;
 
+    vTaskResume(secondLoop);
+
     return;
 }
