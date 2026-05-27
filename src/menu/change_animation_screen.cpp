@@ -8,18 +8,33 @@
 struct SpriteData* checkerboardPattern;
 
 void menu_createCheckerboard() {
+    // Build the pattern pre-scaled by SPRITE_SCALE (6) so that
+    // draw_drawSprite can treat it identically to SPIFFS-loaded sprites.
+    // Logical size: 34 wide × 1 tall  →  Scaled: 204 wide × 6 tall
+    const uint8_t SCALE       = 6;
+    const uint8_t logicalW    = 34;
+    const uint8_t logicalH    = 1;
+    const uint16_t scaledW    = logicalW * SCALE;   // 204
+    const uint16_t scaledH    = logicalH * SCALE;   // 6
+    const uint32_t bufferSize = scaledW * scaledH;
+
     checkerboardPattern = (SpriteData*) malloc(sizeof(SpriteData));
-    checkerboardPattern->spriteHeight = 1;
-    checkerboardPattern->spriteWidth = 34;
+    checkerboardPattern->spriteWidth  = scaledW;
+    checkerboardPattern->spriteHeight = scaledH;
     checkerboardPattern->spriteNumber = 1;
-    checkerboardPattern->spriteData = (uint16_t**) malloc(sizeof(uint16_t*) * checkerboardPattern->spriteNumber);
-    checkerboardPattern->spriteData[0] = (uint16_t*) malloc(sizeof(uint16_t) * checkerboardPattern->spriteWidth);
-    
-    for (int i = 0; i < checkerboardPattern->spriteWidth; i++) {
-        if (i % 2 == 0) {
-            checkerboardPattern->spriteData[0][i] = TFT_BLACK;
-        } else {
-            checkerboardPattern->spriteData[0][i] = TFT_TRANSPARENT;
+    checkerboardPattern->spriteData   = (uint16_t**) malloc(sizeof(uint16_t*));
+    checkerboardPattern->spriteData[0] = (uint16_t*) malloc(sizeof(uint16_t) * bufferSize);
+
+    uint16_t* buf = checkerboardPattern->spriteData[0];
+
+    // Fill: repeat each logical pixel as a SCALE×SCALE block across all rows
+    for (uint16_t row = 0; row < scaledH; row++) {
+        for (uint8_t col = 0; col < logicalW; col++) {
+            uint16_t color = (col % 2 == 0) ? TFT_BLACK : TFT_TRANSPARENT;
+            uint16_t* dst  = buf + row * scaledW + col * SCALE;
+            for (uint8_t dx = 0; dx < SCALE; dx++) {
+                dst[dx] = color;
+            }
         }
     }
 }
@@ -32,7 +47,7 @@ void menu_freeCheckerboard() {
 }
 
 // Don't worry, I hate this too
-void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainCharacterSprites) {
+void menu_evolutionScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* mainCharacterSprites) {
     menu_createCheckerboard();
     TFT_eSprite checkerboard = TFT_eSprite(&tft);
 
@@ -48,7 +63,7 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
             tone(SPK_PIN, 3500, 50);
 
             draw_drawBackground(bg, 90, 90, 3);
-            draw_drawSprite(sprite, 72 + ((i % 2 == 0) * 6), 72, mainCharacterSprites, 6, 6);
+            draw_drawSprite(sprite, 72 + ((i % 2 == 0) * 6), 72, mainCharacterSprites, 6);
             
             tft_drawBuffer();
 
@@ -59,7 +74,7 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
     }
 
     draw_drawBackground(bg, 90, 90, 3);
-    draw_drawSprite(sprite, 72, 72, mainCharacterSprites, 7, 6);
+    draw_drawSprite(sprite, 72, 72, mainCharacterSprites, 7);
 
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
 
@@ -70,7 +85,7 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
     
             tft_drawRectangle(18, startYPos, 204, 6, TFT_RED);
     
-            draw_drawSprite(checkerboard, 18, startYPos, checkerboardPattern, 0, 6, checkerboardShift);
+            draw_drawSprite(checkerboard, 18, startYPos, checkerboardPattern, 0, checkerboardShift);
             
             tft_drawBuffer();
     
@@ -105,7 +120,7 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
             uint8_t startYPos = 72 + (i * 6);
 
             tft_drawRectangle(18, startYPos, 204, 6, TFT_GREEN);
-            draw_drawSprite(checkerboard, 18, startYPos, checkerboardPattern, 0, 6, checkerboardShift);
+            draw_drawSprite(checkerboard, 18, startYPos, checkerboardPattern, 0, checkerboardShift);
             
             tft_drawBuffer();
 
@@ -120,7 +135,7 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
         uint64_t currentTime = esp_timer_get_time();
         if (currentTime - lastUpdateTime > 100000) {
             draw_drawBackground(bg, 90, 90, 3);
-            draw_drawSprite(sprite, 72, 72, mainCharacterSprites, 7, 6);
+            draw_drawSprite(sprite, 72, 72, mainCharacterSprites, 7);
 
             uint8_t rectHeight = (6 * i);
 
@@ -129,7 +144,7 @@ void menu_evolutionScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
             for (int j = 0; j < i; j++) {
                 uint8_t rectYPos = 72 + (6 * j);
 
-                draw_drawSprite(checkerboard, 18, rectYPos, checkerboardPattern, 0, 6, checkerboardShift);
+                draw_drawSprite(checkerboard, 18, rectYPos, checkerboardPattern, 0, checkerboardShift);
                     
                 checkerboardShift = !checkerboardShift;
             }

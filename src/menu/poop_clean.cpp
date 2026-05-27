@@ -36,15 +36,21 @@ void menu_clearPoopScreen(
 
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
 
-    while (cleanerXPos > 18) {
-        draw_drawSprite(sprite, cleanerXPos, 72, smallUiElements, CLEANER_ICON, 6);
-        draw_drawSprite(sprite, cleanerXPos, 120, smallUiElements, CLEANER_ICON, 6);
+    while (cleanerXPos > 18 - 48) {
+        draw_drawBackgroundSection(bg, cleanerXPos + 6, 72, 48, 96);
+
+        draw_drawSprite(sprite, cleanerXPos, 72, smallUiElements, CLEANER_ICON);
+        draw_drawSprite(sprite, cleanerXPos, 120, smallUiElements, CLEANER_ICON);
+        
+        draw_drawBackgroundSection(bg, 0, 72, 18, 96);
+        
         tft_drawBuffer();
+        
         cleanerXPos -= 6;
-        delay(50);
     }
 
     screenKey = HAPPY_SCREEN;
+    menuKey = -1;
     charaData[currentCharacter].poopNumber = 0;
 
     return;

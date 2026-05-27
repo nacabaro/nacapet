@@ -167,7 +167,12 @@ void vpet_evalHungerTimer() {
         charaData[currentCharacter].hungerCareMistakeTimer <= 0 &&
         charaData[currentCharacter].hunger > 0
     ) {
+        #ifndef DEBUG
         charaData[currentCharacter].hunger--;
+        #else 
+        charaData[currentCharacter].hunger -= 60;
+        #endif
+
 
         if (charaData[currentCharacter].hunger > 0) {
             charaData[currentCharacter].hungerCareMistakeTimer = charaData[currentCharacter].initialStatsReductionTime;
@@ -202,7 +207,12 @@ void vpet_evalStrengthTimer() {
         charaData[currentCharacter].strengthCareMistakeTimer <= 0 &&
         charaData[currentCharacter].strength > 0
     ) {
+        #ifndef DEBUG
         charaData[currentCharacter].strength--;
+        #else
+        charaData[currentCharacter].strength -= 60;
+        #endif
+
         if (charaData[currentCharacter].strength > 0) {
             charaData[currentCharacter].strengthCareMistakeTimer = charaData[currentCharacter].initialStatsReductionTime;
         } else {
@@ -226,7 +236,11 @@ void vpet_evalStrengthTimer() {
 
 void vpet_evalChangeTimer(uint8_t diff_sec) {
     if (charaData[currentCharacter].changeTimerLeft > 0) {
+        #ifndef DEBUG
         charaData[currentCharacter].changeTimerLeft -= diff_sec;
+        #else
+        charaData[currentCharacter].changeTimerLeft -= 600;
+        #endif
     }
 
     if (charaData[currentCharacter].changeTimerLeft <= 0) {
@@ -245,7 +259,7 @@ void IRAM_ATTR onActionTimerDelta() {
 }
 
 void vpet_runVpetTasks() {
-    if (runVpetTasks) {
+    if (runVpetTasks && !charaData[currentCharacter].frozen) {
         uint64_t currentEvaluationTime = esp_timer_get_time();
 
         uint64_t deltaUs   = currentEvaluationTime - vpetLastEvaluationTime;

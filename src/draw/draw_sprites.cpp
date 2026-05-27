@@ -9,106 +9,56 @@
 const char* TAG_D = "[DRAW]";
 
 
-/*void draw_drawSprite(
-    TFT_eSprite &spr, int x, int y, 
-    struct SpriteData* spriteData, uint8_t spriteNumber, uint8_t factor, bool flipHorizontal 
-) {
-    int scaledWidth = spriteData->spriteWidth * factor;
-    int scaledHeight = spriteData->spriteHeight * factor;
-    
-    spr.createSprite(scaledWidth, scaledHeight);
-
-    for (int sy = 0; sy < scaledHeight; sy++) {
-        for (int sx = 0; sx < scaledWidth; sx++) {
-            int srcX = sx / factor;
-            if (flipHorizontal) {
-                srcX = (spriteData->spriteWidth - 1) - srcX;
-            } 
-
-            int srcY = sy / factor;
-
-            uint16_t color = spriteData->spriteData
-                [spriteNumber]
-                [srcY * spriteData->spriteWidth + srcX];
-            
-                spr.drawPixel(sx, sy, color);
-        }
-    }
-
-    spr.pushToSprite(&composite1, x, y, TFT_TRANSPARENT);
-    spr.pushToSprite(&composite2, x, y - 120, TFT_TRANSPARENT);
-
-    spriteData->lastX = x;
-    spriteData->lastY = y;
-    spriteData->lastW = scaledWidth;
-    spriteData->lastH = scaledWidth;
-
-    //printf("%s: Sprite %d drawn at (%d, %d) %s\n", TAG_D, spriteNumber, x, y, (flipHorizontal ? "flipped" : ""));
-}*/
-
-
 void draw_drawSprite(
     TFT_eSprite &spr,
     int x, int y,
     struct SpriteData* spriteData,
     uint8_t spriteNumber,
-    uint8_t factor,
     bool flipHorizontal
 ) {
-    int srcW = spriteData->spriteWidth;
-    int srcH = spriteData->spriteHeight;
-    int scaledW = srcW * factor;
-    int scaledH = srcH * factor;
+    // Sprites are pre-scaled at load time; width/height are already final.
+    const int W = spriteData->spriteWidth;
+    const int H = spriteData->spriteHeight;
 
-    if (spr.width() != scaledW || spr.height() != scaledH) {
+    if (spr.width() != W || spr.height() != H) {
         spr.deleteSprite();
-        spr.createSprite(scaledW, scaledH);
+        spr.createSprite(W, H);
     }
 
-    uint16_t *sprBuf = (uint16_t *)spr.getPointer();
-    uint16_t *srcBuf = spriteData->spriteData[spriteNumber];
+    uint16_t* sprBuf = (uint16_t*) spr.getPointer();
+    uint16_t* srcBuf = spriteData->spriteData[spriteNumber];
 
-    for (int srcY = 0; srcY < srcH; srcY++) {
-        int destYBase = srcY * factor;
-        for (int srcX = 0; srcX < srcW; srcX++) {
-            int useX = flipHorizontal ? (srcW - 1 - srcX) : srcX;
-            uint16_t raw  = srcBuf[srcY * srcW + useX];
-            uint16_t color = (raw << 8) | (raw >> 8);
-
-            int destXBase = srcX * factor;
-            for (int dy = 0; dy < factor; dy++) {
-                int rowStart = (destYBase + dy) * scaledW + destXBase;
-                for (int dx = 0; dx < factor; dx++) {
-                    sprBuf[rowStart + dx] = color;
-                }
+    if (!flipHorizontal) {
+        // Fast path: one memcpy of the whole frame
+        memcpy(sprBuf, srcBuf, W * H * sizeof(uint16_t));
+    } else {
+        // Mirror each row horizontally
+        for (int row = 0; row < H; row++) {
+            const uint16_t* src = srcBuf + row * W;
+            uint16_t*       dst = sprBuf + row * W;
+            for (int col = 0; col < W; col++) {
+                dst[col] = src[W - 1 - col];
             }
         }
     }
 
-    spr.pushToSprite(&composite1, x, y, TFT_TRANSPARENT);
-    spr.pushToSprite(&composite2, x, y - 120, TFT_TRANSPARENT);
+    spr.pushToSprite(&composite, x, y, TFT_TRANSPARENT);
 
     spriteData->lastX = x;
     spriteData->lastY = y;
-    spriteData->lastW = scaledW;
-    spriteData->lastH = scaledH;
+    spriteData->lastW = W;
+    spriteData->lastH = H;
 }
 
 
 void draw_drawSpriteCentered(
     TFT_eSprite &spr,
-    struct SpriteData* spriteData, uint8_t spriteNumber, uint8_t factor, bool flipped, int y
+    struct SpriteData* spriteData, uint8_t spriteNumber, bool flipped, int y
 ) {
-    int x = (BUFFER_X - (spriteData->spriteWidth * factor)) / 2;
-    int new_y; 
-    if (y == -1) {
-        new_y = (BUFFER_Y - (spriteData->spriteHeight * factor)) / 2;
-    } else {
-        new_y = y;
-    }
+    int x = (BUFFER_X - spriteData->spriteWidth)  / 2;
+    int new_y = (y == -1)
+        ? (BUFFER_Y - spriteData->spriteHeight) / 2
+        : y;
 
-    draw_drawSprite(
-        spr, x, new_y, 
-        spriteData, spriteNumber, factor, flipped
-    );
+    draw_drawSprite(spr, x, new_y, spriteData, spriteNumber, flipped);
 }

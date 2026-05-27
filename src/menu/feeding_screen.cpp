@@ -5,7 +5,7 @@
 #include "display/display.h"
 
 void menu_feedingScreen(
-    TFT_eSprite &bg, TFT_eSprite &charaSprite, 
+    TFT_eSprite& bg, TFT_eSprite &charaSprite, 
     struct SpriteData* uiSpriteData, struct SpriteData* charaSpriteData, uint8_t item
 ) {
     static int currentAnimationFrame = 0;
@@ -19,7 +19,7 @@ void menu_feedingScreen(
         animate_performEatingAnimation(charaSprite, charaSpriteData);
         
         tft_clearBuffer(charaSprite, TFT_TRANSPARENT);
-        draw_drawSprite(charaSprite, 24, 120, uiSpriteData, item, 6);
+        draw_drawSprite(charaSprite, 24, 120, uiSpriteData, item);
         
         lastUpdateTime = currentTime;
         currentAnimationFrame++;

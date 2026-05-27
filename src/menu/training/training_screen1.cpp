@@ -14,7 +14,7 @@ void training_screenTraining1(
     vTaskSuspend(secondLoop);
 
     draw_drawBackground(bg, 90, 90, 3);
-    draw_drawSpriteCentered(sprite, mainCharaData, 11, 6);
+    draw_drawSpriteCentered(sprite, mainCharaData, 11);
     
     tone(SPK_PIN, 4100, 100);
     tone(SPK_PIN, 3500, 100);
@@ -24,7 +24,7 @@ void training_screenTraining1(
     delay(500);
 
     draw_drawBackground(bg, 90, 90, 3);
-    draw_drawSpriteCentered(sprite, mainCharaData, 0, 6);
+    draw_drawSpriteCentered(sprite, mainCharaData, 0);
     tft_drawCenteredText("PUSH!!", 4, 190);
 
     tft_drawBuffer();

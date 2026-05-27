@@ -4,8 +4,9 @@
 #include "display/display.h"
 #include "buttons/buttons.h"
 #include "defs/screen_defs.h"
+#include "vpet/vpet/vpet.h"
 
-void menu_drawClock(TFT_eSprite &bg) {
+void menu_drawClock(TFT_eSprite& bg) {
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
         case K2_PRESSED:
@@ -30,7 +31,7 @@ void menu_drawClock(TFT_eSprite &bg) {
     tft_drawBuffer();
 }
 
-void menu_drawClockEdit(TFT_eSprite &bg) {
+void menu_drawClockEdit(TFT_eSprite& bg) {
     char textBuffer[6];
 
     static int clockHourCount = 0;
@@ -50,10 +51,14 @@ void menu_drawClockEdit(TFT_eSprite &bg) {
         case K3_PRESSED:
             // Es un dia random, nada significativo, ya pondre mas adelante que tenga dia del año
             rtc.setTime(0, clockMinuteCount, clockHourCount, 1, 11, 2024);
+            srand(time(NULL));
 
-            coldBoot = false;
-
+            timeSet = true;
+            
             screenKey = CLOCK_SCREEN;
+            
+            vpet_initTimer();
+
             break; 
 
         default:

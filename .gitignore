@@ -8,6 +8,7 @@
 *.line
 *.egg
 *.cm
+*.png
 __pycache__/
 venv/
 sprites/

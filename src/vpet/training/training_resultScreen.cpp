@@ -2,6 +2,7 @@
 #include "draw/draw.h"
 #include "defs/defs.h"
 #include "defs/chara_data.h"
+#include "defs/sprite_data.h"
 #include "display/display.h"
 
 #define NUM_ROUNDS 5
@@ -75,13 +76,17 @@ void training_displayTrainingResult(
             break;
     }
 
+    draw_drawBackground(bg, 90, 90, 3);
 
     for (int i = 0; i < NUM_ROUNDS; i++) {
         training_trainingAttackSounds();
-        for (int j = 78; j >= -48; j -= 3) {
-            draw_drawBackground(bg, 90, 90, 3);
-            draw_drawSprite(sprite, 126, 72, mainCharaData, 11, 6);
-            draw_drawAttacks(sprite, attackSprites, j, 72, pattern[i], charaData[currentCharacter].spriteAttackId, 6);
+        
+        for (int j = 78; j >= -48; j -= 6) {
+            draw_drawSprite(sprite, 126, 72, mainCharaData, 11);
+
+            draw_drawAttacks(bg, sprite, attackSprites, j, 72, pattern[i], charaData[currentCharacter].spriteAttackId);
+            
+            draw_drawBackgroundSection(bg, 0, 72, 18, 96);
             
             tft_drawBuffer();
         }

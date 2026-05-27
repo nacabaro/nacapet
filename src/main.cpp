@@ -20,8 +20,7 @@ const char* TAG = "[MAIN]";
 
 // TFT_eSPI stuff, important
 TFT_eSPI tft = TFT_eSPI();
-TFT_eSprite composite1 = TFT_eSprite(&tft);
-TFT_eSprite composite2 = TFT_eSprite(&tft);
+TFT_eSprite composite = TFT_eSprite(&tft);
 TFT_eSprite sprite = TFT_eSprite(&tft);
 TFT_eSprite bg = TFT_eSprite(&tft);
 
@@ -41,7 +40,7 @@ struct CharacterData* charaData;
 uint8_t currentCharacter = 0;
 
 // Boot flag, tells if the device clock has been initialized
-bool coldBoot = true;
+bool timeSet = false;
 
 // Screen keys, this tells which screen is being shown the screens state machine
 int screenKey = TITLE_SCREEN;
@@ -70,42 +69,40 @@ void secondCoreTask(void*);
 
 void setup() {
     Serial.begin(115200);
-    delay(100); // Give MPU6050 and ESP32 time to power up
+
+    //delay(10000);
 
     //Wire.begin(MPU_SDA_PIN, MPU_SCL_PIN);  // I2C init before MPU6050
     //mpu.initialize();
 
     tft_initDisplay(tft, TFT_BLACK);
-    tft_initScreenBuffer(TFT_BLACK);
+    tft_initScreenBuffer(TFT_TRANSPARENT);
 
     storage_init();
 
-    charaData = (struct CharacterData*) calloc(CHARA_COUNT_IN_DEVICE, sizeof(struct CharacterData));
-    
     storage_readFile("/menu.bin", &menuElementsData);
     storage_readFile("/ui.bin", &uiElementsData);
-
-    storage_initBackground("/bg.bin", bg);
-
-    pinMode(K1_PIN, INPUT_PULLDOWN);
-    pinMode(K2_PIN, INPUT_PULLDOWN);
-    pinMode(K3_PIN, INPUT_PULLDOWN);
-    pinMode(K4_PIN, INPUT_PULLDOWN);
-
+    
+    storage_initBackground("/bg2.bin", bg);
+    
+    pinMode(K1_PIN, BUTTON_MODE);
+    pinMode(K2_PIN, BUTTON_MODE);
+    pinMode(K3_PIN, BUTTON_MODE);
+    pinMode(K4_PIN, BUTTON_MODE);
+    
     xTaskCreatePinnedToCore(secondCoreTask, "VPET_EVAL", 4096, NULL, 0, &secondLoop, 0);
     
     lines_initLineStorage();
 
-    vpet_initTimer();
-
-    energy_setUpLightSleep();
+    storage_loadState();
+    
 }
 
 
 void loop() { 
     switch (screenKey) {
         case TITLE_SCREEN:
-            menu_drawTitle(bg);
+            menu_drawTitle(bg, composite);
             break;
 
         case CLOCK_EDIT_SCREEN:
@@ -185,7 +182,7 @@ void loop() {
             break;
 
         case EGG_EMPTY_SCREEN:
-            menu_drawDeathScreen( bg, sprite, &menuElementsData, &uiElementsData);
+            menu_drawDeathScreen(bg, sprite, &menuElementsData, &uiElementsData);
             break;       
 
         case EVOLUTION_SCREEN:
@@ -193,7 +190,7 @@ void loop() {
             break;
 
         case TRAINING_SCREEN_1:
-            training_screenTraining1(bg, sprite, &mainCharacterSprites, &uiElementsData);
+            training_screenTraining2(bg, sprite, &mainCharacterSprites, &uiElementsData);
             break;
 
         case MAIN_SCREEN:
@@ -203,10 +200,14 @@ void loop() {
         case CHANGE_SCREEN:
             menu_changeCharaScreen(bg, sprite, &mainCharacterSprites, &uiElementsData);
             break;
+
+        case FROZEN_SCREEN:
+            menu_drawFridgeScreen(bg, sprite, &mainCharacterSprites, &menuElementsData);
+            break;
     }
 
     if (screenKey == IDLE_SCREEN || screenKey == OFF_SCREEN) {
-        steps_countSteps();
+        //steps_countSteps();
     }
 }
 

@@ -42,10 +42,10 @@ void menu_sleepingScreen(
         animate_performSleepyAnimation(sprite, mainCharaData);
 
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        draw_drawSprite(sprite, 72, 72, bigUiElements, BED_SPRITE, 6);
+        draw_drawSprite(sprite, 72, 72, bigUiElements, BED_SPRITE);
             
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
-        draw_drawSprite(sprite, 172, 72, smallUIElements, ZZZ_ICON, 6);
+        draw_drawSprite(sprite, 172, 72, smallUIElements, ZZZ_ICON);
 
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
         menu_uiOverlay(sprite, bigUiElements);

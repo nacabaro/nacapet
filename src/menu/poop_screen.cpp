@@ -22,7 +22,7 @@ void menu_poopScreen(
             draw_drawBackground(bg, 90, 90, 3);
     
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            draw_drawSprite(sprite, 72 + (animationPosition * 6), 72, spriteData, 6, 6);
+            draw_drawSprite(sprite, 72 + (animationPosition * 6), 72, spriteData, 6);
 
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
             menu_uiOverlay(sprite, bigUiElements);
@@ -45,13 +45,13 @@ void menu_poopScreen(
             draw_drawBackground(bg, 90, 90, 3);
     
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            draw_drawSprite(sprite, 174, 120, smallUiElements, POOP_ICON, 6);
+            draw_drawSprite(sprite, 174, 120, smallUiElements, POOP_ICON);
             
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
             menu_uiOverlay(sprite, bigUiElements);
 
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            draw_drawSprite(sprite, 72, 72, spriteData, 7, 6);
+            draw_drawSprite(sprite, 72, 72, spriteData, 7);
     
             animationFrame++;
             animationPosition = !animationPosition;
@@ -69,7 +69,7 @@ void menu_poopScreen(
                 screenKey = MAIN_SCREEN;
             }
             
-            menuKey = 0;
+            menuKey = -1;
             animationFrame = 0;
             animationPosition = 0;
 

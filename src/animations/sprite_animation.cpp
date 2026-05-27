@@ -11,11 +11,10 @@ int currentAnimationFrame = 0;
 void animate_performAnimation(TFT_eSprite &spr, struct SpriteData* spriteData, uint8_t offsetX) {
     draw_drawSprite(
         spr,
-        animationPositions[currentAnimationFrame] - offsetX, 
-        spriteHeightOnScreen, 
-        spriteData, 
-        animationFrames[currentAnimationFrame], 
-        6,
+        animationPositions[currentAnimationFrame] - offsetX,
+        spriteHeightOnScreen,
+        spriteData,
+        animationFrames[currentAnimationFrame],
         animationFlipSprites[currentAnimationFrame]
     );
 
@@ -26,14 +25,12 @@ void animate_performAttentionAnimation(TFT_eSprite &spr, struct SpriteData* spri
     currentAnimationFrame = (currentAnimationFrame + 1) % numFramesAngry;
     draw_drawSprite(
         spr,
-        spriteHeightOnScreen, 
-        spriteHeightOnScreen, 
-        spriteData, 
-        angryAnimationFrames[currentAnimationFrame], 
-        6,
+        spriteHeightOnScreen,
+        spriteHeightOnScreen,
+        spriteData,
+        angryAnimationFrames[currentAnimationFrame],
         animationFlipSprites[currentAnimationFrame]
     );
-
 }
 
 void animate_performEatingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
@@ -44,7 +41,6 @@ void animate_performEatingAnimation(TFT_eSprite &spr, struct SpriteData* spriteD
         spriteHeightOnScreen,
         spriteData,
         eatingAnimationFrames[currentAnimationFrame],
-        6,
         false
     );
 }
@@ -57,7 +53,6 @@ void animate_performRefuseAnimation(TFT_eSprite &spr, struct SpriteData* spriteD
         spriteHeightOnScreen,
         spriteData,
         refuseAnimationFrames[currentAnimationFrame],
-        6,
         refuseAnimationFlips[currentAnimationFrame]
     );
 }
@@ -70,7 +65,6 @@ void animate_performSleepyAnimation(TFT_eSprite &spr, struct SpriteData* spriteD
         spriteHeightOnScreen,
         spriteData,
         sleepyAnimationFrames[currentAnimationFrame],
-        6,
         false
     );
 }
@@ -83,7 +77,6 @@ void animate_performHappyAnimation(TFT_eSprite &spr, struct SpriteData* spriteDa
         spriteHeightOnScreen,
         spriteData,
         happyAnimationFrames[currentAnimationFrame],
-        6,
         false
     );
 }
@@ -97,7 +90,6 @@ void animate_performAngryAnimation(TFT_eSprite &spr, struct SpriteData* spriteDa
         spriteHeightOnScreen,
         spriteData,
         angryAnimationFrames[currentAnimationFrame],
-        6,
         false
     );
 }
@@ -110,7 +102,6 @@ void animate_performHatchingAnimation(TFT_eSprite &spr, struct SpriteData* sprit
         spriteHeightOnScreen,
         spriteData,
         0,
-        6,
         false
     );
 }

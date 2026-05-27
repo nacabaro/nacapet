@@ -6,7 +6,7 @@
 #include "defs/sprite_data.h"
 #include "vpet/lines/lines.h"
 
-void menu_drawDeathScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite) {
+void menu_drawDeathScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite) {
     static uint8_t frameCounter = 0;
     uint64_t currentTime = esp_timer_get_time();
 
@@ -33,7 +33,7 @@ void menu_drawDeathScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteDat
 
     if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
         draw_drawBackground(bg, 90, 90, 3);
-        draw_drawSprite(sprite, 72 + (6 * (frameCounter == 0)), 72, uiBigSprite, EMPTY_EGG, 6);
+        draw_drawSprite(sprite, 72 + (6 * (frameCounter == 0)), 72, uiBigSprite, EMPTY_EGG);
         tft_clearBuffer(sprite, TFT_TRANSPARENT);
         menu_uiOverlay(sprite, uiSmallSprite);
         tft_clearBuffer(sprite, TFT_TRANSPARENT);

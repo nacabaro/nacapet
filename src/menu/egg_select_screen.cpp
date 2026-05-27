@@ -9,7 +9,7 @@
 #include "vpet/vpet/vpet.h"
 
 
-void menu_lineSwitcher(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiSmallSprite) {
+void menu_lineSwitcher(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* uiSmallSprite) {
     static uint8_t eggCounter = 0;
 
     uint8_t buttonsPressed = buttons_getPressedButtons();
@@ -36,9 +36,9 @@ void menu_lineSwitcher(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
 
     draw_drawBackground(bg, 90, 90, 3);
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
-    draw_drawSpriteCentered(sprite, &eggSelection[eggCounter].eggSprite, 0, 6);
+    draw_drawSpriteCentered(sprite, &eggSelection[eggCounter].eggSprite, 0);
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
-    draw_drawSprite(sprite, 194, 96, uiSmallSprite, ARROW_ICON, 6);
+    draw_drawSprite(sprite, 194, 96, uiSmallSprite, ARROW_ICON);
 
     tft_drawBuffer();
 }

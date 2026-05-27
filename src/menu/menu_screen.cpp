@@ -12,7 +12,7 @@
 const int textXPos = 10;
 const int textYPos = 180;
 
-void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct SpriteData* spriteData) {
+void menu_drawCurrentMenuOption(TFT_eSprite& bg, TFT_eSprite &icon, struct SpriteData* spriteData) {
     draw_drawBackground(bg, 90, 90, 3);
 
     uint8_t pressedButtons = buttons_getPressedButtons();
@@ -40,19 +40,23 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
                 break;
                 
             case FOOD_SCREEN_MENU:
+                if (charaData[currentCharacter].frozen) { break; }
                 screenKey = FOOD_SCREEN;
                 break;
 
             case SLEEP_SCREEN_MENU:
+                if (charaData[currentCharacter].frozen) { break; }
                 menu_sleepScreen_sleepAction();
                 break;
 
             case TRAIN_SCREEN_MENU:
+                if (charaData[currentCharacter].frozen) { break; }
                 screenKey = TRAINING_SCREEN_1;
                 return;
                 break;
 
             case POOP_SCREEN_MENU:
+                if (charaData[currentCharacter].frozen) { break; }
                 menuKey = STATUS_SCREEN;
                 screenKey = CLEAR_POOP_SCREEN;
                 return;
@@ -64,15 +68,20 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
                 return;
                 break;
 
+            case FREEZE_SCREEN_MENU:
+                menu_freezeScreen_alternateFreeze();
+                return;
+                break;
+
             default:
                 break;
         }
         return;
     }
 
-    draw_drawSpriteCentered(icon, spriteData, menuKey % 9, 6);
+    draw_drawSpriteCentered(icon, spriteData, menuKey % 10);
 
-    switch(menuKey % 10) {
+    switch(menuKey % 11) {
         case STATUS_SCREEN_MENU:
             tft_drawCenteredText("Status", 4, textYPos);
             break;
@@ -108,8 +117,12 @@ void menu_drawCurrentMenuOption(TFT_eSprite &bg, TFT_eSprite &icon, struct Sprit
         case SETTINGS_SCREEN_MENU:
             tft_drawCenteredText("Settings", 4, textYPos);
             break;
-            
-        case 9:
+
+        case FREEZE_SCREEN_MENU:
+            tft_drawCenteredText("Freeze", 4, textYPos);
+            break;
+
+        case 10:
             menuKey = STATUS_SCREEN_MENU;
             screenKey = MAIN_SCREEN;
             return;
@@ -130,7 +143,7 @@ void menu_sleepScreen_sleepAction() {
 
         charaData[currentCharacter].sleepDisturbances++;
 
-        menuKey = STATUS_SCREEN;
+        menuKey = STATUS_SCREEN_MENU;
         screenKey = MAIN_SCREEN;
 
     } else {
@@ -138,9 +151,16 @@ void menu_sleepScreen_sleepAction() {
 
         vpet_computeCallLight();    // Lo hago por cortesia, no me gusta
 
-        menuKey = STATUS_SCREEN;
+        menuKey = STATUS_SCREEN_MENU;
         screenKey = SLEEP_SCREEN;
     }
+}
+
+void menu_freezeScreen_alternateFreeze() {
+    charaData[currentCharacter].frozen = !charaData[currentCharacter].frozen;
+
+    menuKey = STATUS_SCREEN;
+    screenKey = MAIN_SCREEN;
 }
 
 void menu_sleepScreen_recalculateSleep() {

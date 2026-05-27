@@ -46,7 +46,8 @@ struct CharacterData {
     bool asleep = false;
     bool injured = false;
     bool dead = false;
-    bool traited = true;
+    bool traited = false;
+    bool frozen = false;
 
     // Usado para recalcular cuantos dias van a tardar en recuperarse, max 5 pls
     uint8_t dynamicSleepDists; 

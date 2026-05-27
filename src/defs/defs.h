@@ -11,24 +11,38 @@
 #define VERSION "Alpha v0.1"
 
 // SCREEN PINOUT
-#define SCL_PIN 34
-#define SDA_PIN 35
-#define RST_PIN 32
-#define BL_PIN 25
 
 // BUTTONS PINOUT
-#define K1_PIN 35
-#define K2_PIN 13
-#define K3_PIN 33
-#define K4_PIN 14
+#ifdef DEV_UNIT
+
+#define K1_PIN 1
+#define K2_PIN 2
+#define K3_PIN 3
+#define K4_PIN 4
+#define BUTTON_MODE INPUT_PULLDOWN
+
+#define BL_PIN 10
+
+#endif
+
+#ifdef ANDREW_UNIT
+
+#define K1_PIN 39
+#define K2_PIN 8
+#define K3_PIN 9
+#define K4_PIN 38
+#define BUTTON_MODE INPUT_PULLUP
+
+#define BL_PIN 42
+
+#endif
 
 // SPEAKER PINOUT
-#define SPK_PIN 21
+#define SPK_PIN 7
 
 // MPU6050 PINOUT
-#define MPU_SCL_PIN 4
-#define MPU_SDA_PIN 16
-#define MPU_INT_PIN 12
+#define MPU_SCL_PIN 9
+#define MPU_SDA_PIN 8
 
 // SPECIAL SCREEN THAT OPENS WHEN TIMERS ARE DONE
 // RECEIVES AN EXTRA PARAMETER (INTERRUPTKEY)
@@ -59,6 +73,7 @@
 #define SLEEP_SCREEN_MENU 6
 #define CHANGE_SCREEN_MENU 7
 #define SETTINGS_SCREEN_MENU 8
+#define FREEZE_SCREEN_MENU 9
 
 // SCREENS THAT OPEN AFTER CLICKING ON A MENU ENTRY
 #define STATUS_SCREEN 10
@@ -80,9 +95,11 @@
 #define MEDICAL_SCREEN_ICON 5
 #define SLEEP_SCREEN_ICON 6
 #define SETTINGS_SCREEN_ICON 8
-#define CARE_MISTAKE_CALL_LIGHT 9
+#define FRIDGE_DOOR 9
 #define BED_SPRITE 10
 #define EMPTY_EGG 11
+#define CARE_MISTAKE_CALL_LIGHT 12
+
 
 // SCREENS
 #define OFF_SCREEN -1
@@ -98,6 +115,7 @@
 #define FEEDING_SCREEN 20
 #define REFUSING_SCREEN 21
 #define SLEEPY_SCREEN 22
+#define FROZEN_SCREEN 28
 #define CARE_MISTAKE_SCREEN 23
 #define POOPING_SCREEN 24
 #define HAPPY_SCREEN 25
@@ -163,7 +181,6 @@ extern uint64_t lastPressedButtonTime;
 extern uint64_t lastUpdateTime;
 extern uint64_t lastBeepTime;
 
-extern struct CharacterData* charaData;
 extern struct tm timeInfo;
 extern uint32_t dayUnixTime; 
 
@@ -179,16 +196,18 @@ extern uint8_t beepCounter;
 
 extern uint16_t stepCounter;
 
-extern bool coldBoot;
+extern bool timeSet;
 
 extern uint8_t eggNumber;
 extern Egg_t* eggSelection;
 
 extern uint8_t currentCharacter;
 
+// Rescatar
 extern Egg_t* currentEgg;
 extern LineCare_t** currentLineCareInstr;
 extern Line_t** currentLine;
+extern struct CharacterData* charaData;
 
 extern struct SpriteData mainCharacterSprites;
 

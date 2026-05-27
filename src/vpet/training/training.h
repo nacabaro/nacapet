@@ -2,6 +2,7 @@
 #define TRAINING_H
 
 #include <TFT_eSPI.h>
+#include "defs/sprite_data.h"
 
 void training_displayTrainingResult(
     TFT_eSprite &bg, TFT_eSprite &sprite,

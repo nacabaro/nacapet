@@ -8,7 +8,7 @@
 uint64_t lastBeepTime = esp_timer_get_time();
 uint8_t beepCounter = 0;
 
-void menu_careMistakeScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* uiSpritesBig) {
+void menu_careMistakeScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* uiSpritesBig) {
     uint64_t currentTime = esp_timer_get_time();
     uint8_t pressedButtons = buttons_getPressedButtons();
 

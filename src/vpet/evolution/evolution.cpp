@@ -86,4 +86,6 @@ void change_onChangeComplete() {
     snprintf(spriteFileName, 30, "/chara/%02x.bin", charaData[currentCharacter].idChara);
 
     storage_readFile(spriteFileName, &mainCharacterSprites);
+
+    storage_saveState();
 }

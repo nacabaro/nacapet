@@ -8,7 +8,7 @@
 #include "defs/defs.h"
 
 
-void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* mainSpriteData, struct SpriteData* uiSpriteData) {
+void menu_changeCharaScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* mainSpriteData, struct SpriteData* uiSpriteData) {
     vTaskSuspend(secondLoop);
 
     uint8_t selectedChara = currentCharacter;
@@ -63,13 +63,13 @@ void menu_changeCharaScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteD
                 sprintf(fileName, "/chara/%02x.bin", selectedCharaData->idChara);
                 
                 storage_readFile(fileName, mainSpriteData);
-                draw_drawSprite(sprite, 18, 72, mainSpriteData, 0, 6);
+                draw_drawSprite(sprite, 18, 72, mainSpriteData, 0);
                 
             } else {
                 tft_drawCenteredText("EMPTY", 4, 120);
             }
 
-            draw_drawSprite(sprite, 174, 96, uiSpriteData, ARROW_ICON, 6);
+            draw_drawSprite(sprite, 174, 96, uiSpriteData, ARROW_ICON);
             
             tft_drawBuffer();
 

@@ -4,9 +4,13 @@
 
 void menu_mainScreen() {
     printf("[MAINSCR] on main screen\n");
+    lastUpdateTime = 0;
 
-    if (coldBoot) {  
+    if (!timeSet) {  
         screenKey = TITLE_SCREEN;
+        return;
+    } else if (charaData[currentCharacter].frozen) {
+        screenKey = FROZEN_SCREEN;
         return;
     } else if (!charaData[currentCharacter].hatched && !charaData[currentCharacter].hatching) {
         screenKey = EGG_EMPTY_SCREEN;

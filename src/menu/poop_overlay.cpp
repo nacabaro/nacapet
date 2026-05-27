@@ -13,7 +13,7 @@ uint8_t menu_poopOverlay(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
         bool poopTop = false;
 
         for (int i = 0; i < charaData[currentCharacter].poopNumber; i++) {
-            draw_drawSprite(sprite, poopStartX, poopStartY - (48 * poopTop), smallUiElements, POOP_ICON, 6, poopFlip);
+            draw_drawSprite(sprite, poopStartX, poopStartY - (48 * poopTop), smallUiElements, POOP_ICON, poopFlip);
             poopStartX -= (i % 2) * 48;
             poopTop = !poopTop;
         }

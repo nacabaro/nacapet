@@ -6,7 +6,7 @@
 #include "animations/animations.h"
 
 void menu_drawAngryScreen(
-    TFT_eSprite &bg, TFT_eSprite &sprite,
+    TFT_eSprite& bg, TFT_eSprite &sprite,
     struct SpriteData* spriteData, struct SpriteData* smallUiElements
 ) {
     uint8_t frameCounter = 0;
@@ -33,8 +33,8 @@ void menu_drawAngryScreen(
                 tone(SPK_PIN, 1000, 200);
 
                 tft_clearBuffer(sprite, TFT_TRANSPARENT);
-                draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON, 6);
-                draw_drawSprite(sprite, 174, 72, smallUiElements, FIREWORKS_ICON, 6);
+                draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON);
+                draw_drawSprite(sprite, 174, 72, smallUiElements, FIREWORKS_ICON);
             }
 
             frameCounter++;            

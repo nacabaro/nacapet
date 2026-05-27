@@ -9,7 +9,7 @@
 #include "vpet/vpet/vpet.h"
 #include "vpet/lines/lines.h"
 
-void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite) {
+void menu_eggHatchScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* uiBigSprite, struct SpriteData* uiSmallSprite) {
     static bool eggSpriteFrame = false;
     
     uint8_t pressedButtons = buttons_getPressedButtons();
@@ -26,7 +26,7 @@ void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
     if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
         if (charaData[currentCharacter].hatchTimer <= currentLine[currentCharacter]->hatchTime) {
             draw_drawBackground(bg, 90, 90, 3);
-            draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, eggSpriteFrame, 6);
+            draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, eggSpriteFrame);
     
             eggSpriteFrame = !eggSpriteFrame;
             lastUpdateTime = currentTime;
@@ -47,7 +47,7 @@ void menu_eggHatchScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData
 
             draw_drawBackground(bg, 90, 90, 3);
 
-            draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, 2, 6);
+            draw_drawSpriteCentered(sprite, &currentEgg->eggSprite, 2);
             
             tft_drawBuffer();
             

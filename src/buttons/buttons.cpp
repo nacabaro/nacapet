@@ -33,10 +33,10 @@ uint8_t buttons_getPressedButtons() {
     bool k4_current = digitalRead(K4_PIN);
 
     uint8_t retV = (
-        (k1_prev == HIGH && k1_current == LOW) << 3 | 
-        (k2_prev == HIGH && k2_current == LOW) << 2 |
-        (k3_prev == HIGH && k3_current == LOW) << 1 | 
-        (k4_prev == HIGH && k4_current == LOW)    
+        (k1_prev == LOW && k1_current == HIGH) << 3 | 
+        (k2_prev == LOW && k2_current == HIGH) << 2 |
+        (k3_prev == LOW && k3_current == HIGH) << 1 | 
+        (k4_prev == LOW && k4_current == HIGH)    
     );
 
     if (retV != 0) {

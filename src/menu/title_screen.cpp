@@ -4,7 +4,7 @@
 #include "defs/defs.h"
 #include "buttons/buttons.h"
 
-void menu_drawTitle(TFT_eSprite &bg) {
+void menu_drawTitle(TFT_eSprite &bg, TFT_eSprite &composite) {
     uint8_t pressedButtons = buttons_getPressedButtons();
     if (pressedButtons == 8 || pressedButtons == 4) {
         screenKey = CLOCK_EDIT_SCREEN;
@@ -18,4 +18,6 @@ void menu_drawTitle(TFT_eSprite &bg) {
     tft_drawCenteredText(VERSION, 2, 80);
 
     tft_drawBuffer();
+
+    delay(200);
 }

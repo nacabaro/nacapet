@@ -6,6 +6,8 @@
 #include "display/display.h"
 #include "draw/draw.h"
 
+#include <math.h>
+
 void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData) {
     tft_clearBuffer(sprite, TFT_TRANSPARENT);
 
@@ -23,7 +25,7 @@ void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
 
     menu_statusScreen_drawStat(sprite, spriteData, 10, 10, "Hunger", charaData[currentCharacter].hunger);
     menu_statusScreen_drawStat(sprite, spriteData, 10, 80, "Strength", charaData[currentCharacter].strength);
-    menu_statusScreen_drawStat(sprite, spriteData, 10, 150, "Effort", charaData[currentCharacter].effort);
+    menu_statusScreen_drawStat(sprite, spriteData, 10, 150, "Effort", floor(charaData[currentCharacter].effort / 4));
 
     tft_drawBuffer();
 }
@@ -43,7 +45,6 @@ void menu_statusScreen_drawStat(TFT_eSprite &sprite, struct SpriteData* spriteDa
             y + 30, 
             spriteData, 
             icon, 
-            4, 
             false
         );
     }

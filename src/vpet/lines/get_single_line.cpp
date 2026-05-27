@@ -2,13 +2,14 @@
 #include "memory/memory.h"
 #include "defs/defs.h"
 
+#include <FS.h>
 #include <SPIFFS.h>
 
 void lines_getSingleLine(const char* fileName) {
     char fullPath[8 + strlen(fileName)];
     snprintf(fullPath, 20, "/lines/%s", fileName);
 
-    File lineFile = SPIFFS.open(fullPath);
+    fs::File lineFile = SPIFFS.open(fullPath);
 
     struct Line_t* selectedLine = (struct Line_t*) malloc(sizeof(struct Line_t));
     if (selectedLine == NULL) {
@@ -17,7 +18,7 @@ void lines_getSingleLine(const char* fileName) {
 
     uint8_t buffer[4];
 
-    lineFile.seek(4, SeekCur);
+    lineFile.seek(4, fs::SeekCur);
 
     uint8_t bytesRead = lineFile.read(&selectedLine->id, 1);
     bytesRead += lineFile.readBytes(selectedLine->name, 16);
@@ -40,7 +41,7 @@ void lines_getSingleLine(const char* fileName) {
     currentEgg = selectedEgg;
 }
 
-void lines_getSingleEggSprites(File &lineFile, Egg_t* selectedEgg) {
+void lines_getSingleEggSprites(fs::File &lineFile, Egg_t* selectedEgg) {
     // Importante tener el nombre de archivo del huevo en todo momento
     strcpy(selectedEgg->fileName, lineFile.name());
 

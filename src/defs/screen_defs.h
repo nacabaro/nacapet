@@ -4,8 +4,7 @@
 #include <TFT_eSPI.h>
 
 extern TFT_eSPI tft;
-extern TFT_eSprite composite1;
-extern TFT_eSprite composite2;
+extern TFT_eSprite composite;
 
 // ALTAMENTE TEMPORAL
 extern int xPos;

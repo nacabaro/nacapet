@@ -6,8 +6,8 @@
 #include "animations/animations.h"
 
 void menu_drawHappyScreen(
-    TFT_eSprite &bg, TFT_eSprite &sprite,
-    struct SpriteData* spriteData, struct SpriteData* smallUiElements
+    TFT_eSprite& bg, TFT_eSprite &sprite,
+    struct SpriteData* spriteData, struct SpriteData* smallUiElements, const int returnScreen
 ) {
     uint8_t frameCounter = 0;
     
@@ -15,10 +15,8 @@ void menu_drawHappyScreen(
         uint64_t currentTime = esp_timer_get_time();
         if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
             if (frameCounter > 3) {
-                screenKey = MAIN_SCREEN; // TODO: Change for while battling
+                screenKey = returnScreen; // TODO: Change for while battling
                 menuKey = STATUS_SCREEN;
-
-                vTaskResume(secondLoop);
 
                 return;
             }
@@ -35,8 +33,8 @@ void menu_drawHappyScreen(
                 tone(SPK_PIN, 1000, 50);
 
                 tft_clearBuffer(sprite, TFT_TRANSPARENT);
-                draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON, 6);
-                draw_drawSprite(sprite, 174, 72, smallUiElements, FIREWORKS_ICON, 6);
+                draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON);
+                draw_drawSprite(sprite, 174, 72, smallUiElements, FIREWORKS_ICON);
             }
 
             frameCounter++;            

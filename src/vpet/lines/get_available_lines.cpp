@@ -2,7 +2,8 @@
 #include "memory/memory.h"
 #include "defs/defs.h"
 
-#include "SPIFFS.h"
+#include <FS.h>
+#include <SPIFFS.h>
 
 const char lineHeader[5] = "NPET"; 
 const uint8_t headerSize = 4;
@@ -12,8 +13,8 @@ void lines_getAvailableLines() {
         return;
     }
     
-    File root = SPIFFS.open("/lines");
-    File lineFile = root.openNextFile();
+    fs::File root = SPIFFS.open("/lines");
+    fs::File lineFile = root.openNextFile();
 
     uint8_t allocCount = 0;
     char header[5]; 
