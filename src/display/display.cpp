@@ -23,18 +23,16 @@ void tft_initDisplay(TFT_eSPI &tft, uint16_t color) {
 void tft_initScreenBuffer(uint16_t color) {
     composite.setAttribute(PSRAM_ENABLE, true);
 
-    
-    // 2. Try to create the sprite
     if (composite.createSprite(240, 240)) {
         printf("SUCCESS: Composite sprite created.\n");
-        composite.fillSprite(TFT_RED); // If this works, screen should turn RED
+        composite.fillSprite(TFT_RED);
     } else {
         printf("FATAL: Composite sprite failed! No RAM/PSRAM.\n");
-        return; // Stop here so we don't draw "lines"
+        return;
     }
 
-    composite.setFreeFont(NULL); // Reset to default GLCD font
-    composite.setTextFont(1);    // Use the standard small font (scaled by size 4)
+    composite.setFreeFont(NULL); 
+    composite.setTextFont(1);  
     composite.setTextColor(TFT_BLUE);
     composite.setTextSize(4);
     composite.pushSprite(0, 0);

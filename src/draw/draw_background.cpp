@@ -10,13 +10,9 @@ void draw_drawBackground(TFT_eSprite& bg, int spr_w, int spr_h, int factor) {
 }
 
 void draw_drawBackgroundSection(TFT_eSprite& bg, int x, int y, int w, int h) {
-    // Get the raw 16-bit pixel buffer from the background sprite
     uint16_t* bgPtr = (uint16_t*)bg.getPointer();
-    int bgStride = bg.width(); // Full row width — needed to advance between rows
+    int bgStride = bg.width(); 
 
-    // pushImage assumes a contiguous (packed) source buffer, so feeding the
-    // whole rectangle at once would read wrong pixels after the first row.
-    // Instead, copy one row at a time, each time jumping by bgStride pixels.
     for (int row = 0; row < h; row++) {
         uint16_t* rowSrc = bgPtr + ((y + row) * bgStride) + x;
         composite.pushImage(x, y + row, w, 1, rowSrc);

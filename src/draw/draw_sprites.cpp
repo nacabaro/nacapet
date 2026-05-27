@@ -16,7 +16,6 @@ void draw_drawSprite(
     uint8_t spriteNumber,
     bool flipHorizontal
 ) {
-    // Sprites are pre-scaled at load time; width/height are already final.
     const int W = spriteData->spriteWidth;
     const int H = spriteData->spriteHeight;
 
@@ -29,10 +28,8 @@ void draw_drawSprite(
     uint16_t* srcBuf = spriteData->spriteData[spriteNumber];
 
     if (!flipHorizontal) {
-        // Fast path: one memcpy of the whole frame
         memcpy(sprBuf, srcBuf, W * H * sizeof(uint16_t));
     } else {
-        // Mirror each row horizontally
         for (int row = 0; row < H; row++) {
             const uint16_t* src = srcBuf + row * W;
             uint16_t*       dst = sprBuf + row * W;

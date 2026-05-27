@@ -8,9 +8,6 @@
 struct SpriteData* checkerboardPattern;
 
 void menu_createCheckerboard() {
-    // Build the pattern pre-scaled by SPRITE_SCALE (6) so that
-    // draw_drawSprite can treat it identically to SPIFFS-loaded sprites.
-    // Logical size: 34 wide × 1 tall  →  Scaled: 204 wide × 6 tall
     const uint8_t SCALE       = 6;
     const uint8_t logicalW    = 34;
     const uint8_t logicalH    = 1;
@@ -27,7 +24,6 @@ void menu_createCheckerboard() {
 
     uint16_t* buf = checkerboardPattern->spriteData[0];
 
-    // Fill: repeat each logical pixel as a SCALE×SCALE block across all rows
     for (uint16_t row = 0; row < scaledH; row++) {
         for (uint8_t col = 0; col < logicalW; col++) {
             uint16_t color = (col % 2 == 0) ? TFT_BLACK : TFT_TRANSPARENT;

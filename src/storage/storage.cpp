@@ -8,8 +8,6 @@
 
 const char* TAG_S = "[STORAGE]";
 
-// All sprites are upscaled by this factor at load time so draw_drawSprite
-// can skip the scaling loop entirely at runtime.
 #define SPRITE_SCALE 6
 
 void storage_init() {
@@ -41,8 +39,6 @@ void storage_readFile(const char* path, struct SpriteData* spriteData) {
     const uint8_t scaledW = width  * SPRITE_SCALE;
     const uint8_t scaledH = height * SPRITE_SCALE;
 
-    // Allocate scaled buffers in PSRAM (ps_malloc falls back to regular heap
-    // automatically if PSRAM is not available for a given allocation).
     uint16_t** scaled = (uint16_t**) ps_malloc(spriteNumber * sizeof(uint16_t*));
     if (!scaled) {
         printf("%s PSRAM alloc failed for pointer table\n", TAG_S);
@@ -60,7 +56,6 @@ void storage_readFile(const char* path, struct SpriteData* spriteData) {
         }
     }
 
-    // Temporary single-row scratch buffer in internal RAM for reading from file
     uint16_t* rowBuf = (uint16_t*) malloc(width * sizeof(uint16_t));
     if (!rowBuf) {
         printf("%s scratch alloc failed\n", TAG_S);
@@ -79,20 +74,16 @@ void storage_readFile(const char* path, struct SpriteData* spriteData) {
         uint16_t* dst = scaled[sprN];
 
         for (int srcY = 0; srcY < height; srcY++) {
-            // --- Read one source row, byte-swapping as we go ---
             for (int srcX = 0; srcX < width; srcX++) {
                 uint8_t hi, lo;
                 file.read(&hi, 1);
                 file.read(&lo, 1);
-                // File is big-endian RGB565; TFT_eSPI expects little-endian
                 rowBuf[srcX] = (lo << 8) | hi;
             }
 
-            // --- Scale row vertically (repeat SPRITE_SCALE times) ---
             for (int dy = 0; dy < SPRITE_SCALE; dy++) {
                 uint16_t* dstRow = dst + (srcY * SPRITE_SCALE + dy) * scaledW;
 
-                // --- Scale each pixel horizontally ---
                 for (int srcX = 0; srcX < width; srcX++) {
                     uint16_t color = rowBuf[srcX];
                     uint16_t* dstPixel = dstRow + srcX * SPRITE_SCALE;
@@ -107,7 +98,6 @@ void storage_readFile(const char* path, struct SpriteData* spriteData) {
     free(rowBuf);
     file.close();
 
-    // Store scaled dimensions so the rest of the code sees the final size
     spriteData->spriteWidth  = scaledW;
     spriteData->spriteHeight = scaledH;
     spriteData->spriteNumber = spriteNumber;
@@ -140,8 +130,6 @@ void storage_initBackground(const char* path, TFT_eSprite& bg) {
         uint8_t hi, lo;
         file.read(&lo, 1);
         file.read(&hi, 1);
-        // Store directly into sprite buffer – no byte swap needed here since
-        // background pixels are not going through the draw_drawSprite path.
         bgBuf[i] = (hi << 8) | lo;
     }
 

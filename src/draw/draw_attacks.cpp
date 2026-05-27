@@ -3,8 +3,7 @@
 
 
 void draw_drawAttacks(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* attackSpriteData, int x, int y, uint8_t attackType, uint8_t attackSprite, bool flipped) {
-    // spriteWidth/Height are already pre-scaled at load time
-    int cleanWidth = attackSpriteData->spriteWidth + 6; // +4 to be safe
+    int cleanWidth = attackSpriteData->spriteWidth + 6; 
     draw_drawBackgroundSection(bg, x, y, cleanWidth, attackSpriteData->spriteHeight * 2);
 
     switch(attackType) {
