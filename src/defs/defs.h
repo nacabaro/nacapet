@@ -40,9 +40,9 @@
 // SPEAKER PINOUT
 #define SPK_PIN 7
 
-// MPU6050 PINOUT
-#define MPU_SCL_PIN 9
-#define MPU_SDA_PIN 8
+// I2C PINOUT
+#define I2C_SCL_PIN 9
+#define I2C_SDA_PIN 8
 
 // SPECIAL SCREEN THAT OPENS WHEN TIMERS ARE DONE
 // RECEIVES AN EXTRA PARAMETER (INTERRUPTKEY)
@@ -210,5 +210,9 @@ extern Line_t** currentLine;
 extern struct CharacterData* charaData;
 
 extern struct SpriteData mainCharacterSprites;
+
+extern bool isSamplingSteps;
+extern uint64_t sampleStartTime;
+extern uint16_t initialSteps;
 
 #endif

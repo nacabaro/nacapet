@@ -22,7 +22,7 @@ void steps_countSteps() {
     float dyn = mag - gravity;
   
     unsigned long now = esp_timer_get_time();
-    if (dyn > thresh && (now - lastStepTime) > 250000) {
+    if (dyn > thresh && (now - lastStepTime) > 350000) {
         stepCounter++;
         lastStepTime = now;
     }

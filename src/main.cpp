@@ -64,16 +64,25 @@ uint8_t eggNumber = 0;
 // Tasks
 TaskHandle_t secondLoop = NULL;
 
+bool isSamplingSteps = false;
+uint64_t sampleStartTime = 0;
+uint16_t initialSteps = 0;
+
 void loop2();
 void secondCoreTask(void*);
 
 void setup() {
     Serial.begin(115200);
 
+    while (!Serial) {  }
+
     //delay(10000);
 
-    //Wire.begin(MPU_SDA_PIN, MPU_SCL_PIN);  // I2C init before MPU6050
-    //mpu.initialize();
+    pinMode(48, OUTPUT);
+    digitalWrite(48, HIGH);
+
+    Wire.begin(I2C_SDA_PIN, I2C_SCL_PIN);  // I2C init before MPU6050
+    mpu.initialize();
 
     tft_initDisplay(tft, TFT_BLACK);
     tft_initScreenBuffer(TFT_TRANSPARENT);
@@ -207,7 +216,7 @@ void loop() {
     }
 
     if (screenKey == IDLE_SCREEN || screenKey == OFF_SCREEN) {
-        //steps_countSteps();
+        steps_countSteps();
     }
 }
 
@@ -218,7 +227,29 @@ void loop2() {
     getLocalTime(&timeInfo, 50);
     dayUnixTime = mktime(&timeInfo) % SECONDS_IN_DAY;
     
-    if (screenOff) { energy_startLightSleep(); }
+    if (screenOff) {
+        if (isSamplingSteps) {
+            uint64_t currentTime = esp_timer_get_time();
+
+            if ((currentTime - sampleStartTime) > 10000000) {
+                isSamplingSteps = false;
+                
+                uint16_t sampledSteps = stepCounter - initialSteps;
+
+                uint16_t approximatedSteps = sampledSteps * 6;
+                
+                stepCounter += approximatedSteps;
+                
+                printf("[STEPS] Sampled %d steps in 10s, added %d approximated steps for sleep period.\n", sampledSteps, approximatedSteps);
+
+                energy_startLightSleep();
+            }
+        } else {
+            energy_startLightSleep();
+        }
+    } else {
+        isSamplingSteps = false;
+    }
 }
 
 void secondCoreTask(void*) {
