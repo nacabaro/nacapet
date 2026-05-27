@@ -2,17 +2,17 @@
 #define USE_HSPI_PORT
 
 #define ST7789_DRIVER      // Full configuration option, define additional parameters below for this display
-#define TFT_RGB_ORDER TFT_RGB  // Colour order Red-Green-Blue
+#define TFT_RGB_ORDER TFT_BGR  // Colour order Red-Green-Blue
 #define TFT_WIDTH  240 // ST7789 240 x 240 and 240 x 320
 #define TFT_HEIGHT 240 // ST7789 240 x 240
 #define TFT_BL   1            // LED back-light control pin
 #define TFT_BACKLIGHT_ON HIGH  // Level to turn ON back-light (HIGH or LOW)
 
-#define TFT_MOSI  1
+#define TFT_MOSI  11
 #define TFT_MISO -1
-#define TFT_SCLK  2
-#define TFT_DC    4
-#define TFT_RST   3
+#define TFT_SCLK  12
+#define TFT_DC    5
+#define TFT_RST   6 
 
 #define TOUCH_CS -1
 
