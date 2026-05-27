@@ -164,6 +164,8 @@
 
 #define CHARA_COUNT_IN_DEVICE 5
 
+#define SPRITE_SCALE 6
+
 extern int screenKey;
 extern int menuKey;
 extern int submenuKey;
