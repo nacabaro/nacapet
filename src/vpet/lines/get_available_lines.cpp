@@ -83,8 +83,8 @@ void lines_getAvailableLines() {
         uint8_t lowByte;
 
         for (int i = 0; i < originalWidth * originalHeight; i++) {
-            bytesRead += lineFile.read(&highByte, 1);
             bytesRead += lineFile.read(&lowByte, 1);
+            bytesRead += lineFile.read(&highByte, 1);
 
             spriteBuffer[i] = (highByte << 8) | lowByte;
         }

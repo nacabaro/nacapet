@@ -1,6 +1,7 @@
 #include "lines.h"
 #include "memory/memory.h"
 #include "defs/defs.h"
+#include "utils/utils.h"
 
 #include <FS.h>
 #include <SPIFFS.h>
@@ -40,37 +41,76 @@ void lines_getSingleLine(const char* fileName) {
     currentLine[currentCharacter] = selectedLine;
     currentEgg = selectedEgg;
 }
-
 void lines_getSingleEggSprites(fs::File &lineFile, Egg_t* selectedEgg) {
+
     // Importante tener el nombre de archivo del huevo en todo momento
     strcpy(selectedEgg->fileName, lineFile.name());
 
-    // Ahora se lee los datos
-    lineFile.read(&(selectedEgg->eggSprite.spriteWidth), 1);
-    lineFile.read(&(selectedEgg->eggSprite.spriteHeight), 1);
+    // Leer dimensiones originales
+    uint8_t originalWidth;
+    uint8_t originalHeight;
+
+    lineFile.read(&originalWidth, 1);
+    lineFile.read(&originalHeight, 1);
     lineFile.read(&(selectedEgg->eggSprite.spriteNumber), 1);
-    
+
+    const uint8_t scaledWidth  = originalWidth  * SPRITE_SCALE;
+    const uint8_t scaledHeight = originalHeight * SPRITE_SCALE;
+
+    // Guardar dimensiones escaladas
+    selectedEgg->eggSprite.spriteWidth  = scaledWidth;
+    selectedEgg->eggSprite.spriteHeight = scaledHeight;
+
+    // Reservar memoria para sprites escalados
     selectedEgg->eggSprite.spriteData = memory_allocate(
-        selectedEgg->eggSprite.spriteNumber, 
-        selectedEgg->eggSprite.spriteWidth, 
-        selectedEgg->eggSprite.spriteHeight
+        selectedEgg->eggSprite.spriteNumber,
+        scaledWidth,
+        scaledHeight
     );
 
-    uint16_t size = selectedEgg->eggSprite.spriteWidth * selectedEgg->eggSprite.spriteHeight;
+    const uint16_t originalSize =
+        originalWidth * originalHeight;
+
+    // Buffer temporal en SRAM
+    uint16_t* spriteBuffer =
+        (uint16_t*) malloc(
+            originalSize * sizeof(uint16_t)
+        );
+
+    if (!spriteBuffer) {
+        printf("[LINES] Failed to allocate sprite buffer\n");
+        return;
+    }
 
     uint8_t highByte;
     uint8_t lowByte;
 
-    for (int spr = 0; spr < selectedEgg->eggSprite.spriteNumber; spr++) {
-        for (int i= 0; i < size; i++) {
-            lineFile.read(&highByte, 1);
+    for (
+        int spr = 0;
+        spr < selectedEgg->eggSprite.spriteNumber;
+        spr++
+    ) {
+
+        // Leer sprite original
+        for (int i = 0; i < originalSize; i++) {
+
             lineFile.read(&lowByte, 1);
+            lineFile.read(&highByte, 1);
 
-            uint16_t pixel = (highByte << 8) | lowByte;
-
-            selectedEgg->eggSprite.spriteData[spr][i] = pixel;
+            spriteBuffer[i] =
+                (highByte << 8) | lowByte;
         }
-    } 
+
+        // Escalar sprite
+        utils_upscaleSprite(
+            spriteBuffer,
+            originalWidth,
+            originalHeight,
+            selectedEgg->eggSprite.spriteData[spr]
+        );
+    }
+
+    free(spriteBuffer);
 }
 
 // Son las 22:35, que estoy haciendo?
