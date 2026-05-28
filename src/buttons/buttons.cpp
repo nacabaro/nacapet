@@ -16,9 +16,11 @@ bool k4_prev = HIGH;
 
 void buttons_checkInactivity() {
     uint64_t currentTime = esp_timer_get_time();
-    if (currentTime - lastPressedButtonTime > INACTIVITY_THRESHOLD_TIME_US && !screenOff) {
+    if (currentTime - lastPressedButtonTime > INACTIVITY_THRESHOLD_TIME_US && !screenOff && !alwaysOnEnabled) {
+        #ifdef ALLOW_SLEEP
         digitalWrite(BL_PIN, LOW);
         screenKey = OFF_SCREEN;
+        #endif
         
     } else if (currentTime - lastPressedButtonTime > LAST_PRESSED_BUTTON_THRESHOLD_TIME_US && !inactive) {        
         screenKey =  MAIN_SCREEN;
