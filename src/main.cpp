@@ -61,6 +61,9 @@ uint32_t dayUnixTime = 0;
 Egg_t* eggSelection = NULL;
 uint8_t eggNumber = 0;
 
+// Background stuff
+int currentBackground = 0;
+
 // Tasks
 TaskHandle_t secondLoop = NULL;
 
@@ -92,7 +95,7 @@ void setup() {
     storage_readFile("/menu.bin", &menuElementsData);
     storage_readFile("/ui.bin", &uiElementsData);
     
-    storage_initBackground("/bg2.bin", bg);
+    storage_initBackground(currentBackground, bg);
     
     pinMode(K1_PIN, BUTTON_MODE);
     pinMode(K2_PIN, BUTTON_MODE);

@@ -53,10 +53,12 @@ void menu_drawAngryScreen(
     struct SpriteData* spriteData, struct SpriteData* smallUiElements
 );
 void menu_drawFridgeScreen(TFT_eSprite &bg, TFT_eSprite& sprite, struct SpriteData* smallUiElements, struct SpriteData* bigUiElements);
-
 void training_screenTraining2(
     TFT_eSprite &bg, TFT_eSprite &sprite,
     struct SpriteData* mainCharaData, struct SpriteData* attackSprites
+);
+void menu_changeBackgroundScreen(
+    TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiSpriteData
 );
 
 void menu_sleepScreen_sleepAction();

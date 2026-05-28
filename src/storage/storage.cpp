@@ -17,7 +17,11 @@ void storage_init() {
 }
 
 
-void storage_initBackground(const char* path, TFT_eSprite& bg) {
+void storage_initBackground(const int id, TFT_eSprite& bg) {
+    char path[15];
+
+    snprintf(path, 15, "/bg/%i.bin", id);
+
     File file = SPIFFS.open(path, "r");
     if (!file) {
         printf("%s Failed to open file for reading\n", TAG_S);

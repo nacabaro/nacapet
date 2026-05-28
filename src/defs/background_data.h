@@ -3,6 +3,8 @@
 
 #include <stdint.h>
 
+extern int currentBackground;
+
 struct BackgroundData {
     uint8_t backgroundWidth;
     uint8_t backgroundHeight;

@@ -9,7 +9,7 @@
 
 void storage_init();
 void storage_readFile(const char* path, struct SpriteData* spriteData);
-void storage_initBackground(const char* path, TFT_eSprite &bg);
+void storage_initBackground(const int id, TFT_eSprite &bg);
 
 void storage_saveState(); 
 void storage_loadState();
