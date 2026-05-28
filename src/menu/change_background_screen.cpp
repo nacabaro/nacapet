@@ -18,7 +18,7 @@ void menu_changeBackgroundScreen(
 
     uint64_t currentTime = esp_timer_get_time();
 
-    int8_t selectedPreviousBackground = 0;
+    int8_t selectedPreviousBackground = -1;
 
     while (background) {
         if (!background.isDirectory()) {
@@ -28,6 +28,12 @@ void menu_changeBackgroundScreen(
         background = background.openNextFile();
     }
 
+    printf("[BACKGROUNDS] numBackgrounds=%i\n", backgrounds);
+
+    draw_drawBackground(bg, 90, 90, 3);
+    draw_drawSprite(sprite, 174, 96, uiSpriteData, ARROW_ICON);
+    tft_drawBuffer();
+
     for (;;) {
         uint8_t buttonsPressed = buttons_getPressedButtons();
         currentTime = esp_timer_get_time();
@@ -35,7 +41,7 @@ void menu_changeBackgroundScreen(
         switch (buttonsPressed) {
             case K1_PRESSED:
                 selectedBackground++;
-                if (selectedBackground > backgrounds) { 
+                if (selectedBackground >= backgrounds) { 
                     selectedBackground = 0;
                 }
                 storage_initBackground(selectedBackground, bg);
@@ -54,11 +60,13 @@ void menu_changeBackgroundScreen(
             case K3_PRESSED:
                 currentBackground = selectedBackground;
                 lastUpdateTime = currentTime;
+                screenKey = MAIN_SCREEN;
                 return;
             
             case K4_PRESSED:
                 storage_initBackground(currentBackground, bg);
                 lastUpdateTime = currentTime;
+                screenKey = MAIN_SCREEN;
                 return;
         }
 
