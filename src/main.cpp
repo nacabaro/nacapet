@@ -67,6 +67,11 @@ int currentBackground = 0;
 // Tasks
 TaskHandle_t secondLoop = NULL;
 
+// Settings
+bool soundEnabled = true;
+bool alwaysOnEnabled = false;
+
+// Background step counting
 bool isSamplingSteps = false;
 uint64_t sampleStartTime = 0;
 uint16_t initialSteps = 0;
@@ -216,6 +221,14 @@ void loop() {
         case FROZEN_SCREEN:
             menu_drawFridgeScreen(bg, sprite, &mainCharacterSprites, &menuElementsData);
             break;
+
+        case SETTINGS_SCREEN:
+            menu_settingsScreen(bg, sprite, &uiElementsData);
+            break;
+
+        case BACKGROUND_CHANGE_SCREEN:
+            menu_changeBackgroundScreen(bg, sprite, &uiElementsData);
+            break;
     }
 
     if (screenKey == IDLE_SCREEN || screenKey == OFF_SCREEN) {
@@ -244,7 +257,6 @@ void loop2() {
                 stepCounter += approximatedSteps;
                 
                 printf("[STEPS] Sampled %d steps in 10s, added %d approximated steps for sleep period.\n", sampledSteps, approximatedSteps);
-
                 energy_startLightSleep();
             }
         } else {

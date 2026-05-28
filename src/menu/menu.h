@@ -60,6 +60,8 @@ void training_screenTraining2(
 void menu_changeBackgroundScreen(
     TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* uiSpriteData
 );
+void menu_settingsScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData *spriteData);
+void menu_settingsScreen_drawEntry(uint8_t entryId, const char *textEntry);
 
 void menu_sleepScreen_sleepAction();
 void menu_sleepScreen_recalculateSleep();

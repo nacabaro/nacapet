@@ -125,6 +125,9 @@
 // TRAINING MODES
 #define TRAINING_SCREEN_1 30
 
+// SETTINGS SUBSCREENS
+#define BACKGROUND_CHANGE_SCREEN 40
+
 // SMALL UI ICONS (UI.BIN)
 #define POOP_ICON 0
 #define FOOD_ICON 1
@@ -216,5 +219,9 @@ extern struct SpriteData mainCharacterSprites;
 extern bool isSamplingSteps;
 extern uint64_t sampleStartTime;
 extern uint16_t initialSteps;
+
+// Settings screen options
+extern bool soundEnabled;
+extern bool alwaysOnEnabled;
 
 #endif

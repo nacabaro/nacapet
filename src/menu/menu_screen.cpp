@@ -73,6 +73,12 @@ void menu_drawCurrentMenuOption(TFT_eSprite& bg, TFT_eSprite &icon, struct Sprit
                 return;
                 break;
 
+            case SETTINGS_SCREEN_MENU:
+                menuKey = STATUS_SCREEN;
+                screenKey = SETTINGS_SCREEN;
+                return;
+                break;
+
             default:
                 break;
         }
