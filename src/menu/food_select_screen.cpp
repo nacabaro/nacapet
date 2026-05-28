@@ -20,19 +20,19 @@ void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara,
 
   uint8_t pressedButtons = buttons_getPressedButtons();
   switch (pressedButtons) {
-  case 8:
-    arrowPosition = (arrowPosition + 1) % 2;
-    break;
+    case K1_PRESSED:
+      arrowPosition = (arrowPosition + 1) % 2;
+      break;
 
-  case 2:
-    screenKey = MENU_SCREEN;
-    break;
+    case K3_PRESSED:
+      screenKey = MENU_SCREEN;
+      break;
 
-  default:
-    break;
+    default:
+      break;
   }
 
-  if (pressedButtons == 4) {
+  if (pressedButtons == K2_PRESSED) {
     lastUpdateTime = 0;
     switch (arrowPosition) {
     case 0:
