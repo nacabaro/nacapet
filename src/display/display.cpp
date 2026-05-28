@@ -2,6 +2,8 @@
 #include "defs/screen_defs.h"
 #include "defs/defs.h"
 
+#include <TFT_eSPI.h>
+
 int xPos = 0;
 int yPos = 0;
 
@@ -59,9 +61,15 @@ void tft_drawCenteredText(const char* text, int size, int yGlobal) {
     composite.drawString(text, x, yGlobal);
 }
 
-void tft_drawText(const char* text, int size, int x, int y, uint16_t color) {
+void tft_drawText(const char* text, int size, int x, int y, uint16_t color, uint16_t bgColor = TFT_TRANSPARENT) {
     composite.setTextSize(size);
-    composite.setTextColor(color);
+
+    if (bgColor != TFT_TRANSPARENT) {
+        composite.setTextColor(color, bgColor);
+    } else {
+        composite.setTextColor(color);
+    }
+
     composite.drawString(text, x, y);
 }
 
