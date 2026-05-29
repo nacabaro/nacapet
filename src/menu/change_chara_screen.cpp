@@ -24,6 +24,15 @@ void menu_changeCharaScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteD
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
         case K1_PRESSED:
+            selectedChara--;
+            if (selectedChara < 0) {
+                selectedChara = CHARA_COUNT_IN_DEVICE - 1;
+            }
+            selectedCharaData = &charaData[selectedChara];
+            updateScreen = true;
+            break;
+
+        case K2_PRESSED:
             selectedChara++;
             if (selectedChara >= CHARA_COUNT_IN_DEVICE) {
                 selectedChara = 0;
@@ -32,14 +41,14 @@ void menu_changeCharaScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteD
             updateScreen = true;
             break;
 
-        case K2_PRESSED:
+        case K3_PRESSED:
             currentCharacter = selectedChara;
             initialized = false;
             screenKey = MAIN_SCREEN;
             menuKey = STATUS_SCREEN;
             return;
 
-        case K3_PRESSED: {
+        case K4_PRESSED: {
             char fileName[20];
             sprintf(fileName, "/chara/%02x.bin", charaData[currentCharacter].idChara);
 

@@ -12,18 +12,19 @@ void menu_drawDeathScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteDat
 
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
-        case K1_PRESSED:
+        case K4_PRESSED:
             lines_getAvailableLines();
             screenKey = EGG_SELECT_SCREEN;
             return;
             break;
         
-        case K2_PRESSED:
+        case K3_PRESSED:
             screenKey = CLOCK_SCREEN;
             return;
             break;
 
-        case K3_PRESSED:
+        case K1_PRESSED:
+        case K2_PRESSED:
             lastUpdateTime = currentTime;
             frameCounter = 0;
 

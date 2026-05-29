@@ -6,7 +6,7 @@
 
 void menu_drawTitle(TFT_eSprite &bg, TFT_eSprite &composite) {
     uint8_t pressedButtons = buttons_getPressedButtons();
-    if (pressedButtons == 8 || pressedButtons == 4) {
+    if (pressedButtons != 0) {
         screenKey = CLOCK_EDIT_SCREEN;
         return;
     }

@@ -13,10 +13,14 @@ void menu_resetDataScreen(TFT_eSprite &bg) {
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
         case K1_PRESSED:
-            selectedOption = (selectedOption + 1) % 2;
+            selectedOption = (selectedOption - 1) % 2;
             break;
 
         case K2_PRESSED:
+            selectedOption = (selectedOption + 1) % 2;
+            break;
+
+        case K4_PRESSED:
             if (selectedOption == 1) {
                 draw_drawBackground(bg, 90, 90, 3);
                 tft_drawCenteredText("RESETTING", 3, 104);

@@ -13,7 +13,7 @@ void menu_statusScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
 
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
-        case 2:
+        case K3_PRESSED:
             screenKey = MENU_SCREEN;
             break;
 

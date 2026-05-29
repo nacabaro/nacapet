@@ -23,11 +23,12 @@ void menu_sleepingScreen(
 
     uint8_t buttonsPressed = buttons_getPressedButtons();
     switch (buttonsPressed) {
-        case 8:
+        case K1_PRESSED:
+        case K2_PRESSED:
             screenKey = MENU_SCREEN;
             break;
 
-        case 4:
+        case K4_PRESSED:
             screenKey = CLOCK_SCREEN;
             break;
 

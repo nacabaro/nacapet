@@ -22,6 +22,13 @@ void menu_drawCurrentMenuOption(TFT_eSprite& bg, TFT_eSprite &icon, struct Sprit
             menuKey++;
             break;
 
+        case K2_PRESSED:
+            menuKey--;
+            if (menuKey < 0) {
+                menuKey = FREEZE_SCREEN_MENU;
+            }
+            break;
+
         case K3_PRESSED:
             screenKey = MAIN_SCREEN;
             menuKey = STATUS_SCREEN_MENU;
@@ -33,7 +40,7 @@ void menu_drawCurrentMenuOption(TFT_eSprite& bg, TFT_eSprite &icon, struct Sprit
     }
 
     // Separaíto mas guapito
-    if (pressedButtons == K2_PRESSED) {
+    if (pressedButtons == K4_PRESSED) {
         const uint64_t currentTime = esp_timer_get_time();
         lastUpdateTime = currentTime;
         

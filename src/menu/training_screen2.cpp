@@ -58,9 +58,9 @@ void training_screenTraining2(
         }
 
         uint8_t pressedButtons = buttons_getPressedButtons();
-        if (pressedButtons == K1_PRESSED || pressedButtons == K2_PRESSED) {
+        if (pressedButtons == K3_PRESSED || pressedButtons == K4_PRESSED) {
             randomPosition = rand() % 2;
-            projectilePosition =  pressedButtons >> 3; // pressedButtons >> 4 == 1 => K1; != 1 => K2
+            projectilePosition =  pressedButtons >> 1; // pressedButtons >> 4 == 1 => K1; != 1 => K2
             printf("[TRAIN] projectilePosition=%i\n", projectilePosition);
 
             inactivityTimer = currentTime;

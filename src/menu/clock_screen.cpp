@@ -9,7 +9,14 @@
 void menu_drawClock(TFT_eSprite& bg) {
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
+        case K2_PRESSED | K3_PRESSED:
+            screenKey = CLOCK_EDIT_SCREEN;
+            break;
+
+        case K1_PRESSED:
         case K2_PRESSED:
+        case K3_PRESSED:
+        case K4_PRESSED:
             draw_drawBackground(bg, 90, 90, 3);
             screenKey = MAIN_SCREEN;
             break;
@@ -47,8 +54,8 @@ void menu_drawClockEdit(TFT_eSprite& bg) {
         case K2_PRESSED:
             clockMinuteCount = (clockMinuteCount + 1) % 60;
             break;
-        
-        case K3_PRESSED:
+
+        case K4_PRESSED:
             // Es un dia random, nada significativo, ya pondre mas adelante que tenga dia del año
             rtc.setTime(0, clockMinuteCount, clockHourCount, 1, 11, 2024);
             srand(time(NULL));

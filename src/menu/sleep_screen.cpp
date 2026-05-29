@@ -19,10 +19,12 @@ void menu_sleepyScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
     uint64_t currentTime = esp_timer_get_time();
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
-        case 8: 
+        case K1_PRESSED:
+        case K2_PRESSED: 
             screenKey = MENU_SCREEN;
             break;
-        case 4:
+            
+        case K4_PRESSED:
             screenKey = CLOCK_SCREEN;
             break;
         

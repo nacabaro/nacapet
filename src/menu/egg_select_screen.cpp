@@ -15,10 +15,14 @@ void menu_lineSwitcher(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* 
     uint8_t buttonsPressed = buttons_getPressedButtons();
     switch(buttonsPressed) {
         case K1_PRESSED:
+            eggCounter = (eggCounter - 1) % eggNumber;
+            break;
+
+        case K2_PRESSED:
             eggCounter = (eggCounter + 1) % eggNumber;
             break;
         
-        case K2_PRESSED:
+        case K4_PRESSED:
             menu_reloadEggs(eggCounter);
             eggCounter = 0;
             screenKey = EGG_HATCH_SCREEN;

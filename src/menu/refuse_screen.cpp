@@ -14,8 +14,10 @@ void menu_refuseScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteDat
     uint64_t currentTime = esp_timer_get_time();
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
-        case 8:
-        case 4:
+        case K1_PRESSED:
+        case K2_PRESSED:
+        case K3_PRESSED:
+        case K4_PRESSED:
             currentAnimationFrame = 0;
             screenKey = FOOD_SCREEN;
             soundPlayed = false;

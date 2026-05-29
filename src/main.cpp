@@ -97,6 +97,8 @@ void setup() {
     tft_initDisplay(tft, TFT_BLACK);
     tft_initScreenBuffer(TFT_TRANSPARENT);
     
+    tft.setRotation(2);
+
     sound_init();
 
     storage_init();

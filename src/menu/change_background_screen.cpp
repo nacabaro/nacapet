@@ -42,18 +42,18 @@ void menu_changeBackgroundScreen(
 
     switch (buttonsPressed) {
         case K1_PRESSED:
-            selectedBackground++;
-            if (selectedBackground >= backgrounds) {
-                selectedBackground = 0;
+            selectedBackground--;
+            if (selectedBackground < 0) {
+                selectedBackground = backgrounds - 1;
             }
             storage_initBackground(selectedBackground, bg);
             screenLastActionTime = currentTime;
             break;
-
+            
         case K2_PRESSED:
-            selectedBackground--;
-            if (selectedBackground < 0) {
-                selectedBackground = backgrounds - 1;
+            selectedBackground++;
+            if (selectedBackground >= backgrounds) {
+                selectedBackground = 0;
             }
             storage_initBackground(selectedBackground, bg);
             screenLastActionTime = currentTime;

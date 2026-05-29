@@ -15,12 +15,25 @@ void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara,
     return;
   }
 
-  static uint8_t arrowPosition = 0;
+  static int8_t arrowPosition = 0;
+  const int numItems = 2;
 
   uint8_t pressedButtons = buttons_getPressedButtons();
   switch (pressedButtons) {
     case K1_PRESSED:
-      arrowPosition = (arrowPosition + 1) % 2;
+      printf("[FOOD] arrowPosition=%i\n", arrowPosition);
+      arrowPosition--;
+      if (arrowPosition < 0) {
+        arrowPosition = numItems - 1;
+      }
+      break;
+
+    case K2_PRESSED:
+      printf("[FOOD] arrowPosition=%i\n", arrowPosition);
+      arrowPosition++;
+      if (arrowPosition >= numItems) {
+        arrowPosition = 0;
+      } 
       break;
 
     case K3_PRESSED:
@@ -31,7 +44,7 @@ void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara,
       break;
   }
 
-  if (pressedButtons == K2_PRESSED) {
+  if (pressedButtons == K4_PRESSED) {
     lastUpdateTime = 0;
     switch (arrowPosition) {
     case 0:

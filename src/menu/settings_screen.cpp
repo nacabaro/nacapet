@@ -38,7 +38,7 @@ void switchScreenState() {
 
 void menu_settingsScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData *spriteData)
 {
-    static uint8_t arrowPosition = 0;
+    static int8_t arrowPosition = 0;
 
     static SettingsMenuItem menuItems[] = {
         { "BG", SETTINGS_SUBMENU, BACKGROUND_CHANGE_SCREEN, nullptr, nullptr },
@@ -47,21 +47,31 @@ void menu_settingsScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteD
         { "RESET", SETTINGS_SUBMENU, RESET_DATA_SCREEN, nullptr, nullptr }
     };
 
-    const uint8_t maxItems = sizeof(menuItems) / sizeof(menuItems[0]);
+    const uint8_t numItems = sizeof(menuItems) / sizeof(menuItems[0]);
 
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
-
         case K1_PRESSED:
-            arrowPosition = (arrowPosition + 1) % maxItems;
-            printf("[SETTINGS] arrowPosition=%i\n", arrowPosition);
-            break;
+        printf("[FOOD] arrowPosition=%i\n", arrowPosition);
+        arrowPosition--;
+        if (arrowPosition < 0) {
+            arrowPosition = numItems - 1;
+        }
+        break;
+
+        case K2_PRESSED:
+        printf("[FOOD] arrowPosition=%i\n", arrowPosition);
+        arrowPosition++;
+        if (arrowPosition >= numItems) {
+            arrowPosition = 0;
+        } 
+        break;
 
         case K3_PRESSED:
             screenKey = MENU_SCREEN;
             return;
 
-        case K2_PRESSED:
+        case K4_PRESSED:
             lastUpdateTime = 0;
 
             if (menuItems[arrowPosition].type == SETTINGS_ACTION) {
@@ -85,7 +95,7 @@ void menu_settingsScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteD
     const int startY = 10;
     const int spacingY = 40;
 
-    for (uint8_t i = 0; i < maxItems; i++) {
+    for (uint8_t i = 0; i < numItems; i++) {
         bool selected = (i == arrowPosition);
         int y = startY + (i * spacingY);
 

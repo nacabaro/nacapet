@@ -7,11 +7,12 @@ void menu_drawFridgeScreen(TFT_eSprite &bg, TFT_eSprite& sprite, struct SpriteDa
     uint8_t pressedButtons = buttons_getPressedButtons();
     switch (pressedButtons) {
         case K1_PRESSED:
+        case K2_PRESSED:
             screenKey = MENU_SCREEN;
             menuKey = STATUS_SCREEN_MENU;
             break;
         
-        case K2_PRESSED:
+        case K4_PRESSED:
             screenKey = CLOCK_SCREEN;
             break;
         
