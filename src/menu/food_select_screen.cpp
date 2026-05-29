@@ -3,14 +3,13 @@
 #include "display/display.h"
 #include "draw/draw.h"
 #include "menu.h"
+#include "defs/sounds.h"
 #include "vpet/vpet/vpet.h"
 
 void menu_foodScreen(TFT_eSprite &bg, TFT_eSprite &mainChara,
                      struct SpriteData *spriteData) {
   if (charaData[currentCharacter].sleepy) {
-    tone(SPK_PIN, BEEP_FREQ_HZ, BEEP_LEN_MS);
-    delay(100);
-    tone(SPK_PIN, BEEP_FREQ_HZ, BEEP_LEN_MS);
+    sound_playMelody(SOUND_BUTTON_BEEP, SOUND_NOTE_COUNT(SOUND_BUTTON_BEEP));
     screenKey = MENU_SCREEN;
 
     return;

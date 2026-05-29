@@ -41,7 +41,7 @@ void menu_statusScreen_drawStat(TFT_eSprite &sprite, struct SpriteData* spriteDa
 
         draw_drawSprite(
             sprite, 
-            15 + (i * 32),
+            15 + (i * 48),
             y + 30, 
             spriteData, 
             icon, 

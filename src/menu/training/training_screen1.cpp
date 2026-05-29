@@ -1,6 +1,7 @@
 #include "vpet/training/training.h"
 #include "defs/defs.h"
 #include "defs/chara_data.h"
+#include "defs/sounds.h"
 #include "defs/sprite_data.h"
 #include "buttons/buttons.h"
 #include "display/display.h"
@@ -15,9 +16,8 @@ void training_screenTraining1(
 
     draw_drawBackground(bg, 90, 90, 3);
     draw_drawSpriteCentered(sprite, mainCharaData, 11);
-    
-    tone(SPK_PIN, 4100, 100);
-    tone(SPK_PIN, 3500, 100);
+
+    sound_playMelody(SOUND_TRAINING_START, SOUND_NOTE_COUNT(SOUND_TRAINING_START));
 
     tft_drawBuffer();
 

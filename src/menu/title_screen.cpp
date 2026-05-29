@@ -11,6 +11,11 @@ void menu_drawTitle(TFT_eSprite &bg, TFT_eSprite &composite) {
         return;
     }
 
+    uint64_t currentTime = esp_timer_get_time();
+    if (currentTime - lastUpdateTime < 200000) {
+        return;
+    }
+
     draw_drawBackground(bg, 90, 90, 3);
 
     tft_drawCenteredText("NacaPet", 4, 40);
@@ -18,6 +23,5 @@ void menu_drawTitle(TFT_eSprite &bg, TFT_eSprite &composite) {
     tft_drawCenteredText(VERSION, 2, 80);
 
     tft_drawBuffer();
-
-    delay(200);
+    lastUpdateTime = currentTime;
 }

@@ -62,6 +62,7 @@ void menu_changeBackgroundScreen(
 );
 void menu_settingsScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteData *spriteData);
 void menu_settingsScreen_drawEntry(uint8_t entryId, const char *textEntry);
+void menu_resetDataScreen(TFT_eSprite &bg);
 
 void menu_sleepScreen_sleepAction();
 void menu_sleepScreen_recalculateSleep();

@@ -95,7 +95,7 @@ void animate_performAngryAnimation(TFT_eSprite &spr, struct SpriteData* spriteDa
 }
 
 void animate_performHatchingAnimation(TFT_eSprite &spr, struct SpriteData* spriteData) {
-    currentAnimationFrame = (currentAnimationFrame + 1) % numFramesHappy;
+    currentAnimationFrame = (currentAnimationFrame + 1) % numFramesHatching;
     draw_drawSprite(
         spr,
         hatchingAnimationPositions[currentAnimationFrame],

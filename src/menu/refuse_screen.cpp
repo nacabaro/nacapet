@@ -3,6 +3,7 @@
 #include "draw/draw.h"
 #include "display/display.h"
 #include "defs/defs.h"
+#include "defs/sounds.h"
 #include "defs/sprite_data.h"
 #include "animations/animations.h"
 
@@ -34,8 +35,7 @@ void menu_refuseScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteDat
     }
 
     if (!soundPlayed) {
-        tone(SPK_PIN, 3000, 100);
-        tone(SPK_PIN, 1000, 100);
+        sound_playMelody(SOUND_REFUSE, SOUND_NOTE_COUNT(SOUND_REFUSE));
 
         soundPlayed = true;
     }

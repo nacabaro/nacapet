@@ -13,5 +13,6 @@ void storage_initBackground(const int id, TFT_eSprite &bg);
 
 void storage_saveState(); 
 void storage_loadState();
+bool storage_deleteState();
 
 #endif

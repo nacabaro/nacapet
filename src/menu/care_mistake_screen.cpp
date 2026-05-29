@@ -3,6 +3,7 @@
 #include "animations/animations.h"
 #include "display/display.h"
 #include "defs/chara_data.h"
+#include "defs/sounds.h"
 #include "draw/draw.h"
 
 uint64_t lastBeepTime = esp_timer_get_time();
@@ -13,8 +14,7 @@ void menu_careMistakeScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteD
     uint8_t pressedButtons = buttons_getPressedButtons();
 
     if (currentTime - lastBeepTime > ANIMATION_THRESHOLD_TIME_US * 2 && beepCounter < 10) {
-        tone(SPK_PIN, 2500, 100);
-        tone(SPK_PIN, 5000, 100);
+        sound_playMelody(SOUND_CARE_ALERT, SOUND_NOTE_COUNT(SOUND_CARE_ALERT));
 
         lastBeepTime = currentTime;
 

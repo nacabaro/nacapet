@@ -34,6 +34,9 @@ void menu_drawCurrentMenuOption(TFT_eSprite& bg, TFT_eSprite &icon, struct Sprit
 
     // Separaíto mas guapito
     if (pressedButtons == K2_PRESSED) {
+        const uint64_t currentTime = esp_timer_get_time();
+        lastUpdateTime = currentTime;
+        
         switch (menuKey) {
             case STATUS_SCREEN_MENU:
                 screenKey = STATUS_SCREEN;

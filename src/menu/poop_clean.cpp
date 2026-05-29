@@ -9,51 +9,44 @@
 void menu_clearPoopScreen(
     TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* spriteData, struct SpriteData* bigUiElements, struct SpriteData* smallUiElements
 ) {
-    printf("[AAAAAAA] pausing loop...\n");
+    static bool initialized = false;
+    static int cleanerXPos = 174;
 
-    vTaskSuspend(secondLoop);
+    if (!initialized) {
+        cleanerXPos = 174;
+        lastUpdateTime = 0;
 
-    printf("[AAAAAAA] loop paused...\n");
+        draw_drawBackground(bg, 90, 90, 3);
+        uint8_t offsetX = menu_poopOverlay(bg, sprite, smallUiElements);
 
-    int cleanerXPos = 174;
+        animate_performAnimation(sprite, spriteData, offsetX);
+        menu_uiOverlay(sprite, bigUiElements);
+        tft_clearBuffer(sprite, TFT_TRANSPARENT);
 
-    lastUpdateTime = 0;
+        initialized = true;
+    }
 
-    printf("[AAAAAAA] drawing idle screen...\n");
-  
-    draw_drawBackground(bg, 90, 90, 3);
-    uint8_t offsetX = menu_poopOverlay(bg, sprite, smallUiElements);
-    
-    printf("[AAAAAAA] drawing animation...\n");
+    if (cleanerXPos <= 18 - 48) {
+        screenKey = HAPPY_SCREEN;
+        menuKey = -1;
+        charaData[currentCharacter].poopNumber = 0;
+        initialized = false;
 
-    animate_performAnimation(sprite, spriteData, offsetX);
+        return;
+    }
 
-    printf("[AAAAAAA] drawing overlay...\n");
-
-    menu_uiOverlay(sprite, bigUiElements);
-    
-    printf("[AAAAAAA] idle screen down...\n");
-
-    tft_clearBuffer(sprite, TFT_TRANSPARENT);
-
-    while (cleanerXPos > 18 - 48) {
+    uint64_t currentTime = esp_timer_get_time();
+    if (currentTime - lastUpdateTime > 50000) {
         draw_drawBackgroundSection(bg, cleanerXPos + 6, 72, 48, 96);
 
         draw_drawSprite(sprite, cleanerXPos, 72, smallUiElements, CLEANER_ICON);
         draw_drawSprite(sprite, cleanerXPos, 120, smallUiElements, CLEANER_ICON);
-        
+
         draw_drawBackgroundSection(bg, 0, 72, 18, 96);
-        
+
         tft_drawBuffer();
-        
+
         cleanerXPos -= 6;
+        lastUpdateTime = currentTime;
     }
-
-    screenKey = HAPPY_SCREEN;
-    menuKey = -1;
-    charaData[currentCharacter].poopNumber = 0;
-
-    vTaskResume(secondLoop);
-
-    return;
 }

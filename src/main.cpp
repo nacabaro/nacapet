@@ -15,6 +15,8 @@
 #include "driver/rtc_io.h"
 #include "loop/loop.h"
 #include "menu/training/training_screens.h"
+#include "defs/sounds.h"
+#include "sound/sound.h"
 
 const char* TAG = "[MAIN]";
 
@@ -94,6 +96,8 @@ void setup() {
 
     tft_initDisplay(tft, TFT_BLACK);
     tft_initScreenBuffer(TFT_TRANSPARENT);
+    
+    sound_init();
 
     storage_init();
 
@@ -108,6 +112,8 @@ void setup() {
     pinMode(K4_PIN, BUTTON_MODE);
     
     xTaskCreatePinnedToCore(secondCoreTask, "VPET_EVAL", 4096, NULL, 0, &secondLoop, 0);
+
+    sound_playMelody(SOUND_BOOT, SOUND_NOTE_COUNT(SOUND_BOOT));
     
     lines_initLineStorage();
 
@@ -229,6 +235,10 @@ void loop() {
         case BACKGROUND_CHANGE_SCREEN:
             menu_changeBackgroundScreen(bg, sprite, &uiElementsData);
             break;
+
+        case RESET_DATA_SCREEN:
+            menu_resetDataScreen(bg);
+            break;
     }
 
     if (screenKey == IDLE_SCREEN || screenKey == OFF_SCREEN) {
@@ -265,6 +275,8 @@ void loop2() {
     } else {
         isSamplingSteps = false;
     }
+
+    sound_update();
 }
 
 void secondCoreTask(void*) {

@@ -2,17 +2,22 @@
 #include "draw/draw.h"
 #include "display/display.h"
 #include "defs/screen_defs.h"
+#include "defs/sounds.h"
 #include "vpet/evolution/evolution.h"
 #include "loop/loop.h"
 
 struct SpriteData* checkerboardPattern;
 
 void menu_createCheckerboard() {
+    if (checkerboardPattern != NULL) {
+        return;
+    }
+
     const uint8_t SCALE       = 6;
     const uint8_t logicalW    = 34;
     const uint8_t logicalH    = 1;
-    const uint16_t scaledW    = logicalW * SCALE;   // 204
-    const uint16_t scaledH    = logicalH * SCALE;   // 6
+    const uint16_t scaledW    = logicalW * SCALE;
+    const uint16_t scaledH    = logicalH * SCALE;
     const uint32_t bufferSize = scaledW * scaledH;
 
     checkerboardPattern = (SpriteData*) malloc(sizeof(SpriteData));
@@ -36,126 +41,178 @@ void menu_createCheckerboard() {
 }
 
 void menu_freeCheckerboard() {
+    if (checkerboardPattern == NULL) {
+        return;
+    }
+
     free(checkerboardPattern->spriteData[0]);
     free(checkerboardPattern->spriteData);
     free(checkerboardPattern);
-
+    checkerboardPattern = NULL;
 }
 
-// Don't worry, I hate this too
 void menu_evolutionScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteData* mainCharacterSprites) {
-    menu_createCheckerboard();
-    TFT_eSprite checkerboard = TFT_eSprite(&tft);
+    enum EvolutionPhase {
+        EVOLUTION_INIT,
+        EVOLUTION_WOBBLE,
+        EVOLUTION_RED_FILL,
+        EVOLUTION_BLACK_FILL,
+        EVOLUTION_APPLY_CHANGE,
+        EVOLUTION_GREEN_REVEAL,
+        EVOLUTION_FINAL_REVEAL,
+        EVOLUTION_DONE
+    };
 
-    bool checkerboardShift = false;
+    static EvolutionPhase phase = EVOLUTION_INIT;
+    static TFT_eSprite checkerboard = TFT_eSprite(&tft);
+    static bool checkerboardShift = false;
+    static int frameIndex = 0;
 
-    tft_clearBuffer(sprite, TFT_TRANSPARENT);
+    sound_update();
 
-    for (int i = 0; i < 5;) {
-        uint64_t currentTime = esp_timer_get_time();
+    uint64_t currentTime = esp_timer_get_time();
+
+    if (phase == EVOLUTION_INIT) {
+        menu_createCheckerboard();
+        checkerboardShift = false;
+        frameIndex = 0;
+        tft_clearBuffer(sprite, TFT_TRANSPARENT);
+        lastUpdateTime = 0;
+        phase = EVOLUTION_WOBBLE;
+        return;
+    }
+
+    if (phase == EVOLUTION_WOBBLE) {
+        if (frameIndex >= 5) {
+            draw_drawBackground(bg, 90, 90, 3);
+            draw_drawSprite(sprite, 72, 72, mainCharacterSprites, 7);
+            tft_clearBuffer(sprite, TFT_TRANSPARENT);
+            frameIndex = 0;
+            lastUpdateTime = 0;
+            phase = EVOLUTION_RED_FILL;
+            return;
+        }
 
         if (currentTime - lastUpdateTime > 500000) {
-            tone(SPK_PIN, 4100, 50);
-            tone(SPK_PIN, 3500, 50);
+            sound_playMelody(SOUND_EVOLUTION_WOBBLE, SOUND_NOTE_COUNT(SOUND_EVOLUTION_WOBBLE));
 
             draw_drawBackground(bg, 90, 90, 3);
-            draw_drawSprite(sprite, 72 + ((i % 2 == 0) * 6), 72, mainCharacterSprites, 6);
-            
+            draw_drawSprite(sprite, 72 + ((frameIndex % 2 == 0) * 6), 72, mainCharacterSprites, 6);
+
             tft_drawBuffer();
 
-            i++;
+            frameIndex++;
             lastUpdateTime = currentTime;
         }
 
+        return;
     }
 
-    draw_drawBackground(bg, 90, 90, 3);
-    draw_drawSprite(sprite, 72, 72, mainCharacterSprites, 7);
+    if (phase == EVOLUTION_RED_FILL) {
+        if (frameIndex >= 16) {
+            frameIndex = 0;
+            lastUpdateTime = 0;
+            phase = EVOLUTION_BLACK_FILL;
+            return;
+        }
 
-    tft_clearBuffer(sprite, TFT_TRANSPARENT);
-
-    for (int i = 0; i < 16;) {
-        uint64_t currentTime = esp_timer_get_time();
         if (currentTime - lastUpdateTime > 100000) {
-            uint8_t startYPos = 72 + (i * 6);
-    
+            uint8_t startYPos = 72 + (frameIndex * 6);
+
             tft_drawRectangle(18, startYPos, 204, 6, TFT_RED);
-    
             draw_drawSprite(checkerboard, 18, startYPos, checkerboardPattern, 0, checkerboardShift);
-            
             tft_drawBuffer();
-    
+
             checkerboardShift = !checkerboardShift;
-    
-            i++;
+            frameIndex++;
             lastUpdateTime = currentTime;
         }
+
+        return;
     }
 
-    for (int i = 0; i < 16;) {
-        uint64_t currentTime = esp_timer_get_time();
+    if (phase == EVOLUTION_BLACK_FILL) {
+        if (frameIndex >= 16) {
+            frameIndex = 15;
+            lastUpdateTime = 0;
+            phase = EVOLUTION_APPLY_CHANGE;
+            return;
+        }
+
         if (currentTime - lastUpdateTime > 100000) {
-            uint8_t startYPos = 72 + (i * 6);
+            uint8_t startYPos = 72 + (frameIndex * 6);
 
             tft_drawRectangle(18, startYPos, 204, 6, TFT_BLACK);
-            
             tft_drawBuffer();
 
             checkerboardShift = !checkerboardShift;
-
-            i++;
+            frameIndex++;
             lastUpdateTime = currentTime;
         }
+
+        return;
     }
 
-    change_onChangeComplete();
+    if (phase == EVOLUTION_APPLY_CHANGE) {
+        change_onChangeComplete();
+        lastUpdateTime = 0;
+        phase = EVOLUTION_GREEN_REVEAL;
+        return;
+    }
 
-    for (int i = 15; i >= 0;) {
-        uint64_t currentTime = esp_timer_get_time();
+    if (phase == EVOLUTION_GREEN_REVEAL) {
+        if (frameIndex < 0) {
+            frameIndex = 15;
+            lastUpdateTime = 0;
+            phase = EVOLUTION_FINAL_REVEAL;
+            return;
+        }
+
         if (currentTime - lastUpdateTime > 100000) {
-            uint8_t startYPos = 72 + (i * 6);
+            uint8_t startYPos = 72 + (frameIndex * 6);
 
             tft_drawRectangle(18, startYPos, 204, 6, TFT_GREEN);
             draw_drawSprite(checkerboard, 18, startYPos, checkerboardPattern, 0, checkerboardShift);
-            
             tft_drawBuffer();
 
             checkerboardShift = !checkerboardShift;
-
-            i--;
+            frameIndex--;
             lastUpdateTime = currentTime;
         }
+
+        return;
     }
 
-    for (int i = 15; i >= 0;) {       
-        uint64_t currentTime = esp_timer_get_time();
+    if (phase == EVOLUTION_FINAL_REVEAL) {
+        if (frameIndex < 0) {
+            phase = EVOLUTION_DONE;
+            return;
+        }
+
         if (currentTime - lastUpdateTime > 100000) {
             draw_drawBackground(bg, 90, 90, 3);
             draw_drawSprite(sprite, 72, 72, mainCharacterSprites, 7);
 
-            uint8_t rectHeight = (6 * i);
+            uint8_t rectHeight = 6 * frameIndex;
 
             tft_drawRectangle(18, 72, 204, rectHeight, TFT_GREEN);
-        
-            for (int j = 0; j < i; j++) {
+
+            for (int j = 0; j < frameIndex; j++) {
                 uint8_t rectYPos = 72 + (6 * j);
 
                 draw_drawSprite(checkerboard, 18, rectYPos, checkerboardPattern, 0, checkerboardShift);
-                    
                 checkerboardShift = !checkerboardShift;
             }
 
             tft_drawBuffer();
-            i--;
+            frameIndex--;
             lastUpdateTime = currentTime;
         }
+
+        return;
     }
 
-    tone(SPK_PIN, 2100, 100);
-    tone(SPK_PIN, 3500, 100);
-    tone(SPK_PIN, 4100, 100);
-    tone(SPK_PIN, 4650, 200);
-
+    sound_playMelody(SOUND_EVOLUTION_COMPLETE, SOUND_NOTE_COUNT(SOUND_EVOLUTION_COMPLETE));
 
     lastPressedButtonTime = esp_timer_get_time();
 
@@ -163,7 +220,8 @@ void menu_evolutionScreen(TFT_eSprite& bg, TFT_eSprite &sprite, struct SpriteDat
 
     vTaskResume(secondLoop);
 
+    phase = EVOLUTION_INIT;
     screenKey = MAIN_SCREEN;
 
-    lastUpdateTime = 0; // Un pequeño empujoncito
+    lastUpdateTime = 0;
 }

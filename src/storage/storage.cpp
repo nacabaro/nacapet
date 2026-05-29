@@ -219,3 +219,20 @@ void storage_loadState() {
 
     printf("%s Load completed!\n", TAG_S);
 }
+
+bool storage_deleteState() {
+    const char* savePath = "/save.bin";
+
+    if (!SPIFFS.exists(savePath)) {
+        printf("%s Save file already deleted.\n", TAG_S);
+        return true;
+    }
+
+    if (!SPIFFS.remove(savePath)) {
+        printf("%s Failed to delete save file.\n", TAG_S);
+        return false;
+    }
+
+    printf("%s Save file deleted.\n", TAG_S);
+    return true;
+}

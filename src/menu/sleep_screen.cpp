@@ -5,6 +5,7 @@
 #include "buttons/buttons.h"
 #include "animations/animations.h"
 #include "defs/chara_data.h"
+#include "defs/sounds.h"
 
 void menu_sleepyScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* charaSprites, struct SpriteData* uiSprites) {
     if (!charaData[currentCharacter].asleep && !charaData[currentCharacter].sleepy) {
@@ -45,8 +46,7 @@ void menu_sleepyScreen(TFT_eSprite &bg, TFT_eSprite &sprite, struct SpriteData* 
     }
 
     if (currentTime - lastBeepTime > ANIMATION_THRESHOLD_TIME_US * 2 && beepCounter < 10) {
-        tone(SPK_PIN, 2500, 100);
-        tone(SPK_PIN, 5000, 100);
+        sound_playMelody(SOUND_CARE_ALERT, SOUND_NOTE_COUNT(SOUND_CARE_ALERT));
 
         lastBeepTime = currentTime;
 

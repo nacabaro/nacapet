@@ -4,43 +4,39 @@
 #include "display/display.h"
 #include "draw/draw.h"
 #include "animations/animations.h"
+#include "defs/sounds.h"
 
 void menu_drawAngryScreen(
     TFT_eSprite& bg, TFT_eSprite &sprite,
     struct SpriteData* spriteData, struct SpriteData* smallUiElements
 ) {
-    uint8_t frameCounter = 0;
-    
-    while (true) {
-        uint64_t currentTime = esp_timer_get_time();
-        if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
-            if (frameCounter > 3) {
-                screenKey = MAIN_SCREEN; // TODO: Change for while battling
-                menuKey = STATUS_SCREEN;
+    static uint8_t frameCounter = 0;
 
-                vTaskResume(secondLoop);
+    uint64_t currentTime = esp_timer_get_time();
+    if (currentTime - lastUpdateTime > ANIMATION_THRESHOLD_TIME_US) {
+        if (frameCounter > 3) {
+            frameCounter = 0;
+            screenKey = MAIN_SCREEN; // TODO: Change for while battling
+            menuKey = STATUS_SCREEN;
 
-                return;
-            }
+            return;
+        }
 
-            draw_drawBackground(bg, 90, 90, 3);
+        draw_drawBackground(bg, 90, 90, 3);
+
+        tft_clearBuffer(sprite, TFT_TRANSPARENT);
+        animate_performAngryAnimation(sprite, spriteData);
+
+        if (frameCounter % 2 == 0) {
+            sound_playMelody(SOUND_ANGRY, SOUND_NOTE_COUNT(SOUND_ANGRY));
 
             tft_clearBuffer(sprite, TFT_TRANSPARENT);
-            animate_performAngryAnimation(sprite, spriteData);
-            
-            if (frameCounter % 2 == 0) {
-                tone(SPK_PIN, 1000, 100);
-                tone(SPK_PIN, 1000, 200);
-
-                tft_clearBuffer(sprite, TFT_TRANSPARENT);
-                draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON);
-                draw_drawSprite(sprite, 174, 72, smallUiElements, FIREWORKS_ICON);
-            }
-
-            frameCounter++;            
-            lastUpdateTime = currentTime;
+            draw_drawSprite(sprite, 18, 72, smallUiElements, FIREWORKS_ICON);
+            draw_drawSprite(sprite, 174, 72, smallUiElements, FIREWORKS_ICON);
         }
-        
+
+        frameCounter++;
+        lastUpdateTime = currentTime;
         tft_drawBuffer();
     }
 }

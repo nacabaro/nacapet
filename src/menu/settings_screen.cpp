@@ -43,7 +43,8 @@ void menu_settingsScreen(TFT_eSprite &bg, TFT_eSprite &mainChara, struct SpriteD
     static SettingsMenuItem menuItems[] = {
         { "BG", SETTINGS_SUBMENU, BACKGROUND_CHANGE_SCREEN, nullptr, nullptr },
         { "SOUND", SETTINGS_ACTION, 0, switchSoundState, &soundEnabled },
-        { "ALWAYS ON", SETTINGS_ACTION, 0, switchScreenState, &alwaysOnEnabled }
+        { "AOD", SETTINGS_ACTION, 0, switchScreenState, &alwaysOnEnabled },
+        { "RESET", SETTINGS_SUBMENU, RESET_DATA_SCREEN, nullptr, nullptr }
     };
 
     const uint8_t maxItems = sizeof(menuItems) / sizeof(menuItems[0]);

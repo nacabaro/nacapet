@@ -2,6 +2,7 @@
 #include "draw/draw.h"
 #include "defs/defs.h"
 #include "defs/chara_data.h"
+#include "defs/sounds.h"
 #include "defs/sprite_data.h"
 #include "display/display.h"
 
@@ -100,20 +101,5 @@ void training_displayTrainingResult(
 
 // nOT FANCY
 void training_trainingAttackSounds() {
-    tone(SPK_PIN, 4100, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 4100, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 4100, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 4100, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 3100, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 3100, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 3100, 25);
-    tone(SPK_PIN, 3700, 25);
-    tone(SPK_PIN, 3100, 25);
+    sound_playMelody(SOUND_TRAINING_ATTACK, SOUND_NOTE_COUNT(SOUND_TRAINING_ATTACK));
 }
