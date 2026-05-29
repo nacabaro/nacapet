@@ -1,4 +1,5 @@
 #include "defs/defs.h"
+#include "defs/sounds.h"
 #include "defs/chara_data.h"
 #include "defs/screen_defs.h"
 #include "buttons.h"
@@ -17,7 +18,7 @@ bool k4_prev = HIGH;
 void buttons_checkInactivity() {
     uint64_t currentTime = esp_timer_get_time();
     if (currentTime - lastPressedButtonTime > INACTIVITY_THRESHOLD_TIME_US && !screenOff && !alwaysOnEnabled) {
-        #ifdef ALLOW_SLEEP
+        #ifdef DISALLOW_SLEEP
         digitalWrite(BL_PIN, LOW);
         screenKey = OFF_SCREEN;
         #endif
@@ -42,7 +43,7 @@ uint8_t buttons_getPressedButtons() {
     );
 
     if (retV != 0) {
-        tone(SPK_PIN, BEEP_FREQ_HZ, BEEP_LEN_MS);
+        sound_playMelody(SOUND_BUTTON_BEEP, SOUND_NOTE_COUNT(SOUND_BUTTON_BEEP));
         lastPressedButtonTime = esp_timer_get_time();
         inactive = false;
         screenOff = false;
