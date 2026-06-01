@@ -9,6 +9,11 @@
 *.egg
 *.cm
 *.png
+*.jpg
+*.webp
+*.adv
+*.coli
+ideas/
 __pycache__/
 venv/
 sprites/
